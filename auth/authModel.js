@@ -6,9 +6,9 @@ const register = user => {
 };
 
 // log in
-const login = user => {
+// const login = user => {
 
-};
+// };
 
 // log out
 
