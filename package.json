@@ -1,0 +1,35 @@
+{
+	"name": "iq",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest --watch",
+		"server": "nodemon index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/miugel/iq.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/miugel/iq/issues"
+	},
+	"homepage": "https://github.com/miugel/iq#readme",
+	"dependencies": {
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"knex": "^0.20.8",
+		"pg": "^7.17.1"
+	},
+	"devDependencies": {
+		"jest": "^25.1.0",
+		"nodemon": "^2.0.2",
+		"supertest": "^4.0.2"
+	},
+	"jest": {
+		"testEnvironment": "node"
+	}
+}
