@@ -11,8 +11,9 @@ exports.up = (knex, Promise) => {
 				.index();
 			table.string('password')
 				.notNullable();
-			table.string('cohort')
+			table.string('role')
 				.notNullable();
+			table.string('cohort');
 			table.integer('iq')
 				.defaultTo(0);
 			table.timestamp('created_at', {useTz: true})
