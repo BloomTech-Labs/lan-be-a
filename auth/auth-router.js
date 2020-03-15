@@ -1,5 +1,5 @@
 const express = require('express');
-const Auth = require('./authModel');
+const Auth = require('./auth-model');
 
 const app = express.Router();
 

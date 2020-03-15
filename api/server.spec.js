@@ -9,7 +9,7 @@ describe('get /', () => {
             });
     });
 
-    test('returns server working', () => {
+    test('returns server working message', () => {
         return request(server).get('/')
             .then(res => {
                 expect(res.body.message).toBe('server working');

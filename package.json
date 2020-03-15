@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"server": "nodemon index.js",
-		"test": "cross-env DB_ENV=test jest --watch --runInBand --detectOpenHandles"
+		"test": "cross-env NODE_ENV=test jest --watch --runInBand --detectOpenHandles"
 	},
 	"repository": {
 		"type": "git",

@@ -1,6 +1,6 @@
 const express = require('express');
-const authRouter = require('../auth/authRouter');
-const postsRouter = require('../posts/postsRouter');
+const authRouter = require('../auth/auth-router');
+const postRouter = require('../posts/post-router');
 
 const app = express();
 
@@ -10,6 +10,6 @@ app.get('/', (request, response) => {
 
 app.use(express.json());
 app.use('/api/auth', authRouter);
-app.use('/api', postsRouter);
+app.use('/api', postRouter);
 
 module.exports = app;
