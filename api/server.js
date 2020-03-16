@@ -1,15 +1,46 @@
 const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const passport = require('passport');
+const passportSetup = require('../config/passport-setup');
+const session = require('express-session');
+const knexSessionStore = require('connect-session-knex')(session);
+const config = require('../data/config');
 const authRouter = require('../auth/auth-router');
 const postRouter = require('../posts/post-router');
 
 const app = express();
 
-app.get('/', (request, response) => {
-    response.send({message: 'server working'});
-});
-
 app.use(express.json());
+app.use(
+    cors({
+        credentials: true,
+        origin: 'http://localhost:3000'
+    })
+);
+app.use(
+    session({
+        name: 'viewee',
+        secret: 'The door slammed on the watermelon.',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            secure: false
+            // set to true once in production
+        },
+        store: new knexSessionStore({
+            knex: config
+        })
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/api/auth', authRouter);
 app.use('/api', postRouter);
+
+app.get('/', (request, response) => response.send({ message: 'server working' }));
 
 module.exports = app;
