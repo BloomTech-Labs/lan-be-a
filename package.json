@@ -10,15 +10,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iqapp/backend"
+		"url": "git+https://github.com/viewee/backend"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/iqapp/backend/issues"
+		"url": "https://github.com/viewee/backend/issues"
 	},
-	"homepage": "https://github.com/iqapp/backend#readme",
+	"homepage": "https://github.com/viewee/backend#readme",
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
 		"connect-session-knex": "^1.6.0",
