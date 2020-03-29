@@ -1,23 +1,25 @@
 exports.up = (knex, Promise) => {
 	return knex.schema
 		.createTable('users', table => {
-			table.increments();
+            table.increments();
+            table.string('google_id')
+                .unique();
+            table.string('facebook_id')
+                .unique();
+            table.string('twitter_id')
+                .unique();
 			table.string('email')
 				.notNullable()
 				.unique();
-			table.string('username')
-				.notNullable()
-				.unique()
+			table.string('display_name')
 				.index();
-			table.string('password')
-				.notNullable();
-			table.string('role')
-				.notNullable();
+			table.string('profile_picture');
+			table.string('password');
+			table.string('role');
 			table.string('cohort');
-			table.integer('iq')
+			table.integer('thumbs_up')
 				.defaultTo(0);
-			table.timestamp('created_at', {useTz: true})
-				.defaultTo(knex.fn.now());
+			table.timestamps(true, true);
 		})
 		.createTable('posts', table => {
 			table.increments();
@@ -34,7 +36,7 @@ exports.up = (knex, Promise) => {
 			table.text('answer')
 				.notNullable()
 				.index();
-			table.integer('iq_points')
+			table.integer('thumbs_up')
 				.defaultTo(0);
 			table.string('cohort')
 				.notNullable()
@@ -42,8 +44,7 @@ exports.up = (knex, Promise) => {
 			table.string('category')
 				.notNullable()
 				.index();
-			table.timestamp('created_at', {useTz: true})
-				.defaultTo(knex.fn.now());
+			table.timestamps(true, true);
 		})
 		.createTable('replies', (table => {
 			table.increments();
@@ -63,10 +64,9 @@ exports.up = (knex, Promise) => {
 				.onDelete('CASCADE');
 			table.text('reply')
 				.notNullable();
-			table.integer('iq_points')
+			table.integer('thumbs_up')
 				.defaultTo(0);
-			table.timestamp('created_at', {useTz: true})
-				.defaultTo(knex.fn.now());
+			table.timestamps(true, true);
 		}));
 };
 
