@@ -21,7 +21,7 @@ app.use(
 app.use(
     session({
         name: 'viewee',
-        secret: 'The door slammed on the watermelon.',
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {

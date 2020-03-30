@@ -1,4 +1,4 @@
-const Auth = require('./authModel');
+const User = require('./authModel');
 const database = require('../data/config');
 
 describe('test environment', () => {
@@ -13,12 +13,10 @@ describe('register', () => {
     });
     
     test('registers user', async () => {
-        await Auth.register({
+        await User.add({
             email: 'test email',
-            username: 'test username',
-            password: 'test password',
-            role: 'test role',
-            cohort: 'test cohort'
+            display_name: 'test display name',
+            password: 'test password'
         });
         const users = await database('users');
         expect(users).toHaveLength(1);
