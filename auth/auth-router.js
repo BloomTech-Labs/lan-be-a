@@ -48,7 +48,8 @@ app.get('/success', (request, response) => {
 		message: 'successfully fetched user object',
 		user: {
             id: request.user.id,
-            displayName: request.user.display_name,
+			displayName: request.user.display_name,
+			profilePicture: request.user.profile_picture,
             track: request.user.track
         }
 	});

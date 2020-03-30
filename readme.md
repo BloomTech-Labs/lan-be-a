@@ -1,31 +1,8 @@
-users:  
-- id
-- email
-- username
-- password
-- role
-- cohort
-- created_at
+### To do
+- user track put endpoint
+- career coach token validation middleware
 
-posts:  
-- id
-- question
-- answer
-- iq_points
-- track
-- category
-- user_id
-- created_at
-
-replies:  
-- id
-- reply
-- iq_points
-- user_id
-- post_id
-- created_at
-
-notes:  
+### Notes
 - structure of tables?
 - upvote functionality, updating in real time?, how it works on the back end, will have only upvotes and no downvotes
 - career coach role, special code on sign in?, checkbox on form?
@@ -34,6 +11,6 @@ notes:
 - urls with usernames and post questions instead of ids?
 - can view questions without logging in, but once try to post question, prompted to sign up/sign in?
 
-stretch:  
+### Stretch  
 - reply to reply functionality
 - @ functionality
