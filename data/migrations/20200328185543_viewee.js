@@ -16,7 +16,7 @@ exports.up = (knex, Promise) => {
 			table.string('profile_picture');
 			table.string('password');
 			table.string('role');
-			table.string('cohort');
+			table.string('track');
 			table.integer('thumbs_up')
 				.defaultTo(0);
 			table.timestamps(true, true);
