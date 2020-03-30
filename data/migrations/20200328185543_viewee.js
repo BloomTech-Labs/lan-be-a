@@ -15,7 +15,6 @@ exports.up = (knex, Promise) => {
 				.index();
 			table.string('profile_picture');
 			table.string('password');
-			table.string('role');
 			table.string('track');
 			table.integer('thumbs_up')
 				.defaultTo(0);

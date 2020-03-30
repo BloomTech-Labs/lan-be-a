@@ -5,10 +5,10 @@ const User = require('./auth-model');
 const app = express.Router();
 
 // google
-app.get('/google', passport.authenticate('google'), {
+app.get('/google', passport.authenticate('google', {
 	scope: ['profile', 'email'],
 	prompt: 'select_account'
-});
+}));
 
 app.get('/google/redirect', passport.authenticate('google', {
 		failureRedirect: 'http://localhost:3000/error'
@@ -19,9 +19,9 @@ app.get('/google/redirect', passport.authenticate('google', {
 );
 
 // facebook
-app.get('/facebook', passport.authenticate('facebook'), {
+app.get('/facebook', passport.authenticate('facebook', {
 	scope: ['email']
-});
+}));
 
 app.get('/facebook/redirect', passport.authenticate('facebook', {
 		failureRedirect: 'http://localhost:3000/error'
@@ -49,9 +49,7 @@ app.get('/success', (request, response) => {
 		user: {
             id: request.user.id,
             displayName: request.user.display_name,
-            profilePicture: request.user.profile_picture,
-            role: request.user.role,
-            cohort: request.user.cohort
+            track: request.user.track
         }
 	});
 });
