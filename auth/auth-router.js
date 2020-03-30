@@ -4,12 +4,43 @@ const User = require('./auth-model');
 
 const app = express.Router();
 
+// google
+app.get('/google', passport.authenticate('google'), {
+	scope: ['profile', 'email'],
+	prompt: 'select_account'
+});
+
+app.get('/google/redirect', passport.authenticate('google', {
+		failureRedirect: 'http://localhost:3000/error'
+	}),
+	(request, response) => {
+		response.redirect('http://localhost:3000/success');
+	}
+);
+
+// facebook
+app.get('/facebook', passport.authenticate('facebook'), {
+	scope: ['email']
+});
+
+app.get('/facebook/redirect', passport.authenticate('facebook', {
+		failureRedirect: 'http://localhost:3000/error'
+	}),
+	(request, response) => {
+		response.redirect('http://localhost:3000/success');
+	}
+);
+
 //twitter
 app.get('/twitter', passport.authenticate('twitter'));
 
-app.get('/twitter/redirect', passport.authenticate('twitter', { failureRedirect: 'https//localhost:3000/error' }), (request, response) => {
-    response.redirect('http://localhost:3000/success');
-});
+app.get('/twitter/redirect', passport.authenticate('twitter', {
+		failureRedirect: 'http://localhost:3000/error'
+	}),
+	(request, response) => {
+		response.redirect('http://localhost:3000/success');
+	}
+);
 
 // common
 app.get('/success', (request, response) => {
