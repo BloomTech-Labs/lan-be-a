@@ -61,35 +61,35 @@ app.get('/logout', (request, response) => {
 	if (request.session) {
 		request.session.destroy(err => {
 			if (err) {
-				response.status(500).json({ message: 'Error destroying session' });
+				response.status(500).json({ message: 'error destroying session' });
 			} else {
-				response.status(200).clearCookie('viewee').json({ message: 'Successfully signed out' });
+				response.status(200).clearCookie('viewee').json({ message: 'successfully signed out' });
 			}
 		});
 	} else {
-		response.status(204).json({ message: 'Session does not exist' });
+		response.status(204).json({ message: 'session does not exist' });
 	};
 });
 
 // users
 app.put('/track', (request, response) => {
 	if (request.body.track === 'Career Coach') {
-		if (request.body.token === 'blueberry') {
+		if (request.body.token === process.env.VIEWEE_TOKEN) {
 			User.update(request.user.id, request.body.track)
-				.then(res => response.status(200).json({ message: "Successfully updated user's track" }))
+				.then(res => response.status(200).json({ message: "successfully updated user's track" }))
 				.catch(err => {
 					console.log(err);
-					response.status(500).json({ message: 'Error updating user track' });
+					response.status(500).json({ message: 'error updating user track' });
 				});
 		} else {
-			response.status(500).json({ message: 'Invalid viewee token' });
+			response.status(500).json({ message: 'invalid viewee token' });
 		};
 	} else {
 		User.update(request.user.id, request.body.track)
-			.then(res => response.status(200).json({ message: "Successfully updated user's track" }))
+			.then(res => response.status(200).json({ message: "successfully updated user's track" }))
 			.catch(err => {
 				console.log(err);
-				response.status(500).json({ message: 'Error updating user track' });
+				response.status(500).json({ message: 'error updating user track' });
 			});
 	};
 });
