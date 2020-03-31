@@ -1,6 +1,8 @@
 ### To do
-- user track put endpoint
-- career coach token validation middleware
+- dashboard component
+- individual post component with replies
+- prioritize career coach replies
+- associated endpoints, will create as i go
 
 ### Notes
 - structure of tables?
