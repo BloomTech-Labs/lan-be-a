@@ -37,7 +37,7 @@ exports.up = (knex, Promise) => {
 				.index();
 			table.integer('thumbs_up')
 				.defaultTo(0);
-			table.string('cohort')
+			table.string('track')
 				.notNullable()
 				.index();
 			table.string('category')
