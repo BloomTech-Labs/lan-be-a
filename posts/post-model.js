@@ -1,14 +1,14 @@
 const database = require('../data/config');
 
-const fetchPosts = () => {
-    return database('posts');
-};
-
-const createPost = post => {
+const create = post => {
     return database('posts').insert(post);
 };
 
+const fetch = () => {
+    return database('posts');
+};
+
 module.exports = {
-    fetchPosts,
-    createPost
+    create,
+    fetch
 };
