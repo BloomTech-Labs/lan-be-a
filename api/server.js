@@ -12,6 +12,7 @@ const postRouter = require('../posts/post-router');
 const app = express();
 
 app.use(express.json());
+app.use(helmet());
 app.use(
     cors({
         credentials: true,
@@ -39,7 +40,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/auth', authRouter);
-app.use('/api', postRouter);
+app.use('/api/post', postRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
