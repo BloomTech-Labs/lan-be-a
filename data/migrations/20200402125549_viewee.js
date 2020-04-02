@@ -16,7 +16,7 @@ exports.up = (knex, Promise) => {
 			table.string('profile_picture');
 			table.string('password');
 			table.string('track');
-			table.integer('thumbs_up')
+			table.integer('likes')
 				.defaultTo(0);
 			table.timestamps(true, true);
 		})
@@ -35,7 +35,9 @@ exports.up = (knex, Promise) => {
 			table.text('answer')
 				.notNullable()
 				.index();
-			table.integer('thumbs_up')
+			table.integer('likes')
+				.defaultTo(0);
+			table.integer('comments')
 				.defaultTo(0);
 			table.string('track')
 				.notNullable()
@@ -45,7 +47,7 @@ exports.up = (knex, Promise) => {
 				.index();
 			table.timestamps(true, true);
 		})
-		.createTable('replies', (table => {
+		.createTable('comments', table => {
 			table.increments();
 			table.integer('user_id')
 				.notNullable()
@@ -61,17 +63,51 @@ exports.up = (knex, Promise) => {
 				.inTable('posts')
 				.onUpdate('CASCADE')
 				.onDelete('CASCADE');
-			table.text('reply')
+			table.text('comment')
 				.notNullable();
 			table.integer('thumbs_up')
 				.defaultTo(0);
 			table.timestamps(true, true);
-		}));
+		})
+		.createTable('liked_posts', table => {
+			table.integer('user_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('users')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+			table.integer('post_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('posts')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+		})
+		.createTable('liked_comments', table => {
+			table.integer('user_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('users')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+			table.integer('comment_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('comments')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+		})
 };
 
 exports.down = (knex, Promise) => {
 	return knex.schema
-		.dropTableIfExists('replies')
+		.dropTableIfExists('liked_comments')
+		.dropTableIfExists('liked_posts')
+		.dropTableIfExists('comments')
 		.dropTableIfExists('posts')
 		.dropTableIfExists('users');
 };
