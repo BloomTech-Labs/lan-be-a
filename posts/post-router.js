@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../auth/auth-model');
 const Post = require('./post-model');
+const Comment = require('../comments/comment-model');
 
 const app = express.Router();
 
@@ -22,12 +23,29 @@ app.post('/', (request, response) => {
 
 // fetch all posts
 app.get('/', (request, response) => {
-    Post.fetch()
+    Post.fetchAll()
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
             response.status(500).json({message: 'error fetching posts'});
         });
+});
+
+// fetch post
+app.post('/:id', (request, response) => {
+	Post.fetch(request.params.id)
+		.then(post => {
+			Comment.fetch(request.params.id).then(comments =>
+				response.status(200).json({
+					...post,
+					comments: comments
+				})
+			);
+		})
+		.catch(err => {
+			console.log(err);
+			response.status(500).json({ message: 'error fetching post' });
+		});
 });
 
 module.exports = app;
