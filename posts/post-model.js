@@ -4,9 +4,14 @@ const create = post => {
     return database('posts').insert(post);
 };
 
-const fetchAll = () => {
-    return database('posts')
+const fetchAll = search => {
+	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
+		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
+		// .where('posts.track', 'like', `%${track}%`)
+		// .where('posts.category', 'like', `%${category}%`)
+		// .orderBy('posts.created_at', 'desc')
+		// .orderBy('post.likes')
 		.select([
 			'posts.id',
 			'users.id as user_id',

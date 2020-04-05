@@ -8,6 +8,7 @@ const knexSessionStore = require('connect-session-knex')(session);
 const config = require('../data/config');
 const authRouter = require('../auth/auth-router');
 const postRouter = require('../posts/post-router');
+const postLikeRouter = require('../post-likes/like-router');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use(passport.session());
 
 app.use('/api/auth', authRouter);
 app.use('/api/post', postRouter);
+app.use('/api/like', postLikeRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
