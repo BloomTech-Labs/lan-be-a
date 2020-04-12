@@ -41,8 +41,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/auth', authRouter);
+app.use('/api/post/like', postLikeRouter);
 app.use('/api/post', postRouter);
-app.use('/api/like', postLikeRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 

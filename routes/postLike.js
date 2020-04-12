@@ -3,20 +3,52 @@ const PostLike = require('../models/postLike');
 
 const app = express.Router();
 
+app.get('/', (request, response)  => {
+    const userID = request.user.id;
+
+    PostLike.fetch(userID)
+        .then(res => response.status(200).json(res))
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error fetching user\'s liked posts' })
+        });
+});
+
+// Like
 app.get('/:id', (request, response) => {
-    PostLike.find(request.params.id)
+    const userID = request.user.id;
+    const postID = request.params.id;
+
+    PostLike.find(postID)
         .then(likes => {
-            console.log(likes, likes.likes, likes.likes + 1, 'first layer');
-            PostLike.update(request.params.id, likes.likes + 1)
+            PostLike.update(postID, likes.likes + 1)
                 .then(res => {
-                    console.log('second layer');
-                    PostLike.add(request.user.id, request.params.id)
-                        .then(r => response.status(200).json({ message: 'post liked successfully' }))
+                    PostLike.add(userID, postID)
+                        .then(r => response.status(200).json({ message: 'Post liked successfully' }))
                 })
         })
         .catch(error => {
             console.log(error);
-            response.status(500).json({ message: 'error liking post' });
+            response.status(500).json({ message: 'Error liking post' });
+        });
+});
+
+// Unlike
+app.delete('/:id', (request, response) => {
+    const userID = request.user.id;
+    const postID = request.params.id;
+
+    PostLike.find(postID)
+        .then(likes => {
+            PostLike.update(postID, likes.likes - 1)
+                .then(res => {
+                    PostLike.remove(userID, postID)
+                        .then(r => response.status(200).json({ message: 'Post unliked successfully' }))
+                })
+        })
+        .catch(error => {
+            console.log(error);
+            response.status(500).json({ message: 'Error liking post' });
         });
 });
 
