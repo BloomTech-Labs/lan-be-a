@@ -2,12 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
-const passportSetup = require('../config/passport-setup');
+const passportSetup = require('../config/passportSetup');
 const session = require('express-session');
 const knexSessionStore = require('connect-session-knex')(session);
 const config = require('../data/config');
 const authRouter = require('../routes/auth');
-const postRouter = require('../posts/post-router');
+const postRouter = require('../routes/post');
 const postLikeRouter = require('../routes/postLike');
 
 const app = express();
