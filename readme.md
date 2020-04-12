@@ -1,8 +1,13 @@
 ### To do
-- dashboard component
-- individual post component with replies
-- prioritize career coach replies
-- associated endpoints, will create as i go
+- Dashboard component
+- Individual post component with replies
+- Prioritize career coach replies
+- Associated endpoints that I will create as I go
+- Pagination
+- Save post functionality
+- Tests
+- Reply to reply functionality
+- @ functionality
 
 ### Notes
 - structure of tables?
@@ -12,7 +17,3 @@
 - have to set to local state in order to update real time, once refresh page, all data will sync
 - urls with usernames and post questions instead of ids?
 - can view questions without logging in, but once try to post question, prompted to sign up/sign in?
-
-### Stretch  
-- reply to reply functionality
-- @ functionality
