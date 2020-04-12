@@ -1,5 +1,5 @@
 const express = require('express');
-const PostLike = require('../models/postLikes');
+const PostLike = require('../models/postLike');
 
 const app = express.Router();
 

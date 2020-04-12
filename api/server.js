@@ -6,9 +6,9 @@ const passportSetup = require('../config/passport-setup');
 const session = require('express-session');
 const knexSessionStore = require('connect-session-knex')(session);
 const config = require('../data/config');
-const authRouter = require('../auth/auth-router');
+const authRouter = require('../routes/auth');
 const postRouter = require('../posts/post-router');
-const postLikeRouter = require('../post-likes/like-router');
+const postLikeRouter = require('../routes/postLike');
 
 const app = express();
 
