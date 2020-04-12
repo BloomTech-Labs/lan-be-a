@@ -1,5 +1,4 @@
 const express = require('express');
-const User = require('../auth/auth-model');
 const Post = require('./post-model');
 const Comment = require('../models/comment');
 
