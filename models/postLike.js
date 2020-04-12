@@ -1,4 +1,4 @@
-const database = require('../data/config');
+const database = require('../database/dbConfig');
 
 const add = (userID, postID) => {
     return database('liked_posts').insert({ user_id: userID, post_id: postID });

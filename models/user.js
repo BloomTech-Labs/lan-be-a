@@ -1,4 +1,4 @@
-const database = require('../data/config');
+const database = require('../database/dbConfig');
 
 const add = user => {
     return database('users').insert(user).returning('*');

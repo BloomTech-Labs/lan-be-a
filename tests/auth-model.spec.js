@@ -1,5 +1,5 @@
 const User = require('./authModel');
-const database = require('../data/config');
+const database = require('../database/dbConfig');
 
 describe('test environment', () => {
     test('using the test environment', () => {
