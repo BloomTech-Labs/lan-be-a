@@ -9,7 +9,7 @@ module.exports = {
 			password: process.env.PASSWORD
 		},
 		migrations: {
-			directory: './data/migrations'
+			directory: './database/migrations'
 		}
 	},
 
@@ -21,7 +21,7 @@ module.exports = {
 			password: process.env.PASSWORD
 		},
 		migrations: {
-			directory: './data/migrations'
+			directory: './database/migrations'
 		}
 	}
 };
