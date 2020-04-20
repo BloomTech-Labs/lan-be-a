@@ -65,7 +65,7 @@ exports.up = (knex, Promise) => {
 				.onDelete('CASCADE');
 			table.text('comment')
 				.notNullable();
-			table.integer('thumbs_up')
+			table.integer('likes')
 				.defaultTo(0);
 			table.timestamps(true, true);
 		})

@@ -16,7 +16,7 @@ const fetch = postID => {
         'users.track',
         'comments.post_id',
         'comments.comment',
-        'comments.thumbs_up',
+        'comments.likes',
         'comments.created_at',
         'comments.updated_at'
     ]);
