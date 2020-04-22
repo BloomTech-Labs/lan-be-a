@@ -101,10 +101,27 @@ exports.up = (knex, Promise) => {
 				.onUpdate('CASCADE')
 				.onDelete('CASCADE');
 		})
+		.createTable('saved_posts', table => {
+			table.integer('user_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('users')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+			table.integer('post_id')
+				.notNullable()
+				.unsigned()
+				.references('id')
+				.inTable('posts')
+				.onUpdate('CASCADE')
+				.onDelete('CASCADE');
+		});
 };
 
 exports.down = (knex, Promise) => {
 	return knex.schema
+		.dropTableIfExists('saved_posts')
 		.dropTableIfExists('liked_comments')
 		.dropTableIfExists('liked_posts')
 		.dropTableIfExists('comments')
