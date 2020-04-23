@@ -11,6 +11,7 @@ const postRouter = require('./routes/post');
 const postLikeRouter = require('./routes/postLike');
 const commentRouter = require('./routes/comment');
 const commentLikeRouter = require('./routes/commentLike');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/api/post/like', postLikeRouter);
 app.use('/api/post', postRouter);
 app.use('/api/comment/like', commentLikeRouter);
 app.use('/api/comment', commentRouter);
+app.use('/api/user', userRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
