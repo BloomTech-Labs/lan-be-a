@@ -20,4 +20,12 @@ app.get('/:id', (request, response) => {
         });
 });
 
+app.put('/', (request, response) => {
+    const { userID, displayName } = request.body;
+
+    User.updateDisplayName(userID, displayName)
+        .then(res => response.status(200).json({ message: 'Updated user\'s display name successfully' }))
+        .catch(err => response.status(500).json({ message: 'Error updating user\'s display name' }));
+});
+
 module.exports = app;

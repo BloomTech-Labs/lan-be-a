@@ -20,10 +20,15 @@ const fetchComments = userID => {
     return database('comments').where('user_id', userID);
 };
 
+const updateDisplayName = (id, display_name) => {
+    return database('users').where({ id }).update({ display_name });
+};
+
 module.exports = {
     add,
     find,
     update,
     fetchPosts,
-    fetchComments
+    fetchComments,
+    updateDisplayName
 };
