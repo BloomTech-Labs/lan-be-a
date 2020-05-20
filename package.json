@@ -32,7 +32,7 @@
 		"passport-facebook": "^3.0.0",
 		"passport-google-oauth20": "^2.0.0",
 		"passport-twitter": "^1.0.4",
-		"pg": "^7.17.1"
+		"pg": "^8.2.1"
 	},
 	"devDependencies": {
 		"cross-env": "^7.0.0",
