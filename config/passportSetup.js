@@ -69,8 +69,8 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new TwitterStrategy({
-        consumerKey: process.env.TWITTER_CONSUMER_KEY,
-        consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+        consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
+        consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
         callbackURL: 'http://localhost:5000/api/auth/twitter/redirect',
         includeEmail: true
     },
