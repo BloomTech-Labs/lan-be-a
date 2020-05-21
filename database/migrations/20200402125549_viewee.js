@@ -29,7 +29,7 @@ exports.up = (knex, Promise) => {
 				.inTable('users')
 				.onUpdate('CASCADE')
 				.onDelete('CASCADE');
-			table.string('question')
+			table.text('question')
 				.notNullable()
 				.index();
 			table.text('answer')
