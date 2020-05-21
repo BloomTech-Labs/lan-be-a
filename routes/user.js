@@ -3,7 +3,7 @@ const User = require('../models/user');
 
 const app = express.Router();
 
-// Fetch logged in user object
+// Fetch logged-in user's object
 app.get('/', (request, response) => {
 	response.status(200).json({
 		message: 'Successfully fetched user object',
@@ -24,17 +24,53 @@ app.get('/:id', (request, response) => {
 
     User.find({ id: userID })
         .then(user => {
+			// Model helper functions need to be seperate due to Knex's limitations
             User.fetchPosts(userID)
                 .then(posts => {
                     User.fetchComments(userID)
-                        .then(comments => response.status(200).json({ ...user, posts, comments }))
-                })
+						.then(comments => response.status(200).json({ ...user, posts, comments }))
+						.catch(e => {
+							console.log(e);
+							response.status(500).json({ message: 'Error fetching user\'s comments' });
+						});
+				})
+				.catch(err => {
+					console.log(err);
+					response.status(500).json({ message: 'Error fetching user\'s posts' });
+				});
         })
-        .catch(err => {
+        .catch(error => {
             console.log(err);
             response.status(500).json({ message: 'Error fetching user' });
         });
 });
+
+// These are similar, but the one above works for any user
+
+// Fetch user's liked posts
+app.get('/post/like', (request, response)  => {
+    const userID = request.user.id;
+
+    User.fetchUsersLikedPosts(userID)
+        .then(res => response.status(200).json(res))
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error fetching user\'s liked posts' })
+        });
+});
+
+// Fetch a user's liked comments
+app.get('/comment/like', (request, response) => {
+    const userID = request.user.id;
+
+    User.fetchUsersLikedComments(userID)
+        .then(res => response.status(200).json(res))
+        .catch(err => {
+            console.log(error);
+            response.status(500).json({ message: 'Error fetching user\'s liked comments' });
+        });
+});
+
 
 // Update user's display name
 app.put('/displayname', (request, response) => {

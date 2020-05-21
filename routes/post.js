@@ -4,49 +4,89 @@ const Comment = require('../models/comment');
 
 const app = express.Router();
 
-// create post
+// Create post
 app.post('/create', (request, response) => {
-    Post.create({
-        user_id: request.user.id,
-        question: request.body.question,
-        answer: request.body.answer,
-        track: request.body.track,
-        category: request.body.category
-    })
-        .then(res => response.status(200).json({message: 'post created successfully'}))
+    const userID = request.user.id;
+    const { question, answer, track, category } = request.body;
+    
+    Post.create({ user_id: userID, question, answer, track, category })
+        .then(res => response.status(200).json({ message: 'Post created successfully' }))
         .catch(err => {
             console.log(err);
-            response.status(500).json({message: 'error creating post'});
+            response.status(500).json({ message: 'Error creating post' });
         });
 });
 
-// fetch all posts
+// Fetch single post
+app.get('/:id', (request, response) => {
+    const postID = request.params.id;
+
+	Post.fetch(postID)
+		.then(post => {
+            Comment.fetch(postID)
+                .then(comments => response.status(200).json({ ...post, comments }))
+                .catch(e => {
+                    console.log(e);
+                    response.status(500).json({ message: 'Error fetching post\'s comments' });
+                });
+		})
+		.catch(err => {
+			console.log(err);
+			response.status(500).json({ message: 'Error fetching post' });
+		});
+});
+
+// Fetch all posts
+// This is where search and sort will occur
 app.post('/', (request, response) => {
-    const { search } = request.body;
+    const search = request.body.search;
     
     Post.fetchAll(search)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
-            response.status(500).json({message: 'error fetching posts'});
+            response.status(500).json({message: 'Error fetching posts'});
         });
 });
 
-// fetch post
-app.get('/:id', (request, response) => {
-	Post.fetch(request.params.id)
-		.then(post => {
-			Comment.fetch(request.params.id).then(comments =>
-				response.status(200).json({
-					...post,
-					comments: comments
-				})
-			);
-		})
-		.catch(err => {
-			console.log(err);
-			response.status(500).json({ message: 'error fetching post' });
-		});
+// Like post
+app.get('/like/:id', (request, response) => {
+    const userID = request.user.id;
+    const postID = request.params.id;
+
+    Post.incrementCommentCount(postID)
+        .then(res => {
+            Post.addPostLike(userID, postID)
+                .then(r => response.status(200).json({ message: 'Post liked successfully' }))
+                .catch(e => {
+                    console.log(e);
+                    response.status(500).json({ message: 'Error adding post like' });
+                });
+        })
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error incrementing post\'s comment count' });
+        });
+});
+
+// Unlike post
+app.delete('/like/:id', (request, response) => {
+    const userID = request.user.id;
+    const postID = request.params.id;
+
+    Post.decrementCommentCount(postID)
+        .then(res => {
+            Post.removePostLike(userID, postID)
+                .then(r => response.status(200).json({ message: 'Post unliked successfully' }))
+                .catch(e => {
+                    console.log(e);
+                    response.status(500).json({ message: 'Error removing post like' });
+                });
+        })
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error decrementing post\'s comment count' });
+        });
 });
 
 module.exports = app;

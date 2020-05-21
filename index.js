@@ -7,11 +7,9 @@ const session = require('express-session');
 const knexSessionStore = require('connect-session-knex')(session);
 const config = require('./database/dbConfig');
 const authRouter = require('./routes/auth');
-const postRouter = require('./routes/post');
-const postLikeRouter = require('./routes/postLike');
-const commentRouter = require('./routes/comment');
-const commentLikeRouter = require('./routes/commentLike');
 const userRouter = require('./routes/user');
+const postRouter = require('./routes/post');
+const commentRouter = require('./routes/comment');
 
 const app = express();
 
@@ -33,7 +31,7 @@ app.use(
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
             secure: false
-            // set to true once in production
+            // Set to true once in production
         },
         store: new knexSessionStore({
             knex: config
@@ -44,11 +42,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/auth', authRouter);
-app.use('/api/post/like', postLikeRouter);
-app.use('/api/post', postRouter);
-app.use('/api/comment/like', commentLikeRouter);
-app.use('/api/comment', commentRouter);
 app.use('/api/user', userRouter);
+app.use('/api/post', postRouter);
+app.use('/api/comment', commentRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
