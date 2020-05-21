@@ -52,15 +52,6 @@ const fetch = postID => {
 		.first();
 };
 
-// Former post like model helper functions
-const incrementCommentCount = postID => {
-    return database('posts').where('id', postID).increment('comments', 1);
-};
-
-const decrementCommentCount = postID => {
-    return database('posts').where('id', postID).decrement('comments', 1);
-};
-
 // Add entry for post like
 const addPostLike = (userID, postID) => {
     return database('liked_posts').insert({ user_id: userID, post_id: postID });
@@ -71,13 +62,21 @@ const removePostLike = (userID, postID) => {
     return database('liked_posts').where({ user_id: userID, post_id: postID }).del();
 };
 
+const incrementCommentCount = postID => {
+    return database('posts').where('id', postID).increment('comments', 1);
+};
+
+const decrementCommentCount = postID => {
+    return database('posts').where('id', postID).decrement('comments', 1);
+};
+
 module.exports = {
     create,
     fetchAll,
 	fetch,
 	
-	incrementCommentCount,
-	decrementCommentCount,
 	addPostLike,
-	removePostLike
+	removePostLike,
+	incrementCommentCount,
+	decrementCommentCount
 };

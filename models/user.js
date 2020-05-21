@@ -8,20 +8,20 @@ const find = filter => {
     return database('users').where(filter).first();
 };
 
-const update = (id, track) => {
-    return database('users').where({ id }).update({ track }).returning('*');
+const update = (id, value) => {
+    return database('users').where('id', id).update(value).returning('*');
 };
 
+// Fetch all of a single user's posts
 const fetchPosts = userID => {
     return database('posts').where('user_id', userID);
 };
 
+// Can we mix these two? Should we?
+
+// Fetch all of a single user's comments
 const fetchComments = userID => {
     return database('comments').where('user_id', userID);
-};
-
-const updateDisplayName = (id, display_name) => {
-    return database('users').where({ id }).update({ display_name });
 };
 
 // Fetch user's liked posts
@@ -40,7 +40,6 @@ module.exports = {
     update,
     fetchPosts,
     fetchComments,
-    updateDisplayName,
     fetchUsersLikedPosts,
     fetchUsersLikedComments
 };
