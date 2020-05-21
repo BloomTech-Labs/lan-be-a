@@ -24,11 +24,23 @@ const updateDisplayName = (id, display_name) => {
     return database('users').where({ id }).update({ display_name });
 };
 
+// Fetch user's liked posts
+const fetchUsersLikedPosts = userID => {
+    return database('liked_posts').where('user_id', userID);
+};
+
+// Fetch user's liked comments
+const fetchUsersLikedComments = userID => {
+    return database('liked_comments').where('user_id', userID);
+};
+
 module.exports = {
     add,
     find,
     update,
     fetchPosts,
     fetchComments,
-    updateDisplayName
+    updateDisplayName,
+    fetchUsersLikedPosts,
+    fetchUsersLikedComments
 };

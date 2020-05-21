@@ -6,6 +6,7 @@ const add = (userID, postID, comment) => {
 };
 
 // Fetch post comments
+// Should this be in post model?
 const fetch = postID => {
     return database('comments')
     .join('users', 'comments.user_id', 'users.id')
@@ -29,10 +30,6 @@ const addCommentLike = (userID, commentID) => {
     return database('liked_comments').insert({ user_id: userID, comment_id: commentID });
 };
 
-const fetchUsersLikedComments = userID => {
-    return database('liked_comments').where('user_id', userID);
-};
-
 const incrementCommentLikes = commentID => {
     return database('comments').where('id', commentID).increment('likes', 1);
 };
@@ -48,10 +45,8 @@ const removeCommentLike = (userID, commentID) => {
 module.exports = {
     add,
     fetch,
-    increment,
 
     addCommentLike,
-    fetchUsersLikedComments,
     incrementCommentLikes,
     decrementCommentLikes,
     removeCommentLike

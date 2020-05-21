@@ -1,14 +1,14 @@
 const express = require('express');
+const User = require('../models/user');
 const Post = require('../models/post');
 
 const app = express.Router();
 
 // Fetch user's liked posts
-// Should this be in user model?
 app.get('/', (request, response)  => {
     const userID = request.user.id;
 
-    Post.fetchUsersLikedPosts(userID)
+    User.fetchUsersLikedPosts(userID)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);

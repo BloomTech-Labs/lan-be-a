@@ -1,4 +1,5 @@
 const express = require('express');
+const User = require('../models/user');
 const Comment = require('../models/comment');
 
 const app = express.Router();
@@ -7,7 +8,7 @@ const app = express.Router();
 app.get('/', (request, response) => {
     const userID = request.user.id;
 
-    Comment.fetchUsersLikedComments(userID)
+    User.fetchUsersLikedComments(userID)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(error);

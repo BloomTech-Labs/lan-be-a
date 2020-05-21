@@ -1,9 +1,11 @@
 const database = require('../database/dbConfig');
 
+// Create post
 const create = post => {
     return database('posts').insert(post);
 };
 
+// Fetch all posts
 const fetchAll = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
@@ -28,6 +30,7 @@ const fetchAll = search => {
 		]);
 };
 
+// Fetch individual post
 const fetch = postID => {
     return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
@@ -63,12 +66,6 @@ const addPostLike = (userID, postID) => {
     return database('liked_posts').insert({ user_id: userID, post_id: postID });
 };
 
-// Fetch user's liked posts
-// Should this be in the user model?
-const fetchUsersLikedPosts = userID => {
-    return database('liked_posts').where({ user_id: userID });
-};
-
 // Remove entry for post like
 const removePostLike = (userID, postID) => {
     return database('liked_posts').where({ user_id: userID, post_id: postID }).del();
@@ -82,6 +79,5 @@ module.exports = {
 	incrementCommentCount,
 	decrementCommentCount,
 	addPostLike,
-	fetchUsersLikedPosts,
 	removePostLike
 };

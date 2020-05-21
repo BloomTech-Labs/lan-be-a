@@ -3,6 +3,7 @@ const User = require('../models/user');
 
 const app = express.Router();
 
+// Fetch all of user's posts and comments
 app.get('/:id', (request, response) => {
     const userID = request.params.id;
 
@@ -20,6 +21,7 @@ app.get('/:id', (request, response) => {
         });
 });
 
+// Update display name
 app.put('/', (request, response) => {
     const { userID, displayName } = request.body;
 
