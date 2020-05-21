@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 const app = express.Router();
 
-// google
+// Google
 app.get('/google', passport.authenticate('google', {
 	scope: ['profile', 'email'],
 	prompt: 'select_account'
@@ -18,7 +18,7 @@ app.get('/google/redirect', passport.authenticate('google', {
 	}
 );
 
-// facebook
+// Facebook
 app.get('/facebook', passport.authenticate('facebook', {
 	scope: ['email']
 }));
@@ -31,7 +31,7 @@ app.get('/facebook/redirect', passport.authenticate('facebook', {
 	}
 );
 
-//twitter
+// Twitter
 app.get('/twitter', passport.authenticate('twitter'));
 
 app.get('/twitter/redirect', passport.authenticate('twitter', {
@@ -42,7 +42,7 @@ app.get('/twitter/redirect', passport.authenticate('twitter', {
 	}
 );
 
-// common
+// Common
 app.get('/logout', (request, response) => {
 	request.logout();
 
@@ -59,7 +59,7 @@ app.get('/logout', (request, response) => {
 	};
 });
 
-// users
+// User
 app.get('/user', (request, response) => {
 	response.status(200).json({
 		message: 'Successfully fetched user object',

@@ -52,4 +52,4 @@ app.use('/api/user', userRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
-app.listen(5000,() => console.log('server listening on port 5000'));
+app.listen(5000, () => console.log('server listening on port 5000'));

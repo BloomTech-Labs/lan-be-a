@@ -1,9 +1,11 @@
 const database = require('../database/dbConfig');
 
+// Add comment
 const add = (userID, postID, comment) => {
     return database('comments').insert({ user_id: userID, post_id: postID, comment: comment }).returning('*');
 };
 
+// Fetch post comments
 const fetch = postID => {
     return database('comments')
     .join('users', 'comments.user_id', 'users.id')
@@ -22,12 +24,35 @@ const fetch = postID => {
     ]);
 };
 
-const increment = postID => {
-    return database('posts').where('id', postID).increment('comments', 1);
+// Former comment like helper functions
+const addCommentLike = (userID, commentID) => {
+    return database('liked_comments').insert({ user_id: userID, comment_id: commentID });
+};
+
+const fetchUsersLikedComments = userID => {
+    return database('liked_comments').where('user_id', userID);
+};
+
+const incrementCommentLikes = commentID => {
+    return database('comments').where('id', commentID).increment('likes', 1);
+};
+
+const decrementCommentLikes = commentID => {
+    return database('comments').where('id', commentID).decrement('likes', 1);
+};
+
+const removeCommentLike = (userID, commentID) => {
+    return database('liked_comments').where({ user_id: userID, comment_id: commentID }).del();
 };
 
 module.exports = {
-    fetch,
     add,
-    increment
+    fetch,
+    increment,
+
+    addCommentLike,
+    fetchUsersLikedComments,
+    incrementCommentLikes,
+    decrementCommentLikes,
+    removeCommentLike
 };

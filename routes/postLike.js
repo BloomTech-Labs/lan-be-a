@@ -1,12 +1,14 @@
 const express = require('express');
-const PostLike = require('../models/postLike');
+const Post = require('../models/post');
 
 const app = express.Router();
 
+// Fetch user's liked posts
+// Should this be in user model?
 app.get('/', (request, response)  => {
     const userID = request.user.id;
 
-    PostLike.fetch(userID)
+    Post.fetchUsersLikedPosts(userID)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
@@ -14,41 +16,43 @@ app.get('/', (request, response)  => {
         });
 });
 
-// Like
+// Like post
 app.get('/:id', (request, response) => {
     const userID = request.user.id;
     const postID = request.params.id;
 
-    PostLike.find(postID)
-        .then(likes => {
-            PostLike.update(postID, likes.likes + 1)
-                .then(res => {
-                    PostLike.add(userID, postID)
-                        .then(r => response.status(200).json({ message: 'Post liked successfully' }))
-                })
+    Post.incrementCommentCount(postID)
+        .then(res => {
+            Post.addPostLike(userID, postID)
+                .then(r => response.status(200).json({ message: 'Post liked successfully' }))
+                .catch(e => {
+                    console.log(e);
+                    response.status(500).json({ message: 'Error adding post like' });
+                });
         })
-        .catch(error => {
-            console.log(error);
-            response.status(500).json({ message: 'Error liking post' });
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error incrementing post\'s comment count' });
         });
 });
 
-// Unlike
+// Unlike post
 app.delete('/:id', (request, response) => {
     const userID = request.user.id;
     const postID = request.params.id;
 
-    PostLike.find(postID)
-        .then(likes => {
-            PostLike.update(postID, likes.likes - 1)
-                .then(res => {
-                    PostLike.remove(userID, postID)
-                        .then(r => response.status(200).json({ message: 'Post unliked successfully' }))
-                })
+    Post.decrementCommentCount(postID)
+        .then(res => {
+            Post.removePostLike(userID, postID)
+                .then(r => response.status(200).json({ message: 'Post unliked successfully' }))
+                .catch(e => {
+                    console.log(e);
+                    response.status(500).json({ message: 'Error removing post like' });
+                });
         })
-        .catch(error => {
-            console.log(error);
-            response.status(500).json({ message: 'Error liking post' });
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({ message: 'Error decrementing post\'s comment count' });
         });
 });
 
