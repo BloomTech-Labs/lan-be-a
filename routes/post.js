@@ -54,7 +54,7 @@ app.get('/like/:id', (request, response) => {
     const userID = request.user.id;
     const postID = request.params.id;
 
-    Post.incrementCommentCount(postID)
+    Post.incrementPostLikes(postID)
         .then(res => {
             Post.addPostLike(userID, postID)
                 .then(r => response.status(200).json({ message: 'Post liked successfully' }))
@@ -74,7 +74,7 @@ app.delete('/like/:id', (request, response) => {
     const userID = request.user.id;
     const postID = request.params.id;
 
-    Post.decrementCommentCount(postID)
+    Post.decrementPostLikes(postID)
         .then(res => {
             Post.removePostLike(userID, postID)
                 .then(r => response.status(200).json({ message: 'Post unliked successfully' }))

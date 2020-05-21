@@ -58,6 +58,14 @@ const fetchAll = search => {
 		]);
 };
 
+const incrementPostLikes = postID => {
+	return database('posts').where('id', postID).increment('likes', 1);
+};
+
+const decrementPostLikes = postID => {
+	return database('posts').where('id', postID).decrement('likes', 1);
+};
+
 const incrementCommentCount = postID => {
     return database('posts').where('id', postID).increment('comments', 1);
 };
@@ -75,7 +83,9 @@ module.exports = {
     create,
 	addPostLike,
 	fetch,
-    fetchAll,
+	fetchAll,
+	incrementPostLikes,
+	decrementPostLikes,
 	incrementCommentCount,
 	decrementCommentCount,
 	removePostLike,
