@@ -5,12 +5,17 @@ const add = (userID, postID, comment) => {
     return database('comments').insert({ user_id: userID, post_id: postID, comment: comment }).returning('*');
 };
 
+const addCommentLike = (userID, commentID) => {
+    return database('liked_comments').insert({ user_id: userID, comment_id: commentID });
+};
+
 // Fetch post comments
-// Should this be in post model?
+// Should this be in post model? Maybe not because the URI will end in /comment.
 const fetch = postID => {
     return database('comments')
     .join('users', 'comments.user_id', 'users.id')
     .where('post_id', postID)
+    // Check what else is available here
     .select([
         'comments.id',
         'comments.user_id',
@@ -23,11 +28,6 @@ const fetch = postID => {
         'comments.created_at',
         'comments.updated_at'
     ]);
-};
-
-// Former comment like helper functions
-const addCommentLike = (userID, commentID) => {
-    return database('liked_comments').insert({ user_id: userID, comment_id: commentID });
 };
 
 const incrementCommentLikes = commentID => {
@@ -44,9 +44,8 @@ const removeCommentLike = (userID, commentID) => {
 
 module.exports = {
     add,
-    fetch,
-
     addCommentLike,
+    fetch,
     incrementCommentLikes,
     decrementCommentLikes,
     removeCommentLike

@@ -5,29 +5,9 @@ const create = post => {
     return database('posts').insert(post);
 };
 
-// Fetch all posts
-const fetchAll = search => {
-	return database('posts')
-		.join('users', 'posts.user_id', 'users.id')
-		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
-		// .where('posts.track', 'like', `%${track}%`)
-		// .where('posts.category', 'like', `%${category}%`)
-		// .orderBy('posts.created_at', 'desc')
-		// .orderBy('post.likes')
-		.select([
-			'posts.id',
-			'users.id as user_id',
-			'users.profile_picture',
-			'users.display_name',
-			'posts.track',
-			'posts.category',
-			'posts.question',
-			'posts.answer',
-			'posts.likes',
-			'posts.comments',
-			'posts.created_at',
-			'posts.updated_at'
-		]);
+// Add entry for post like
+const addPostLike = (userID, postID) => {
+    return database('liked_posts').insert({ user_id: userID, post_id: postID });
 };
 
 // Fetch individual post
@@ -52,14 +32,30 @@ const fetch = postID => {
 		.first();
 };
 
-// Add entry for post like
-const addPostLike = (userID, postID) => {
-    return database('liked_posts').insert({ user_id: userID, post_id: postID });
-};
-
-// Remove entry for post like
-const removePostLike = (userID, postID) => {
-    return database('liked_posts').where({ user_id: userID, post_id: postID }).del();
+// Fetch all posts
+// This is where search and sorting will occur
+const fetchAll = search => {
+	return database('posts')
+		.join('users', 'posts.user_id', 'users.id')
+		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
+		// .where('posts.track', 'like', `%${track}%`)
+		// .where('posts.category', 'like', `%${category}%`)
+		// .orderBy('posts.created_at', 'desc')
+		// .orderBy('post.likes')
+		.select([
+			'posts.id',
+			'users.id as user_id',
+			'users.profile_picture',
+			'users.display_name',
+			'posts.track',
+			'posts.category',
+			'posts.question',
+			'posts.answer',
+			'posts.likes',
+			'posts.comments',
+			'posts.created_at',
+			'posts.updated_at'
+		]);
 };
 
 const incrementCommentCount = postID => {
@@ -70,13 +66,17 @@ const decrementCommentCount = postID => {
     return database('posts').where('id', postID).decrement('comments', 1);
 };
 
+// Remove entry for post like
+const removePostLike = (userID, postID) => {
+    return database('liked_posts').where({ user_id: userID, post_id: postID }).del();
+};
+
 module.exports = {
     create,
-    fetchAll,
-	fetch,
-	
 	addPostLike,
-	removePostLike,
+	fetch,
+    fetchAll,
 	incrementCommentCount,
-	decrementCommentCount
+	decrementCommentCount,
+	removePostLike,
 };

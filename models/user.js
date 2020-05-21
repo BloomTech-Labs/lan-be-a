@@ -8,10 +8,6 @@ const find = filter => {
     return database('users').where(filter).first();
 };
 
-const update = (id, value) => {
-    return database('users').where('id', id).update(value).returning('*');
-};
-
 // Fetch all of a single user's posts
 const fetchPosts = userID => {
     return database('posts').where('user_id', userID);
@@ -34,12 +30,16 @@ const fetchUsersLikedComments = userID => {
     return database('liked_comments').where('user_id', userID);
 };
 
+const update = (id, value) => {
+    return database('users').where('id', id).update(value).returning('*');
+};
+
 module.exports = {
     add,
     find,
-    update,
     fetchPosts,
     fetchComments,
     fetchUsersLikedPosts,
-    fetchUsersLikedComments
+    fetchUsersLikedComments,
+    update
 };
