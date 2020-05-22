@@ -14,6 +14,7 @@ const commentRouter = require('./routes/comment');
 const app = express();
 
 const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(helmet());
@@ -50,4 +51,4 @@ app.use('/api/comment', commentRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
-app.listen(5000, () => console.log('server listening on port 5000'));
+app.listen(PORT, () => console.log('server listening on port 5000'));
