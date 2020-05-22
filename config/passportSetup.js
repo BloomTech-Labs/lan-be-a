@@ -4,6 +4,8 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/user');
 
+const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -18,7 +20,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://localhost:5000/api/auth/google/redirect'
+        callbackURL: `${FRONTEND_URL}/api/auth/google/redirect`
     }, (accessToken, refreshToken, profile, done) => {
         const user = {
             google_id: profile.id,
@@ -44,7 +46,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
         clientID: process.env.FACEBOOK_APP_ID,
         clientSecret: process.env.FACEBOOK_APP_SECRET,
-        callbackURL: 'http://localhost:5000/api/auth/facebook/redirect',
+        callbackURL: `${FRONTEND_URL}/api/auth/facebook/redirect`,
         profileFields: ['id', 'displayName', 'photos', 'email']
     }, (accessToken, refreshToken, profile, done) => {
         const user = {
@@ -71,7 +73,7 @@ passport.use(new FacebookStrategy({
 passport.use(new TwitterStrategy({
         consumerKey: process.env.TWITTER_CONSUMER_API_KEY,
         consumerSecret: process.env.TWITTER_CONSUMER_API_SECRET_KEY,
-        callbackURL: 'http://localhost:5000/api/auth/twitter/redirect',
+        callbackURL: `${FRONTEND_URL}/api/auth/twitter/redirect`,
         includeEmail: true
     },
     (token, tokenSecret, profile, done) => {
