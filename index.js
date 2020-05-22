@@ -13,12 +13,14 @@ const commentRouter = require('./routes/comment');
 
 const app = express();
 
+const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+
 app.use(express.json());
 app.use(helmet());
 app.use(
     cors({
         credentials: true,
-        origin: 'http://localhost:3000'
+        origin: FRONTEND_URL
     })
 );
 app.use(

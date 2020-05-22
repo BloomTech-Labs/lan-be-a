@@ -3,6 +3,8 @@ const passport = require('passport');
 
 const app = express.Router();
 
+const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+
 // Google
 app.get('/google', passport.authenticate('google', {
 	scope: ['profile', 'email'],
@@ -10,10 +12,10 @@ app.get('/google', passport.authenticate('google', {
 }));
 
 app.get('/google/redirect', passport.authenticate('google', {
-		failureRedirect: 'http://localhost:3000/error'
+		failureRedirect: `${FRONTEND_URL}/error`
 	}),
 	(request, response) => {
-		response.redirect('http://localhost:3000/success');
+		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
 
@@ -23,10 +25,10 @@ app.get('/facebook', passport.authenticate('facebook', {
 }));
 
 app.get('/facebook/redirect', passport.authenticate('facebook', {
-		failureRedirect: 'http://localhost:3000/error'
+		failureRedirect: `${FRONTEND_URL}/error`
 	}),
 	(request, response) => {
-		response.redirect('http://localhost:3000/success');
+		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
 
@@ -34,10 +36,10 @@ app.get('/facebook/redirect', passport.authenticate('facebook', {
 app.get('/twitter', passport.authenticate('twitter'));
 
 app.get('/twitter/redirect', passport.authenticate('twitter', {
-		failureRedirect: 'http://localhost:3000/error'
+		failureRedirect: `${FRONTEND_URL}/error`
 	}),
 	(request, response) => {
-		response.redirect('http://localhost:3000/success');
+		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
 
