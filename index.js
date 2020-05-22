@@ -51,4 +51,4 @@ app.use('/api/comment', commentRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
-app.listen(PORT, () => console.log('server listening on port 5000'));
+app.listen(PORT, () => console.log(`server listening on port ${PORT}`));
