@@ -3,18 +3,21 @@ exports.up = (knex, Promise) => {
 		.createTable('users', table => {
             table.increments();
             table.string('google_id')
-                .unique();
-            table.string('facebook_id')
-                .unique();
-            table.string('twitter_id')
-                .unique();
+				.unique();
+			// Refer to passportSetup.js as to why these are commented out.
+            // table.string('facebook_id')
+            //     .unique();
+            // table.string('twitter_id')
+            //     .unique();
 			table.string('email')
 				.notNullable()
 				.unique();
 			table.string('display_name')
 				.index();
 			table.string('profile_picture');
-			table.string('password');
+			// I believe the components are there in the frontend for manual sign-ups and sign-ins, but due to design decisions and security concerns,
+			// I don't think we will be doing them. Commenting out just in case.
+			// table.string('password');
 			table.string('track');
 			table.integer('likes')
 				.defaultTo(0);
@@ -40,7 +43,7 @@ exports.up = (knex, Promise) => {
 			table.integer('comments')
 				.defaultTo(0);
 			table.string('track')
-				.notNullable()
+				// .notNullable()
 				.index();
 			table.string('category')
 				.notNullable()

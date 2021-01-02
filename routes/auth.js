@@ -19,29 +19,30 @@ app.get('/google/redirect', passport.authenticate('google', {
 	}
 );
 
+// Refer to passportSetup.js as to why these are commented out.
 // Facebook
-app.get('/facebook', passport.authenticate('facebook', {
-	scope: ['email']
-}));
+// app.get('/facebook', passport.authenticate('facebook', {
+// 	scope: ['email']
+// }));
 
-app.get('/facebook/redirect', passport.authenticate('facebook', {
-		failureRedirect: `${FRONTEND_URL}/error`
-	}),
-	(request, response) => {
-		response.redirect(`${FRONTEND_URL}/success`);
-	}
-);
+// app.get('/facebook/redirect', passport.authenticate('facebook', {
+// 		failureRedirect: `${FRONTEND_URL}/error`
+// 	}),
+// 	(request, response) => {
+// 		response.redirect(`${FRONTEND_URL}/success`);
+// 	}
+// );
 
 // Twitter
-app.get('/twitter', passport.authenticate('twitter'));
+// app.get('/twitter', passport.authenticate('twitter'));
 
-app.get('/twitter/redirect', passport.authenticate('twitter', {
-		failureRedirect: `${FRONTEND_URL}/error`
-	}),
-	(request, response) => {
-		response.redirect(`${FRONTEND_URL}/success`);
-	}
-);
+// app.get('/twitter/redirect', passport.authenticate('twitter', {
+// 		failureRedirect: `${FRONTEND_URL}/error`
+// 	}),
+// 	(request, response) => {
+// 		response.redirect(`${FRONTEND_URL}/success`);
+// 	}
+// );
 
 // Common
 app.get('/logout', (request, response) => {
@@ -60,6 +61,6 @@ app.get('/logout', (request, response) => {
 	};
 });
 
-// Might implement manual registering later on
+// Might implement manual registering later on. Most likely not, but here is where they would go.
 
 module.exports = app;
