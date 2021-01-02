@@ -1,8 +1,8 @@
 # Lambda Alumni Network (LAN)
 
-The LAN is an app for Lambda School alumns where they can connect, grow in their careers, and complete find information on endorsment completion.
+The LAN is an app for Lambda School alums where they can connect, grow in their careers, and complete find information on endorsment completion.
 
-A Lambda School alumn is defined as a student who has completed all sprints or who has been hired.
+A Lambda School alum is defined as a student who has completed all sprints or who has been hired.
 
 [Trello Board](https://trello.com/b/NOH7uQ8q/lambda-alumni-network)
 [Design Files]()
@@ -34,7 +34,7 @@ LAN provides communication on important factors for alumni in endorsement and ou
 
 - Ability to login with Linkedin
 - Ability for students to choose program + cohort 
-- Endless comment scroll 
+- Infinite comment scroll 
 
 
 ## Backend Framework + Tech Stack
@@ -54,6 +54,7 @@ LAN provides communication on important factors for alumni in endorsement and ou
 ## Testing
 
 `Jest`
+`Supertest`
 
 ## Installation Instructions
 
