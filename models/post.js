@@ -37,10 +37,10 @@ const fetch = postID => {
 const fetchAll = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
+		// .whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
 		// .where('posts.track', 'like', `%${track}%`)
 		// .where('posts.category', 'like', `%${category}%`)
-		// .orderBy('posts.created_at', 'desc')
+		.orderBy('posts.created_at', 'desc')
 		// .orderBy('post.likes')
 		.select([
 			'posts.id',
