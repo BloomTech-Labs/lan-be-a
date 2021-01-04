@@ -34,7 +34,7 @@ const fetch = postID => {
 
 // Fetch all posts
 // This is where search and sorting will occur
-const fetchAll = search => {
+const fetchRecent = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
 		// .whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
@@ -83,7 +83,7 @@ module.exports = {
     create,
 	addPostLike,
 	fetch,
-	fetchAll,
+	fetchRecent,
 	incrementPostLikes,
 	decrementPostLikes,
 	incrementCommentCount,

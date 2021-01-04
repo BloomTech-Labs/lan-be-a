@@ -41,7 +41,7 @@ app.get('/:id', (request, response) => {
 app.post('/', (request, response) => {
     const search = request.body.search;
     
-    Post.fetchAll(search)
+    Post.fetchRecent(search)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
