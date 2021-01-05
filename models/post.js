@@ -34,14 +34,51 @@ const fetch = postID => {
 
 // Fetch all posts
 // This is where search and sorting will occur
-const fetchRecent = search => {
+const fetchRecent = () => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		// .whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
-		// .where('posts.track', 'like', `%${track}%`)
-		// .where('posts.category', 'like', `%${category}%`)
 		.orderBy('posts.created_at', 'desc')
-		// .orderBy('post.likes')
+		.select([
+			'posts.id',
+			'users.id as user_id',
+			'users.profile_picture',
+			'users.display_name',
+			'posts.track',
+			'posts.category',
+			'posts.question',
+			'posts.answer',
+			'posts.likes',
+			'posts.comments',
+			'posts.created_at',
+			'posts.updated_at'
+		]);
+};
+
+// Fetch all posts based on popularity
+const fetchPopular = () => {
+	return database('posts')
+		.join('users', 'posts.user_id', 'users.id')
+		.orderBy('post.likes')
+		.select([
+			'posts.id',
+			'users.id as user_id',
+			'users.profile_picture',
+			'users.display_name',
+			'posts.track',
+			'posts.category',
+			'posts.question',
+			'posts.answer',
+			'posts.likes',
+			'posts.comments',
+			'posts.created_at',
+			'posts.updated_at'
+		]);
+};
+
+const fetchSearch = () => {
+	return database('posts')
+		.join('users', 'posts.user_id', 'users.id')
+		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
 		.select([
 			'posts.id',
 			'users.id as user_id',
@@ -84,6 +121,8 @@ module.exports = {
 	addPostLike,
 	fetch,
 	fetchRecent,
+	fetchPopular,
+	fetchSearch,
 	incrementPostLikes,
 	decrementPostLikes,
 	incrementCommentCount,

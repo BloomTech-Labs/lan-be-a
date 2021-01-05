@@ -38,10 +38,33 @@ app.get('/:id', (request, response) => {
 
 // Fetch all posts
 // This is where search and sort will occur
-app.post('/', (request, response) => {
+app.get('/recent', (request, response) => {
+    
+    Post.fetchRecent()
+        .then(res => response.status(200).json(res))
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({message: 'Error fetching posts'});
+        });
+});
+
+// Fetch posts by popularity
+app.post('/popular', (request, response) => {
+    
+    Post.fetchPopular()
+        .then(res => response.status(200).json(res))
+        .catch(err => {
+            console.log(err);
+            response.status(500).json({message: 'Error fetching posts'});
+        });
+});
+
+
+// Searches
+app.post('/search', (request, response) => {
     const search = request.body.search;
     
-    Post.fetchRecent(search)
+    Post.fetchSearch(search)
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
