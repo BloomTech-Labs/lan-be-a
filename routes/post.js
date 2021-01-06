@@ -36,26 +36,23 @@ app.get('/:id', (request, response) => {
 		});
 });
 
-// Fetch all posts
-// This is where search and sort will occur
-app.get('/recent', (request, response) => {
-    
+// Fetch recent posts, not paginated yet
+app.post('/recent', (request, response) => {
     Post.fetchRecent()
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
-            response.status(500).json({message: 'Error fetching posts'});
+            response.status(500).json({message: 'Error fetching recent posts'});
         });
 });
 
 // Fetch posts by popularity
 app.post('/popular', (request, response) => {
-    
     Post.fetchPopular()
         .then(res => response.status(200).json(res))
         .catch(err => {
             console.log(err);
-            response.status(500).json({message: 'Error fetching posts'});
+            response.status(500).json({message: 'Error fetching popular posts'});
         });
 });
 

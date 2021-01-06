@@ -58,7 +58,7 @@ const fetchRecent = () => {
 const fetchPopular = () => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		.orderBy('post.likes')
+		.orderBy('posts.likes')
 		.select([
 			'posts.id',
 			'users.id as user_id',
