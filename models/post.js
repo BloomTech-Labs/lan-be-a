@@ -58,7 +58,7 @@ const fetchRecent = () => {
 const fetchPopular = () => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		.orderBy('posts.likes')
+		.orderBy('posts.likes', 'desc')
 		.select([
 			'posts.id',
 			'users.id as user_id',
@@ -75,7 +75,7 @@ const fetchPopular = () => {
 		]);
 };
 
-const fetchSearch = () => {
+const fetchSearch = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
 		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
