@@ -5,6 +5,18 @@ const app = express.Router();
 
 const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
 
+// LinkedIn
+app.get('/linkedin', passport.authenticate('linkedin'));
+
+app.get('/linkedin/redirect', passport.authenticate('linkedin', {
+		failureRedirect: `${FRONTEND_URL}/error`
+	}),
+  	(request, response) => {
+		// Successful authentication, redirect home.
+		response.redirect(`${FRONTEND_URL}/success`);
+	}
+);
+
 // Google
 app.get('/google', passport.authenticate('google', {
 	scope: ['profile', 'email'],
