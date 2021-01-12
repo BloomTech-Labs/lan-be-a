@@ -1,4 +1,5 @@
 const passport = require('passport');
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 // const FacebookStrategy = require('passport-facebook').Strategy;
 // const TwitterStrategy = require('passport-twitter').Strategy;
@@ -17,35 +18,89 @@ passport.deserializeUser((id, done) => {
         });
 });
 
+passport.use(new LinkedInStrategy({
+    clientID: process.env.LINKEDIN_CLIENT_ID,
+    clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+    callbackURL: `${BACKEND_URL}/api/auth/linkedin/redirect`,
+    scope: ['r_emailaddress', 'r_liteprofile'],
+  }, (accessToken, refreshToken, profile, done) => {
+        const user = {
+            id: profile.id,
+            email: profile.emails[0].value,
+            display_name: profile.displayName,
+            profile_picture: profile.photos[3].value
+        };
+
+        process.nextTick(() => {
+            User.find({ id: user.id })
+            .then(existingUser => {
+                if (existingUser) {
+                    return done(null, existingUser);
+                } else {
+                    User.add(user)
+                        .then(newUser => {
+                            return done(null, newUser[0]);
+                        });
+                };
+            })
+        });
+}));
+
+// passport.use(new LinkedInStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: `${BACKEND_URL}/api/auth/google/redirect`
+// }, (accessToken, refreshToken, profile, done) => {
+//     const user = {
+//         google_id: profile.id,
+//         email: profile.emails[0].value,
+//         display_name: profile.displayName,
+//         profile_picture: profile.photos[0].value
+//     };
+
+//     User.find({ email: user.email })
+//         .then(existingUser => {
+//             if (existingUser) {
+//                 done(null, existingUser);
+//             } else {
+//                 User.add(user)
+//                     .then(newUser => {
+//                         done(null, newUser[0]);
+//                     });
+//             };
+//         })
+// }
+// ));
+
 // Leaving Google as the only one for now as we wait to get approved for LinkedIn authentication
 // The reason we are going to be offering just LinkedIn authentication is because it fits well with the platform's intentions and brand,
 // and for data singularity. Currently, we have 3 different columns for the 3 different social media ID's which I believe introduces security concerns.
 // For example, a user being able to interchange the social media they sign in with if those social medias have the same email address.
-passport.use(new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${BACKEND_URL}/api/auth/google/redirect`
-    }, (accessToken, refreshToken, profile, done) => {
-        const user = {
-            google_id: profile.id,
-            email: profile.emails[0].value,
-            display_name: profile.displayName,
-            profile_picture: profile.photos[0].value
-        };
+// passport.use(new GoogleStrategy({
+//         clientID: process.env.GOOGLE_CLIENT_ID,
+//         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//         callbackURL: `${BACKEND_URL}/api/auth/google/redirect`
+//     }, (accessToken, refreshToken, profile, done) => {
+//         const user = {
+//             google_id: profile.id,
+//             email: profile.emails[0].value,
+//             display_name: profile.displayName,
+//             profile_picture: profile.photos[0].value
+//         };
 
-        User.find({ email: user.email })
-            .then(existingUser => {
-                if (existingUser) {
-                    done(null, existingUser);
-                } else {
-                    User.add(user)
-                        .then(newUser => {
-                            done(null, newUser[0]);
-                        });
-                };
-            })
-    }
-));
+//         User.find({ email: user.email })
+//             .then(existingUser => {
+//                 if (existingUser) {
+//                     done(null, existingUser);
+//                 } else {
+//                     User.add(user)
+//                         .then(newUser => {
+//                             done(null, newUser[0]);
+//                         });
+//                 };
+//             })
+//     }
+// ));
 
 // Removing these two strategies for reasons mentioned above. Commenting them out instead of removing them, just in case we need them in the future.
 // Environment variables needed are available or can be fetched.

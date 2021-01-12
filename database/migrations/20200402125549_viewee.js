@@ -1,9 +1,11 @@
 exports.up = (knex, Promise) => {
 	return knex.schema
 		.createTable('users', table => {
-            table.increments();
-            table.string('google_id')
+			// table.increments();
+			table.string('id')
 				.unique();
+            // table.string('google_id')
+			// 	.unique();
 			// Refer to passportSetup.js as to why these are commented out.
             // table.string('facebook_id')
             //     .unique();
@@ -25,7 +27,7 @@ exports.up = (knex, Promise) => {
 		})
 		.createTable('posts', table => {
 			table.increments();
-			table.integer('user_id')
+			table.string('user_id')
 				.notNullable()
 				.unsigned()
 				.references('id')
@@ -52,7 +54,7 @@ exports.up = (knex, Promise) => {
 		})
 		.createTable('comments', table => {
 			table.increments();
-			table.integer('user_id')
+			table.string('user_id')
 				.notNullable()
 				.unsigned()
 				.references('id')
@@ -73,7 +75,7 @@ exports.up = (knex, Promise) => {
 			table.timestamps(true, true);
 		})
 		.createTable('liked_posts', table => {
-			table.integer('user_id')
+			table.string('user_id')
 				.notNullable()
 				.unsigned()
 				.references('id')
@@ -89,7 +91,7 @@ exports.up = (knex, Promise) => {
 				.onDelete('CASCADE');
 		})
 		.createTable('liked_comments', table => {
-			table.integer('user_id')
+			table.string('user_id')
 				.notNullable()
 				.unsigned()
 				.references('id')
@@ -105,7 +107,7 @@ exports.up = (knex, Promise) => {
 				.onDelete('CASCADE');
 		})
 		.createTable('saved_posts', table => {
-			table.integer('user_id')
+			table.string('user_id')
 				.notNullable()
 				.unsigned()
 				.references('id')
