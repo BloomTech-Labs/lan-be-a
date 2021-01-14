@@ -15,6 +15,7 @@ const fetch = postID => {
     return database('comments')
     .join('users', 'comments.user_id', 'users.id')
     .where('post_id', postID)
+    .orderBy('comments.created_at', 'desc')
     // Check what else is available here
     // user.id or comments.user_id?
     .select([
