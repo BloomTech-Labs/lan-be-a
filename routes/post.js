@@ -23,7 +23,7 @@ app.get('/:id', (request, response) => {
 
 	Post.fetch(postID)
 		.then(post => {
-            Comment.fetch(postID)
+            Comment.fetchRecent(postID)
                 .then(comments => response.status(200).json({ ...post, comments }))
                 .catch(e => {
                     console.log(e);

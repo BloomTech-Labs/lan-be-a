@@ -11,7 +11,7 @@ const addCommentLike = (userID, commentID) => {
 
 // Fetch post comments
 // Should this be in post model? Maybe not because the URI will end in /comment anyway.
-const fetch = postID => {
+const fetchRecent = postID => {
     return database('comments')
     .join('users', 'comments.user_id', 'users.id')
     .where('post_id', postID)
@@ -47,7 +47,7 @@ const removeCommentLike = (userID, commentID) => {
 module.exports = {
     add,
     addCommentLike,
-    fetch,
+    fetchRecent,
     incrementCommentLikes,
     decrementCommentLikes,
     removeCommentLike
