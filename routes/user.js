@@ -95,7 +95,7 @@ app.put('/track', (request, response) => {
 	token = request.body.token;
 
 	if (track === 'Career Coach') {
-		if (token === process.env.VIEWEE_TOKEN) {
+		if (token === process.env.LAN_TOKEN) {
 			User.update(userID, { track })
 				.then(res => response.status(200).json({ message: 'Updated user\'s track successfully' }))
 				.catch(err => {
