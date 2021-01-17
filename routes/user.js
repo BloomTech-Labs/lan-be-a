@@ -5,20 +5,27 @@ const app = express.Router();
 
 // Fetch logged-in user's object
 app.get('/', (request, response) => {
+	console.log('REQUEST', request);
 	response.status(200).json({
 		message: 'Successfully fetched user object',
 		user: {
-			// Email and total likes gotten also available
-            id: request.user.id,
+			id: request.user.id,
+			email: request.user.email,
 			displayName: request.user.display_name,
 			profilePicture: request.user.profile_picture,
-            track: request.user.track
+			track: request.user.track,
+			likes: request.user.likes,
+			onboarded: request.user.onboarded,
+			created_at: request.user.created_at,
+			updated_at: request.user.updated_at,
         }
 	});
 });
 
 // Fetch all of a single user's posts and comments
 // Can model helper function be consolidated?
+// Good idea, I'll think about this
+// Might need help with these architectural decisions
 app.get('/:id', (request, response) => {
     const userID = request.params.id;
 
