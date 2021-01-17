@@ -8,7 +8,7 @@ An app that allows Lambda School alums to connect and grow in their profession b
 - [Design Files](https://projects.invisionapp.com/share/DRJBSR53VNS#/screens?browse)
 
 ### Tech Stack
-`Express.js`
+`Express`
 `PostgreSQL`
 
 ### Installation
@@ -28,10 +28,10 @@ Make sure you have [PostgreSQL](https://www.postgresql.org/) installed on your c
 7. Run the server with `npm run server`.
 
 ### Environment Variables
-- `SESSION_SECRET`
-- `DATABASE`
-- `USER`
-- `PASSWORD`
-- `LINKEDIN_CLIENT_ID`
-- `LINKEDIN_CLIENT_SECRET`
-- `VIEWEE_TOKEN`
+`SESSION_SECRET`
+`DATABASE`
+`USER`
+`PASSWORD`
+`LINKEDIN_CLIENT_ID`
+`LINKEDIN_CLIENT_SECRET`
+`VIEWEE_TOKEN`
