@@ -23,6 +23,8 @@ exports.up = (knex, Promise) => {
 			table.string('track');
 			table.integer('likes')
 				.defaultTo(0);
+			table.boolean('onboarded')
+				.defaultTo('false');
 			table.timestamps(true, true);
 		})
 		.createTable('posts', table => {
