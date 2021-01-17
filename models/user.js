@@ -34,6 +34,11 @@ const update = (id, value) => {
     return database('users').where('id', id).update(value).returning('*');
 };
 
+// Set a user's onboarded field to true
+const onboard = userID => {
+    return database('users').where('id', userID).update('onboarded', 'true').returning('*');
+};
+
 module.exports = {
     add,
     find,
@@ -41,5 +46,6 @@ module.exports = {
     fetchComments,
     fetchUsersLikedPosts,
     fetchUsersLikedComments,
-    update
+    update,
+    onboard
 };
