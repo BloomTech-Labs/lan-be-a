@@ -1,11 +1,11 @@
 const passport = require('passport');
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 // const FacebookStrategy = require('passport-facebook').Strategy;
 // const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/user');
 
-const BACKEND_URL = process.env.URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_DEPLOYED_URL || 'http://localhost:5000';
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
