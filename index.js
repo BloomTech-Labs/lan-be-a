@@ -13,7 +13,7 @@ const commentRouter = require('./routes/comment');
 
 const app = express();
 
-const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -52,4 +52,4 @@ app.use('/api/comment', commentRouter);
 
 app.get('/', (request, response) => response.send({ message: 'server working' }));
 
-app.listen(PORT, () => console.log(`server listening on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

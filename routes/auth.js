@@ -3,7 +3,7 @@ const passport = require('passport');
 
 const app = express.Router();
 
-const FRONTEND_URL = process.env.DEPLOYED_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
 
 // LinkedIn
 app.get('/linkedin', passport.authenticate('linkedin'));
