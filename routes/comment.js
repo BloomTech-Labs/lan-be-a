@@ -23,10 +23,40 @@ app.post('/', (request, response) => {
 
 // Update a comment on a post
 // Does timestamp update automatically?
+// ENDPOINT GOES HERE
 
 // Remove a comment from a post
+// ENDPOINT GOES HERE
+
+// Fetch a post's comments by recent
+app.get('/recent/:id', (request, response) => {
+    const postID = request.params.id;
+
+	Comment.fetchRecent(postID)
+        .then(comments => response.status(200).json(comments))
+        .catch(error => {
+            console.log(error);
+            response.status(500).json({ message: 'Error fetching post\'s comments by recent' });
+        });
+});
+
+// Fetch a post's comments by popular
+app.get('/popular/:id', (request, response) => {
+    const postID = request.params.id;
+
+	Comment.fetchPopular(postID)
+        .then(comments => response.status(200).json(comments))
+        .catch(error => {
+            console.log(error);
+            response.status(500).json({ message: 'Error fetching post\'s comments by popular' });
+        });
+});
+
+// Each of the two endpoints below do two things: update the like field on the comments table for a give comment ID
+// AND creates an entry in the liked_comments table given a user ID and comment ID
 
 // Like comment
+// We need this in order to keep track of what comments a user has liked
 app.get('/like/:id', (request, response) => {
     userID = request.user.id;
     commentID = Number(request.params.id);
@@ -47,6 +77,7 @@ app.get('/like/:id', (request, response) => {
 });
 
 // Unlike comment
+// There is no 'downvote' feature, only 'upvote', therefore this just undoes what the endpoint above does
 app.delete('/like/:id', (request, response) => {
     userID = request.user.id;
     commentID = Number(request.params.id);

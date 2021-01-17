@@ -9,7 +9,7 @@ const addCommentLike = (userID, commentID) => {
     return database('liked_comments').insert({ user_id: userID, comment_id: commentID });
 };
 
-// Fetch post comments
+// Fetch post comments by recent
 // Should this be in post model? Maybe not because the URI will end in /comment anyway.
 const fetchRecent = postID => {
     return database('comments')
@@ -17,7 +17,28 @@ const fetchRecent = postID => {
     .where('post_id', postID)
     .orderBy('comments.created_at', 'desc')
     // Check what else is available here
-    // user.id or comments.user_id?
+    // user.id or comments.user_id?, research Knex as keyword so that you can use user.id
+    .select([
+        'comments.id',
+        'comments.user_id',
+        'users.display_name',
+        'users.profile_picture',
+        'users.track',
+        'comments.post_id',
+        'comments.comment',
+        'comments.likes',
+        'comments.created_at',
+        'comments.updated_at'
+    ]);
+};
+
+const fetchPopular = postID => {
+    return database('comments')
+    .join('users', 'comments.user_id', 'users.id')
+    .where('post_id', postID)
+    .orderBy('comments.likes', 'desc')
+    // Check what else is available here
+    // user.id or comments.user_id?, research Knex as keyword so that you can use user.id
     .select([
         'comments.id',
         'comments.user_id',
@@ -48,6 +69,7 @@ module.exports = {
     add,
     addCommentLike,
     fetchRecent,
+    fetchPopular,
     incrementCommentLikes,
     decrementCommentLikes,
     removeCommentLike
