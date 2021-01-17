@@ -108,4 +108,16 @@ app.put('/track', (request, response) => {
 	};
 });
 
+// Set a user's onboarded field to true
+app.put('/onboard', (request, response) => {
+	userID = request.user.id;
+
+	User.onboard(userID)
+		.then(res => response.status(200).json({ message: 'Updated user\'s onboarded field successfully', user }))
+		.catch(err => {
+			console.log(err);
+			response.status(500).json({ message: 'Error updating user\'s onboarded field' });
+		});
+});
+
 module.exports = app;
