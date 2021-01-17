@@ -22,17 +22,10 @@ app.get('/:id', (request, response) => {
     const postID = request.params.id;
 
 	Post.fetch(postID)
-		.then(post => {
-            Comment.fetchRecent(postID)
-                .then(comments => response.status(200).json({ ...post, comments }))
-                .catch(e => {
-                    console.log(e);
-                    response.status(500).json({ message: 'Error fetching post\'s comments' });
-                });
-		})
-		.catch(err => {
-			console.log(err);
-			response.status(500).json({ message: 'Error fetching post' });
+		.then(post => response.status(200).json(post))
+		.catch(error => {
+			console.log(error);
+			response.status(500).json({ message: 'Error fetching individual post' });
 		});
 });
 
