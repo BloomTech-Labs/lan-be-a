@@ -34,4 +34,4 @@ Make sure you have [PostgreSQL](https://www.postgresql.org/) installed on your c
 `PASSWORD`
 `LINKEDIN_CLIENT_ID`
 `LINKEDIN_CLIENT_SECRET`
-`VIEWEE_TOKEN`
+`LAN_TOKEN`
