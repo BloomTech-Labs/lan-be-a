@@ -50,6 +50,6 @@ app.use('/api/user', userRouter);
 app.use('/api/post', postRouter);
 app.use('/api/comment', commentRouter);
 
-app.get('/', (request, response) => response.send({ message: 'server working' }));
+app.get('/', (request, response) => response.send({ message: 'Server working' }));
 
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
