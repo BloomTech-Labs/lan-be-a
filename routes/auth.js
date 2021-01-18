@@ -13,7 +13,7 @@ app.get('/linkedin/redirect', passport.authenticate('linkedin', {
 	}),
   	(request, response) => {
 		// Successful authentication, redirect home.
-		console.log('/linkedin/redirect hit');
+		console.log('/linkedin/redirect hit', request);
 		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
@@ -66,7 +66,7 @@ app.get('/logout', (request, response) => {
 			if (err) {
 				response.status(500).json({ message: 'Error destroying session' });
 			} else {
-				response.status(200).clearCookie('viewee').json({ message: 'Signed out successfully' });
+				response.status(200).clearCookie('LAN').json({ message: 'Signed out successfully' });
 			};
 		});
 	} else {
