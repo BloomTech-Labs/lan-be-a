@@ -13,7 +13,9 @@ app.get('/linkedin/redirect', passport.authenticate('linkedin', {
 	}),
   	(request, response) => {
 		// Successful authentication, redirect home.
-		console.log('/linkedin/redirect hit', request);
+		console.log('/linkedin/redirect has access to request.sessionID', request.sessionID);
+		console.log('/linkedin/redirect has access to request.session.passport', request.session.passport);
+		console.log('/linkedin/redirect has access to request.user', request.user);
 		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
