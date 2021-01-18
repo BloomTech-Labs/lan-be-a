@@ -32,7 +32,7 @@
 		"passport-google-oauth20": "^2.0.0",
 		"passport-linkedin-oauth2": "^2.0.0",
 		"passport-twitter": "^1.0.4",
-		"pg": "^8.2.1"
+		"pg": "^8.5.1"
 	},
 	"devDependencies": {
 		"minimist": ">=0.2.1",
