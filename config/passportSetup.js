@@ -12,6 +12,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
+    console.log('deserializeUser', id);
     User.find({ id: id })
         .then(user => {
             done(null, user);
@@ -23,6 +24,7 @@ passport.use(new LinkedInStrategy({
     clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
     callbackURL: `${BACKEND_URL}/api/auth/linkedin/redirect`,
     scope: ['r_emailaddress', 'r_liteprofile'],
+    state: true
   }, (accessToken, refreshToken, profile, done) => {
         const user = {
             id: profile.id,
