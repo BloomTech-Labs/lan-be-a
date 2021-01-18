@@ -18,18 +18,18 @@ app.get('/linkedin/redirect', passport.authenticate('linkedin', {
 );
 
 // Google
-app.get('/google', passport.authenticate('google', {
-	scope: ['profile', 'email'],
-	prompt: 'select_account'
-}));
+// app.get('/google', passport.authenticate('google', {
+// 	scope: ['profile', 'email'],
+// 	prompt: 'select_account'
+// }));
 
-app.get('/google/redirect', passport.authenticate('google', {
-		failureRedirect: `${FRONTEND_URL}/error`
-	}),
-	(request, response) => {
-		response.redirect(`${FRONTEND_URL}/success`);
-	}
-);
+// app.get('/google/redirect', passport.authenticate('google', {
+// 		failureRedirect: `${FRONTEND_URL}/error`
+// 	}),
+// 	(request, response) => {
+// 		response.redirect(`${FRONTEND_URL}/success`);
+// 	}
+// );
 
 // Refer to passportSetup.js as to why these are commented out.
 // Facebook
