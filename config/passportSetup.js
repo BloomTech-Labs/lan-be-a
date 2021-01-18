@@ -25,7 +25,6 @@ passport.use(new LinkedInStrategy({
     clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
     callbackURL: `${BACKEND_URL}/api/auth/linkedin/redirect`,
     scope: ['r_emailaddress', 'r_liteprofile'],
-    state: true
   }, (accessToken, refreshToken, profile, done) => {
         console.log('LinkedIn strategy hit', profile);
         const user = {
