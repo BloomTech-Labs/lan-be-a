@@ -26,17 +26,17 @@ app.use(
 );
 app.use(
     session({
-        name: 'LAN',
+        // name: 'LAN',
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
-        cookie: {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-            secure: true
-            // Set to true once in production
-            // Set to false in local development
-        },
+        // cookie: {
+        //     httpOnly: true,
+        //     maxAge: 1000 * 60 * 60 * 24 * 7,
+        //     secure: true
+        //     Set to true once in production
+        //     Set to false in local development
+        // },
         store: new knexSessionStore({
             knex: config
         })
