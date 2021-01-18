@@ -8,6 +8,7 @@ const User = require('../models/user');
 const BACKEND_URL = process.env.BACKEND_DEPLOYED_URL || 'http://localhost:5000';
 
 passport.serializeUser((user, done) => {
+    console.log('serializeUser', user);
     done(null, user.id);
 });
 
@@ -26,6 +27,7 @@ passport.use(new LinkedInStrategy({
     scope: ['r_emailaddress', 'r_liteprofile'],
     state: true
   }, (accessToken, refreshToken, profile, done) => {
+        console.log('LinkedIn strategy hit', profile);
         const user = {
             id: profile.id,
             email: profile.emails[0].value,
@@ -36,11 +38,13 @@ passport.use(new LinkedInStrategy({
         process.nextTick(() => {
             User.find({ id: user.id })
             .then(existingUser => {
+                console.log('existingUser', existingUser);
                 if (existingUser) {
                     return done(null, existingUser);
                 } else {
                     User.add(user)
                         .then(newUser => {
+                            console.log('newUser', newUser)
                             return done(null, newUser[0]);
                         });
                 };

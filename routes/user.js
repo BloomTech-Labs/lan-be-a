@@ -5,6 +5,7 @@ const app = express.Router();
 
 // Fetch logged-in user's object
 app.get('/', (request, response) => {
+	console.log('/api/user enpoint hit', request);
 	response.status(200).json({
 		message: 'Successfully fetched user object',
 		user: {

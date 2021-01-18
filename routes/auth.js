@@ -13,6 +13,7 @@ app.get('/linkedin/redirect', passport.authenticate('linkedin', {
 	}),
   	(request, response) => {
 		// Successful authentication, redirect home.
+		console.log('/linkedin/redirect hit');
 		response.redirect(`${FRONTEND_URL}/success`);
 	}
 );
