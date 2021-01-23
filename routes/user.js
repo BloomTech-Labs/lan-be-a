@@ -5,7 +5,7 @@ const app = express.Router();
 
 // Fetch logged-in user's object
 app.get('/', (request, response) => {
-	console.log('/api/user endpoint hit', request.user);
+	console.log('/api/user does not have access to request.user?', request.user);
 	response.status(200).json({
 		message: 'Successfully fetched user object',
 		user: {
