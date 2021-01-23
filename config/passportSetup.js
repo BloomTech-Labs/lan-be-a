@@ -20,6 +20,11 @@ passport.deserializeUser((id, done) => {
         });
 });
 
+// passport.deserializeUser(async (id,done) => {
+//     const user = await User.findById(id)
+//     done(null, user)
+//  })
+
 passport.use(new LinkedInStrategy({
     clientID: process.env.LINKEDIN_CLIENT_ID,
     clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
@@ -34,8 +39,8 @@ passport.use(new LinkedInStrategy({
             profile_picture: profile.photos[3].value
         };
 
-        process.nextTick(() => {
-            User.find({ id: user.id })
+        // process.nextTick(() => {
+        User.find({ id: user.id })
             .then(existingUser => {
                 console.log('existingUser', existingUser);
                 if (existingUser) {
@@ -47,8 +52,8 @@ passport.use(new LinkedInStrategy({
                             return done(null, newUser[0]);
                         });
                 };
-            })
-        });
+            });
+        // });
 }));
 
 // passport.use(new LinkedInStrategy({

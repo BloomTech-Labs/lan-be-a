@@ -9,8 +9,7 @@ const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000
 app.get('/linkedin', passport.authenticate('linkedin'));
 
 app.get('/linkedin/redirect', passport.authenticate('linkedin', {
-		failureRedirect: `${FRONTEND_URL}/error`,
-		session: true
+		failureRedirect: `${FRONTEND_URL}/error`
 	}),
   	(request, response) => {
 		// Successful authentication, redirect home.
