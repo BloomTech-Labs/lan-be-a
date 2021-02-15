@@ -20,10 +20,8 @@ const fetch = postID => {
 			'users.id as user_id',
 			'users.profile_picture',
 			'users.display_name',
-			'posts.track',
-			'posts.category',
-			'posts.question',
-			'posts.answer',
+			'posts.title',
+			'posts.description',
 			'posts.likes',
 			'posts.comments',
 			'posts.created_at',
@@ -43,10 +41,8 @@ const fetchRecent = () => {
 			'users.id as user_id',
 			'users.profile_picture',
 			'users.display_name',
-			'posts.track',
-			'posts.category',
-			'posts.question',
-			'posts.answer',
+			'posts.title',
+			'posts.description',
 			'posts.likes',
 			'posts.comments',
 			'posts.created_at',
@@ -64,10 +60,8 @@ const fetchPopular = () => {
 			'users.id as user_id',
 			'users.profile_picture',
 			'users.display_name',
-			'posts.track',
-			'posts.category',
-			'posts.question',
-			'posts.answer',
+			'posts.title',
+			'posts.description',
 			'posts.likes',
 			'posts.comments',
 			'posts.created_at',
@@ -78,17 +72,15 @@ const fetchPopular = () => {
 const fetchSearch = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		.whereRaw(`LOWER(posts.question) LIKE ?`, [`%${search}%`])
-		.orWhereRaw(`LOWER(posts.answer) LIKE ?`, [`%${search}%`])
+		.whereRaw(`LOWER(posts.title) LIKE ?`, [`%${search}%`])
+		.orWhereRaw(`LOWER(posts.description) LIKE ?`, [`%${search}%`])
 		.select([
 			'posts.id',
 			'users.id as user_id',
 			'users.profile_picture',
 			'users.display_name',
-			'posts.track',
-			'posts.category',
-			'posts.question',
-			'posts.answer',
+			'posts.title',
+			'posts.description',
 			'posts.likes',
 			'posts.comments',
 			'posts.created_at',
