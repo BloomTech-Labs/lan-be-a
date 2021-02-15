@@ -10,11 +10,11 @@ app.get('/', (request, response) => {
 		message: 'Successfully fetched user object',
 		user: {
 			id: request.user.id,
+            role: request.user.role,
 			email: request.user.email,
 			displayName: request.user.display_name,
 			profilePicture: request.user.profile_picture,
 			track: request.user.track,
-			likes: request.user.likes,
 			onboarded: request.user.onboarded,
 			created_at: request.user.created_at,
 			updated_at: request.user.updated_at,
