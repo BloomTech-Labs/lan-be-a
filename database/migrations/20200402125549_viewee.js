@@ -20,6 +20,7 @@ exports.up = (knex, Promise) => {
         .integer("role_id")
         .notNullable()
         .unsigned()
+        .defaultTo(1)
         .references("id")
         .inTable("roles")
         .onUpdate("CASCADE")
@@ -36,9 +37,9 @@ exports.up = (knex, Promise) => {
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
       table.text("title").notNullable().index();
-      table.text("body").notNullable().index();
-      // table.integer("likes").defaultTo(0);
-      // table.integer("comments").defaultTo(0);
+      table.text("description").notNullable().index();
+      table.integer("likes").defaultTo(0);
+      table.integer("comments").defaultTo(0);
       // table
       //   .string("track")
       //   // .notNullable()
