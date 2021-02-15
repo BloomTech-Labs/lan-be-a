@@ -2,7 +2,7 @@ exports.up = (knex, Promise) => {
   return knex.schema
     .createTable("roles", (table) => {
       table.increments();
-      table.string().notNullable();
+      table.string("role").notNullable();
     })
     .createTable("users", (table) => {
       table.string("id").unique();
@@ -17,7 +17,7 @@ exports.up = (knex, Promise) => {
       table.boolean("onboarded").defaultTo("false");
       table.timestamps(true, true);
       table
-        .string("role_id")
+        .integer("role_id")
         .notNullable()
         .unsigned()
         .references("id")
@@ -134,7 +134,7 @@ exports.up = (knex, Promise) => {
     .createTable("rooms_to_posts", (table) => {
       table.increments();
       table
-        .string("post_id")
+        .integer("post_id")
         .notNullable()
         .unsigned()
         .references("id")
@@ -153,7 +153,7 @@ exports.up = (knex, Promise) => {
     .createTable("posts_to_tags", (table) => {
       table.increments();
       table
-        .string("post_id")
+        .integer("post_id")
         .notNullable()
         .unsigned()
         .references("id")
