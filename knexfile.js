@@ -21,6 +21,9 @@ module.exports = {
 		connection: `${process.env.DATABASE_URL}?ssl=no-verify`,
 		migrations: {
 			directory: './database/migrations'
+		},
+        seeds: {
+			directory: './database/seeds'
 		}
 	}
 };
