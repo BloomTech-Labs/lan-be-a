@@ -1,5 +1,8 @@
 ## Lambda Alumni Network (LAN)
 
+### Contributors
+Team A Members
+
 An app that allows Lambda School alums to connect and grow in their profession by providing career advice, job opportunities, and much more!
 
 ### Documentation
