@@ -10,6 +10,7 @@ An app that allows Lambda School alums to connect and grow in their profession b
 ### Tech Stack
 `Express`
 `PostgreSQL`
+`React`
 
 ### Installation
 Make sure you have [PostgreSQL](https://www.postgresql.org/) installed on your computer.
