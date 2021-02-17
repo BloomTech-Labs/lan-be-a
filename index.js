@@ -10,6 +10,8 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
+const User = require("./models/user");
+
 
 const app = express();
 
@@ -45,10 +47,24 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+async function verifyRole(req, res, next) {
+    const userId = req.user.id
+    try {
+        const verifiedUser = await User.find({ id: userId})
+        if (verifiedUser) {
+            req.user.role_id = verifiedUser.role_id
+            return next()
+        }
+        return res.status(401).send("User does not exist")
+    } catch (error) {
+        return res.status(500).send("Database error")
+    }
+}
+
 app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
-app.use('/api/post', postRouter);
-app.use('/api/comment', commentRouter);
+app.use('/api/user', verifyRole, userRouter);
+app.use('/api/post', verifyRole, postRouter);
+app.use('/api/comment', verifyRole, commentRouter);
 
 app.get('/', (request, response) => response.send({ message: 'Server working' }));
 
