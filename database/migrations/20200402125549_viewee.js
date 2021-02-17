@@ -1,45 +1,45 @@
 exports.up = (knex, Promise) => {
   return knex.schema
-    .createTable("roles", (table) => {
+    .createTable('roles', (table) => {
       table.increments();
-      table.string("role").notNullable();
+      table.string('role').notNullable();
     })
-    .createTable("users", (table) => {
-      table.string("id").unique();
-      table.string("email").notNullable().unique();
-      table.string("display_name").index();
-      table.string("profile_picture");
+    .createTable('users', (table) => {
+      table.string('id').unique();
+      table.string('email').notNullable().unique();
+      table.string('display_name').index();
+      table.string('profile_picture');
       // I believe the components are there in the frontend for manual sign-ups and sign-ins, but due to design decisions and security concerns,
       // I don't think we will be doing them. Commenting out just in case.
       // table.string('password');
-      table.string("track");
+      table.string('track');
       // table.integer("likes").defaultTo(0);
-      table.boolean("onboarded").defaultTo("false");
+      table.boolean('onboarded').defaultTo('false');
       table.timestamps(true, true);
       table
-        .integer("role_id")
+        .integer('role_id')
         .notNullable()
         .unsigned()
         .defaultTo(1)
-        .references("id")
-        .inTable("roles")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('roles')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     })
-    .createTable("posts", (table) => {
+    .createTable('posts', (table) => {
       table.increments();
       table
-        .string("user_id")
+        .string('user_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
-      table.text("title").notNullable().index();
-      table.text("description").notNullable().index();
-      table.integer("likes").defaultTo(0);
-      table.integer("comments").defaultTo(0);
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.text('title').notNullable().index();
+      table.text('description').notNullable().index();
+      table.integer('likes').defaultTo(0);
+      table.integer('comments').defaultTo(0);
       // table
       //   .string("track")
       //   // .notNullable()
@@ -47,142 +47,142 @@ exports.up = (knex, Promise) => {
       // table.string("category").notNullable().index();
       table.timestamps(true, true);
     })
-    .createTable("comments", (table) => {
+    .createTable('comments', (table) => {
       table.increments();
       table
-        .string("user_id")
+        .string('user_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
       table
-        .integer("post_id")
+        .integer('post_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("posts")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
-      table.text("comment").notNullable();
-      // table.integer("likes").defaultTo(0);
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.text('comment').notNullable();
+      table.integer('likes').defaultTo(0);
       table.timestamps(true, true);
     })
-    .createTable("liked_posts", (table) => {
+    .createTable('liked_posts', (table) => {
       table
-        .string("user_id")
+        .string('user_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
       table
-        .integer("post_id")
+        .integer('post_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("posts")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     })
-    .createTable("liked_comments", (table) => {
+    .createTable('liked_comments', (table) => {
       table
-        .string("user_id")
+        .string('user_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
       table
-        .integer("comment_id")
+        .integer('comment_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("comments")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('comments')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     })
-    .createTable("saved_posts", (table) => {
+    .createTable('saved_posts', (table) => {
       table
-        .string("user_id")
+        .string('user_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("users")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
       table
-        .integer("post_id")
+        .integer('post_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("posts")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     })
-    .createTable("rooms", (table) => {
+    .createTable('rooms', (table) => {
       table.increments();
-      table.string("room_name").notNullable().unique();
-      table.string("description").notNullable().unique();
+      table.string('room_name').notNullable().unique();
+      table.string('description').notNullable().unique();
     })
-    .createTable("tags", (table) => {
+    .createTable('tags', (table) => {
       table.increments();
-      table.string("tag_name").notNullable().unique();
+      table.string('tag_name').notNullable().unique();
     })
-    .createTable("rooms_to_posts", (table) => {
-      table.increments();
-      table
-        .integer("post_id")
-        .notNullable()
-        .unsigned()
-        .references("id")
-        .inTable("posts")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
-      table
-        .integer("room_id")
-        .notNullable()
-        .unsigned()
-        .references("id")
-        .inTable("rooms")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
-    })
-    .createTable("posts_to_tags", (table) => {
+    .createTable('rooms_to_posts', (table) => {
       table.increments();
       table
-        .integer("post_id")
+        .integer('post_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("posts")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
       table
-        .integer("tag_id")
+        .integer('room_id')
         .notNullable()
         .unsigned()
-        .references("id")
-        .inTable("tags")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('rooms')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+    })
+    .createTable('posts_to_tags', (table) => {
+      table.increments();
+      table
+        .integer('post_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table
+        .integer('tag_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('tags')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     });
 };
 
 exports.down = (knex, Promise) => {
   return knex.schema
-    .dropTableIfExists("posts_to_tags")
-    .dropTableIfExists("rooms_to_posts")
-    .dropTableIfExists("tags")
-    .dropTableIfExists("rooms")
-    .dropTableIfExists("saved_posts")
-    .dropTableIfExists("liked_comments")
-    .dropTableIfExists("liked_posts")
-    .dropTableIfExists("comments")
-    .dropTableIfExists("posts")
-    .dropTableIfExists("users")
-    .dropTableIfExists("roles");
+    .dropTableIfExists('posts_to_tags')
+    .dropTableIfExists('rooms_to_posts')
+    .dropTableIfExists('tags')
+    .dropTableIfExists('rooms')
+    .dropTableIfExists('saved_posts')
+    .dropTableIfExists('liked_comments')
+    .dropTableIfExists('liked_posts')
+    .dropTableIfExists('comments')
+    .dropTableIfExists('posts')
+    .dropTableIfExists('users')
+    .dropTableIfExists('roles');
 };
