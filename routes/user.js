@@ -3,6 +3,20 @@ const User = require('../models/user');
 
 const app = express.Router();
 
+async function verifyRole(req, res, next) {
+    const userId = req.user.id
+    try {
+        const verifiedUser = await User.find({ id: userId})
+        if (verifiedUser) {
+            req.user.role_id = verifiedUser.role_id
+            return next()
+        }
+        return res.status(401).send('User does not exist')
+    } catch (error) {
+        return res.status(500).send('Database error')
+    }
+}
+
 // Fetch logged-in user's object
 app.get('/', (request, response) => {
   response.status(200).json({
@@ -25,7 +39,7 @@ app.get('/', (request, response) => {
 // Can model helper function be consolidated?
 // Good idea, I'll think about this
 // Might need help with these architectural decisions
-app.get('/:id', (request, response) => {
+app.get('/:id', verifyRole, (request, response) => {
   const userID = request.params.id;
 
   User.find({ id: userID })
@@ -58,7 +72,7 @@ app.get('/:id', (request, response) => {
 // These are similar, but the one above works for any user
 
 // Fetch user's liked posts
-app.get('/post/like', (request, response) => {
+app.get('/post/like', verifyRole, (request, response) => {
   const userID = request.user.id;
 
   User.fetchUsersLikedPosts(userID)
@@ -72,7 +86,7 @@ app.get('/post/like', (request, response) => {
 });
 
 // Fetch a user's liked comments
-app.get('/comment/like', (request, response) => {
+app.get('/comment/like', verifyRole, (request, response) => {
   const userID = request.user.id;
 
   User.fetchUsersLikedComments(userID)
@@ -86,7 +100,7 @@ app.get('/comment/like', (request, response) => {
 });
 
 // Update user's display name
-app.put('/displayname', (request, response) => {
+app.put('/displayname', verifyRole, (request, response) => {
   const { userID, displayName } = request.body;
 
   User.update(userID, { display_name: displayName })
@@ -103,7 +117,7 @@ app.put('/displayname', (request, response) => {
 });
 
 // Set and update user's track
-app.put('/track', (request, response) => {
+app.put('/track', verifyRole, (request, response) => {
   userID = request.user.id;
   track = request.body.track;
   token = request.body.token;
@@ -138,7 +152,7 @@ app.put('/track', (request, response) => {
 });
 
 // Set a user's onboarded field to true
-app.put('/onboard', (request, response) => {
+app.put('/onboard', verifyRole, (request, response) => {
   userID = request.user.id;
 
   User.onboard(userID)
@@ -156,7 +170,7 @@ app.put('/onboard', (request, response) => {
 });
 
 //remove a specific user with the userID passed in req param
-app.delete('/settings/remove-user/:id', (req, res) => {
+app.delete('/settings/remove-user/:id', verifyRole, (req, res) => {
   userID = req.user.id;
 
   User.remove(userID)

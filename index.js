@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
-const passportSetup = require('./config/passportSetup');
 const session = require('express-session');
+const passportSetup = require('./config/passportSetup');
 const knexSessionStore = require('connect-session-knex')(session);
 
 const config = require('./database/dbConfig');
@@ -38,7 +38,7 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false,
+      secure: true,
       // Set to true once in production
       // Set to false in local development
     },
@@ -65,7 +65,7 @@ async function verifyRole(req, res, next) {
 }
 
 app.use('/api/auth', authRouter);
-app.use('/api/user', verifyRole, userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
 app.use('/api/room', verifyRole, roomRouter);
