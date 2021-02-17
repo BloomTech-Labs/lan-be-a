@@ -161,13 +161,13 @@ app.delete('/settings/remove-user/:id', (req, res) => {
   userID = req.user.id;
 
   User.remove(userID)
-    .then((res) =>
+    .then((numberOfRecordsDeleted) => {
       res
         .status(200)
-        .json({ message: `user ${userID} has been removed from DB` })
-    )
+        .json({ message: `user ${userID} has been removed from DB` });
+    })
     .catch((err) => {
-      res.status(500).json({ message: 'err' });
+      res.status(500).json({ err });
     });
 });
 
