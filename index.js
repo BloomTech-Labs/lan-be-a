@@ -62,7 +62,7 @@ async function verifyRole(req, res, next) {
 }
 
 app.use('/api/auth', authRouter);
-app.use('/api/user', verifyRole, userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
 
