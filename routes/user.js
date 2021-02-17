@@ -78,7 +78,7 @@ app.get('/comment/like', (request, response) => {
   User.fetchUsersLikedComments(userID)
     .then((res) => response.status(200).json(res))
     .catch((err) => {
-      console.log(error);
+      console.log(err);
       response
         .status(500)
         .json({ message: "Error fetching user's liked comments" });
