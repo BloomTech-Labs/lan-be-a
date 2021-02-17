@@ -7,10 +7,20 @@ const app = express.Router();
 // Create post
 app.post('/create', (request, response) => {
     const userID = request.user.id;
-    const { title, description } = request.body;
+    const { title, description, room_id } = request.body;
     
-    Post.create({ user_id: userID, title, description })
-        .then(res => response.status(200).json({ message: 'Post created successfully' }))
+    Post.createPost({ user_id: userID, title, description })
+        .then(([res]) => {
+            console.log(res);
+            Post.createRoomPostEntry(res, room_id)
+                .then(() => {
+                    response.status(200).json({ message: 'Post created successfully' });
+                })
+                .catch(err => {
+                    console.log(err);
+                    response.status(500).json({ message: 'Error creating post' });
+                });
+        })
         .catch(err => {
             console.log(err);
             response.status(500).json({ message: 'Error creating post' });
