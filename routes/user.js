@@ -11,9 +11,9 @@ async function verifyRole(req, res, next) {
             req.user.role_id = verifiedUser.role_id
             return next()
         }
-        return res.status(401).send("User does not exist")
+        return res.status(401).send('User does not exist')
     } catch (error) {
-        return res.status(500).send("Database error")
+        return res.status(500).send('Database error')
     }
 }
 
