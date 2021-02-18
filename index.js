@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
 const session = require('express-session');
-const passportSetup = require('./config/passportSetup');
+// const passportSetup = require('./config/passportSetup');
 const knexSessionStore = require('connect-session-knex')(session);
 
 const config = require('./database/dbConfig');
@@ -11,10 +11,9 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
-const roomRouter = require('./routes/room-route');
-const adminRouter = require('./routes/admin');
-
 const User = require('./models/user');
+const adminRouter = require('./routes/admin');
+const roomRouter = require('./routes/room-route');
 
 const app = express();
 
@@ -69,7 +68,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
-app.use('/api/room', verifyRole, roomRouter);
+app.use('/api/room',verifyRole, roomRouter);
 app.use('/api/admin', verifyRole, adminRouter);
 
 app.get('/', (request, response) =>
