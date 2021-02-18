@@ -11,15 +11,14 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
+const User = require("./models/user");
+const AdminRouter = require('./routes/admin');
 const roomRouter = require('./routes/room-route');
 const adminRouter = require('./routes/admin');
 
-const User = require('./models/user');
-
 const app = express();
 
-const FRONTEND_URL =
-  process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -69,6 +68,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
+app.use('/api/admin', verifyRole, AdminRouter);
 app.use('/api/room', verifyRole, roomRouter);
 app.use('/api/admin', verifyRole, adminRouter);
 

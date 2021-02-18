@@ -1,5 +1,13 @@
 const database = require('../database/dbConfig');
 
+const getUsers = () => {
+  return database('users');
+};
+
+const getRooms = () => {
+  return database('rooms');
+};
+
 const fetchUser = (user_id) => {
     return database('users').where('id', user_id).first();
   };
@@ -29,4 +37,6 @@ module.exports = {
   roleCreate,
   roleUpdate,
   roleDelete,
+  getUsers,
+  getRooms
 };
