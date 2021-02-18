@@ -1,26 +1,26 @@
-const express = require("express");
+const express = require('express');
 const app = express.Router();
 
-const Room = require("../models/room-model");
+const Room = require('../models/room-model');
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   Room.getAllRooms()
     .then((rooms) => {
       res.status(200).json(rooms);
     })
     .catch(() => {
-      res.status(500).json({ message: "Could not retrieve rooms" });
+      res.status(500).json({ message: 'Could not retrieve rooms' });
     });
 });
 
 //create a room if users role is 3(admin) and verify that room_name is in req
-app.post("/", (req, res) => {
+app.post('/', (req, res) => {
   const { role_id } = req.user;
   const { room_name } = req.body;
   if (role_id != 3) {
-    res.status(403).json({ message: "Access denied." });
+    res.status(403).json({ message: 'Access denied.' });
   } else if (!room_name) {
-    res.status(400).json({ message: "Must designate room name to continue." });
+    res.status(400).json({ message: 'Must designate room name to continue.' });
   } else {
     Room.add(req.body)
       .then((data) => {
@@ -33,12 +33,12 @@ app.post("/", (req, res) => {
 });
 
 //delete a room if users role is 3(admin)
-app.delete("/:id", (req, res) => {
+app.delete('/:id', (req, res) => {
   const { role_id } = req.user;
   const { roomId } = req.params.id;
 
   if (role_id != 3) {
-    res.status(403).json({ message: "Access denied." });
+    res.status(403).json({ message: 'Access denied.' });
   } else {
     Room.remove(roomId)
       .then((numberOfRoomsToRemove) => {
@@ -52,7 +52,7 @@ app.delete("/:id", (req, res) => {
   }
 });
 
-app.get("/:id/recent", (request, response) => {
+app.get('/:id/recent', (request, response) => {
   console.log(request.params);
   Room.fetchRecentByRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
@@ -64,7 +64,7 @@ app.get("/:id/recent", (request, response) => {
     );
 });
 
-app.get("/:id/popular", (request, response) => {
+app.get('/:id/popular', (request, response) => {
   Room.fetchPopularByRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
@@ -74,7 +74,7 @@ app.get("/:id/popular", (request, response) => {
     );
 });
 
-app.get("/:id/search", (request, response) => {
+app.get('/:id/search', (request, response) => {
   Room.fetchPopularByRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
