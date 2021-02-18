@@ -1,5 +1,10 @@
 const database = require('../database/dbConfig');
 
+//helper to get all the rooms
+const getAllRooms = () => {
+    return database('rooms');
+};
+
 //helper to add a room to the db
 const add = (room) => {
   return database('rooms').insert(room).returning('*');
@@ -11,6 +16,7 @@ const remove = (roomId) => {
 };
 
 module.exports = {
+  getAllRooms,
   add,
   remove,
 };
