@@ -4,11 +4,11 @@ const fetchUser = (user_id) => {
     return database('users').where('id', user_id).first();
   };
 
-const userSetRole = async() => (user_id, role_id) => {
-  const oldUser = await fetchUser(user_id)
+const userSetRole = async (user_id, role_id) => {
+  const oldUser = await fetchUser(user_id);
   return database('users')
   .where('id', user_id)
-  .update({ ...oldUser, role_id })
+  .update({ ...oldUser, role_id });
 };
 const userDelete = (user_id) => {
     return database('users').where('id', user_id).del();
