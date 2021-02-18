@@ -3,15 +3,14 @@ const app = express.Router();
 
 const Room = require('../models/room-model');
 
-
 app.get('/', (req, res) => {
-    Room.getAllRooms()
-        .then((rooms) => {
-            res.status(200).json(rooms);
-        })
-        .catch(() => {
-            res.status(500).json({ message: 'Could not retrieve rooms' });
-        });
+  Room.getAllRooms()
+    .then((rooms) => {
+      res.status(200).json(rooms);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Could not retrieve rooms' });
+    });
 });
 
 //create a room if users role is 3(admin) and verify that room_name is in req
@@ -51,6 +50,38 @@ app.delete('/:id', (req, res) => {
         res.status(500).json({ message: err.message });
       });
   }
+});
+
+app.get('/:id/recent', (request, response) => {
+  console.log(request.params);
+  Room.fetchRecentByRoomId(request.params.id)
+    .then((data) => response.status(200).json(data))
+    .catch((err) =>
+      response.status(400).json({
+        message: `Failed to fetch all posts for room with ID:${request.params.id}`,
+        error: err,
+      })
+    );
+});
+
+app.get('/:id/popular', (request, response) => {
+  Room.fetchPopularByRoomId(request.params.id)
+    .then((data) => response.status(200).json(data))
+    .catch(() =>
+      response.status(400).json({
+        message: `Failed to fetch all posts for room with ID:${request.params.id}`,
+      })
+    );
+});
+
+app.get('/:id/search', (request, response) => {
+  Room.fetchPopularByRoomId(request.params.id)
+    .then((data) => response.status(200).json(data))
+    .catch(() =>
+      response.status(400).json({
+        message: `Failed to fetch all posts for room with ID:${request.params.id}`,
+      })
+    );
 });
 
 module.exports = app;
