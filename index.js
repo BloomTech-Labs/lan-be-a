@@ -68,7 +68,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
-app.use('/api/room', roomRouter);
+app.use('/api/room',verifyRole, roomRouter);
 app.use('/api/admin', verifyRole, adminRouter);
 
 app.get('/', (request, response) =>
