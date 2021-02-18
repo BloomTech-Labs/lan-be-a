@@ -14,6 +14,7 @@ const commentRouter = require('./routes/comment');
 const User = require("./models/user");
 const AdminRouter = require('./routes/admin');
 const roomRouter = require('./routes/room-route');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
 app.use('/api/admin', AdminRouter);
 app.use('/api/room', verifyRole, roomRouter);
+app.use('/api/admin', verifyRole, adminRouter);
 
 app.get('/', (request, response) =>
   response.send({ message: 'Server working' })

@@ -1,8 +1,12 @@
 const database = require('../database/dbConfig');
 
 // Create post
-const create = post => {
-    return database('posts').insert(post);
+const createPost = post => {
+    return database('posts').insert(post).returning('id');
+};
+
+const createRoomPostEntry = (post_id, room_id) => {
+    return database('rooms_to_posts').insert({ post_id, room_id });
 };
 
 // Add entry for post like
@@ -72,8 +76,8 @@ const fetchPopular = () => {
 const fetchSearch = search => {
 	return database('posts')
 		.join('users', 'posts.user_id', 'users.id')
-		.whereRaw(`LOWER(posts.title) LIKE ?`, [`%${search}%`])
-		.orWhereRaw(`LOWER(posts.description) LIKE ?`, [`%${search}%`])
+		.whereRaw('LOWER(posts.title) LIKE ?', [`%${search}%`])
+		.orWhereRaw('LOWER(posts.description) LIKE ?', [`%${search}%`])
 		.select([
 			'posts.id',
 			'users.id as user_id',
@@ -110,7 +114,8 @@ const removePostLike = (userID, postID) => {
 };
 
 module.exports = {
-    create,
+    createPost,
+    createRoomPostEntry,
 	addPostLike,
 	fetch,
 	fetchRecent,

@@ -3,6 +3,17 @@ const app = express.Router();
 
 const Room = require('../models/room-model');
 
+
+app.get('/', (req, res) => {
+    Room.getAllRooms()
+        .then((rooms) => {
+            res.status(200).json(rooms);
+        })
+        .catch(() => {
+            res.status(500).json({ message: 'Could not retrieve rooms' });
+        });
+});
+
 //create a room if users role is 3(admin) and verify that room_name is in req
 app.post('/', (req, res) => {
   const { role_id } = req.user;
