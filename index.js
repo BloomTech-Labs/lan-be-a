@@ -12,6 +12,7 @@ const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
 const roomRouter = require('./routes/room-route');
+const adminRouter = require('./routes/admin');
 
 const User = require('./models/user');
 
@@ -69,6 +70,7 @@ app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
 app.use('/api/room', verifyRole, roomRouter);
+app.use('/api/admin', verifyRole, adminRouter);
 
 app.get('/', (request, response) =>
   response.send({ message: 'Server working' })
