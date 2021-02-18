@@ -5,7 +5,7 @@ const app = express.Router();
 
 // updating a created user's role given the User's ID and the role you'd like to switch it to
 app.put("/users/:user_id/:role_id", (request, response) => {
-  if ((request.user.role_id = 3)) {
+  if ((request.user.role_id === 3)) {
     Admin.userSetRole(request.params.user_id, request.params.role_id)
       .then((data) => response.status(200).json(data))
       .catch((err) => {
@@ -21,7 +21,7 @@ app.put("/users/:user_id/:role_id", (request, response) => {
 });
 // deleting a user from the database, need to later refactor to either move to a different table or toggle something to hide user
 app.delete("/users/:user_id", (request, response) => {
-  if ((request.user.role_id = 3)) {
+  if ((request.user.role_id === 3)) {
     Admin.userDelete(request.params.user_id)
       .then(() =>
         response.status(200).json({
@@ -41,7 +41,7 @@ app.delete("/users/:user_id", (request, response) => {
 });
 // creating a new role given a unique name
 app.post("/roles/:role", (request, response) => {
-  if ((request.user.role_id = 3)) {
+  if ((request.user.role_id === 3)) {
     Admin.roleCreate(request.params.role).then((new_role) =>
       response.status(200).json(new_role)
     );
@@ -53,7 +53,7 @@ app.post("/roles/:role", (request, response) => {
 });
 // updating a role given the role's ID and the new name
 app.put("/roles/:role_id/:role_name", (request, response) => {
-  if ((request.user.role_id = 3)) {
+  if ((request.user.role_id === 3)) {
     Admin.roleUpdate(request.params.role_id, request.params.role_name)
       .then((data) => response.status(200).json(data))
       .catch((err) => {
@@ -69,7 +69,7 @@ app.put("/roles/:role_id/:role_name", (request, response) => {
 });
 // deleting an old role given the role ID and correct authentication level
 app.delete("/roles/:role_id", (request, response) => {
-  if ((request.user.role_id = 3)) {
+  if ((request.user.role_id === 3)) {
     Admin.roleDelete(request.params.role_id)
       .then(() =>
         response.status(200).json({
