@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
 const session = require('express-session');
-// const passportSetup = require('./config/passportSetup');
+const passportSetup = require('./config/passportSetup');
 const knexSessionStore = require('connect-session-knex')(session);
 
 const config = require('./database/dbConfig');
