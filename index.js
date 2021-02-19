@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
 const session = require('express-session');
-const passportSetup = require('./config/passportSetup');
+const passportSetup = require('./config/passportSetup'); // eslint-disable-line
 const knexSessionStore = require('connect-session-knex')(session);
 
 const config = require('./database/dbConfig');
@@ -68,7 +68,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/post', verifyRole, postRouter);
 app.use('/api/comment', verifyRole, commentRouter);
-app.use('/api/room',verifyRole, roomRouter);
+app.use('/api/room', verifyRole, roomRouter);
 app.use('/api/admin', verifyRole, adminRouter);
 
 app.get('/', (request, response) =>
