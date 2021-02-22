@@ -4,21 +4,22 @@ const User = require('../models/user');
 const app = express.Router();
 
 async function verifyRole(req, res, next) {
-    const userId = req.user.id
-    try {
-        const verifiedUser = await User.find({ id: userId})
-        if (verifiedUser) {
-            req.user.role_id = verifiedUser.role_id
-            return next()
-        }
-        return res.status(401).send('User does not exist')
-    } catch (error) {
-        return res.status(500).send('Database error')
+  const userId = req.user.id;
+  try {
+    const verifiedUser = await User.find({ id: userId});
+    if (verifiedUser) {
+      req.user.role_id = verifiedUser.role_id;
+      return next();
     }
+    return res.status(401).send('User does not exist');
+  } catch (error) {
+    return res.status(500).send('Database error');
+  }
 }
 
 // Fetch logged-in user's object
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
+  const verifiedUser = await User.find({ id: request.user.id});
   response.status(200).json({
     message: 'Successfully fetched user object',
     user: {
@@ -26,11 +27,11 @@ app.get('/', (request, response) => {
       email: request.user.email,
       displayName: request.user.display_name,
       profilePicture: request.user.profile_picture,
-      track: request.user.track,
-      likes: request.user.likes,
+      track: verifiedUser.track,
       onboarded: request.user.onboarded,
       created_at: request.user.created_at,
       updated_at: request.user.updated_at,
+      role_id: verifiedUser.role_id
     },
   });
 });
@@ -55,15 +56,15 @@ app.get('/:id', verifyRole, (request, response) => {
               console.log(e);
               response
                 .status(500)
-                .json({ message: "Error fetching user's comments" });
+                .json({ message: 'Error fetching user\'s comments' });
             });
         })
         .catch((err) => {
           console.log(err);
-          response.status(500).json({ message: "Error fetching user's posts" });
+          response.status(500).json({ message: 'Error fetching user\'s posts' });
         });
     })
-    .catch((error) => {
+    .catch((err) => {
       console.log(err);
       response.status(500).json({ message: 'Error fetching user' });
     });
@@ -81,7 +82,7 @@ app.get('/post/like', verifyRole, (request, response) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error fetching user's liked posts" });
+        .json({ message: 'Error fetching user\'s liked posts' });
     });
 });
 
@@ -95,7 +96,7 @@ app.get('/comment/like', verifyRole, (request, response) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error fetching user's liked comments" });
+        .json({ message: 'Error fetching user\'s liked comments' });
     });
 });
 
@@ -107,12 +108,12 @@ app.put('/displayname', verifyRole, (request, response) => {
     .then((res) =>
       response
         .status(200)
-        .json({ message: "Updated user's display name successfully" })
+        .json({ message: 'Updated user\'s display name successfully' })
     )
     .catch((err) =>
       response
         .status(500)
-        .json({ message: "Error updating user's display name" })
+        .json({ message: 'Error updating user\'s display name' })
     );
 });
 
@@ -128,7 +129,7 @@ app.put('/track', verifyRole, (request, response) => {
         .then((res) =>
           response
             .status(200)
-            .json({ message: "Updated user's track successfully" })
+            .json({ message: 'Updated user\'s track successfully' })
         )
         .catch((err) => {
           console.log(err);
@@ -142,7 +143,7 @@ app.put('/track', verifyRole, (request, response) => {
       .then((res) =>
         response
           .status(200)
-          .json({ message: "Updated user's track successfully" })
+          .json({ message: 'Updated user\'s track successfully' })
       )
       .catch((err) => {
         console.log(err);
@@ -159,13 +160,13 @@ app.put('/onboard', verifyRole, (request, response) => {
     .then((res) =>
       response
         .status(200)
-        .json({ message: "Updated user's onboarded field successfully", user })
+        .json({ message: 'Updated user\'s onboarded field successfully', user })
     )
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error updating user's onboarded field" });
+        .json({ message: 'Error updating user\'s onboarded field' });
     });
 });
 
