@@ -2,7 +2,7 @@ const database = require('../database/dbConfig');
 
 //helper to get all the rooms
 const getAllRooms = () => {
-  return database('rooms');
+  return database('rooms').orderBy('room_name');
 };
 
 //helper to add a room to the db

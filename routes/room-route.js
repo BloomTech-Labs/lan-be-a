@@ -35,13 +35,13 @@ app.post('/', (req, res) => {
 //delete a room if users role is 3(admin)
 app.delete('/:id', (req, res) => {
   const { role_id } = req.user;
-  const { roomId } = req.params.id;
+  const roomId = req.params.id;
 
   if (role_id != 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
     Room.remove(roomId)
-      .then((numberOfRoomsToRemove) => {
+      .then(() => {
         res
           .status(200)
           .json({ message: `room ${roomId} has been removed from DB` });
