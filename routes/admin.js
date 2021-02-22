@@ -9,6 +9,7 @@ app.get('/users', async (req, res) => {
       const data = await Admin.getUsers();
       res.status(200).json(data);
     } catch (err) {
+      console.log(err);
       res.status(500).json({ message: err.message });
     }
   } else {
@@ -52,14 +53,15 @@ app.put('/users/:user_id/:role_id', (request, response) => {
 });
 
 // deleting a user from the database, need to later refactor to either move to a different table or toggle something to hide user
-app.delete('/users/:user_id', (request, response) => {
+app.delete('/users/:id', (request, response) => {
+  const userID = request.params.id;
   if (request.user.role_id === 3) {
-    Admin.userDelete(request.params.user_id)
-      .then(() =>
+    Admin.userDelete(userID)
+      .then(() => {
         response.status(200).json({
-          message: `Successfully removed user with ID: ${request.params.user_id}`,
-        })
-      )
+          message: `Successfully removed user with ID: ${userID}`,
+        });
+      })
       .catch((err) => {
         response
           .status(500)
