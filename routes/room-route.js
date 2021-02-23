@@ -16,10 +16,10 @@ app.get('/', (req, res) => {
 //create a room if users role is 3(admin) and verify that room_name is in req
 app.post('/', (req, res) => {
   const { role_id } = req.user;
-  const { room_name } = req.body;
-  if (role_id != 3) {
+  const { room_name, description } = req.body;
+  if (role_id !== 3) {
     res.status(403).json({ message: 'Access denied.' });
-  } else if (!room_name) {
+  } else if (!room_name || !description) {
     res.status(400).json({ message: 'Must designate room name to continue.' });
   } else {
     Room.add(req.body)
