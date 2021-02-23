@@ -25,6 +25,7 @@ exports.up = (knex, Promise) => {
         .inTable('roles')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      table.boolean('visible').defaultTo(1);
     })
     .createTable('posts', (table) => {
       table.increments();
@@ -40,6 +41,7 @@ exports.up = (knex, Promise) => {
       table.text('description').notNullable().index();
       table.integer('likes').defaultTo(0);
       table.integer('comments').defaultTo(0);
+      table.boolean('visible').defaultTo(1);
       // table
       //   .string("track")
       //   // .notNullable()
@@ -67,7 +69,48 @@ exports.up = (knex, Promise) => {
         .onDelete('CASCADE');
       table.text('comment').notNullable();
       table.integer('likes').defaultTo(0);
+      table.boolean('visible').defaultTo(1);
       table.timestamps(true, true);
+    })
+    .createTable('flagged_posts', (table) => {
+      table.increments();
+      table
+        .integer('post_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('posts')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table
+        .string('user_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.boolean('reviewed').defaultTo(0);
+    })
+    .createTable('flagged_comments', (table) => {
+      table.increments();
+      table
+        .integer('comment_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('comments')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table
+        .string('user_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.boolean('reviewed').defaultTo(0);
     })
     .createTable('liked_posts', (table) => {
       table
@@ -181,7 +224,9 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists('saved_posts')
     .dropTableIfExists('liked_comments')
     .dropTableIfExists('liked_posts')
+    .dropTableIfExists('flagged_comments')
     .dropTableIfExists('comments')
+    .dropTableIfExists('flagged_posts')
     .dropTableIfExists('posts')
     .dropTableIfExists('users')
     .dropTableIfExists('roles');
