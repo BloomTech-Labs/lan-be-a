@@ -1,6 +1,7 @@
 const express = require('express');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const { response } = require('express');
 
 const app = express.Router();
 
@@ -25,7 +26,23 @@ app.post('/', (request, response) => {
 // Does timestamp update automatically?
 // ENDPOINT GOES HERE
 
-// Remove a comment from a post
+// DELETE a comment from a post
+app.delete('/comments/:id', (request, response) => {
+
+    const commentId = request.params.id;
+
+    Comment.deleteComments(commentId)
+    .then((num) =>{
+        if (num === 1) {
+            res.status(200).json({ successMessage: "This comment is successfully deleted"})
+        } else {
+            res.status(404).json({ message:"Failed to delete comment"}).end();
+        }
+    })
+    .catch((err) =>{
+        res.status(500).json({message:"ERR in DELETE COMMENT", error: err.message})
+    });
+})
 // ENDPOINT GOES HERE
 
 // Fetch a post's comments by recent
