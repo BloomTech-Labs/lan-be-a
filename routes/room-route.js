@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express.Router();
-
 const Room = require('../models/room-model');
 
+// Get all rooms
 app.get('/', (req, res) => {
   Room.getAllRooms()
     .then((rooms) => {
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     });
 });
 
-//create a room if users role is 3(admin) and verify that room_name is in req
+// Create a room
 app.post('/', (req, res) => {
   const { role_id } = req.user;
   const { room_name, description } = req.body;
@@ -32,19 +32,16 @@ app.post('/', (req, res) => {
   }
 });
 
-//delete a room if users role is 3(admin)
+// Delete a room
 app.delete('/:id', (req, res) => {
   const { role_id } = req.user;
   const roomId = req.params.id;
-
   if (role_id != 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
     Room.remove(roomId)
       .then(() => {
-        res
-          .status(200)
-          .json({ message: `room ${roomId} has been removed from DB` });
+        res.status(200).json({ message: `room ${roomId} has been removed from DB` });
       })
       .catch((err) => {
         res.status(500).json({ message: err.message });
@@ -52,8 +49,8 @@ app.delete('/:id', (req, res) => {
   }
 });
 
+// Fetch posts in a room ordered by most recent
 app.get('/:id/recent', (request, response) => {
-  console.log(request.params);
   Room.fetchRecentByRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
     .catch((err) =>
@@ -64,6 +61,7 @@ app.get('/:id/recent', (request, response) => {
     );
 });
 
+// Fetch posts in a room ordered by most likes
 app.get('/:id/popular', (request, response) => {
   Room.fetchPopularByRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
@@ -74,8 +72,9 @@ app.get('/:id/popular', (request, response) => {
     );
 });
 
+// Fetch posts from room based on user search input
 app.get('/:id/search', (request, response) => {
-  Room.fetchPopularByRoomId(request.params.id)
+  Room.searchWithRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({

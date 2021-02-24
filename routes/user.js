@@ -1,6 +1,5 @@
 const express = require('express');
 const User = require('../models/user');
-
 const app = express.Router();
 
 async function verifyRole(req, res, next) {
@@ -36,32 +35,27 @@ app.get('/', async (request, response) => {
   });
 });
 
-// Fetch all of a single user's posts and comments
-// Can model helper function be consolidated?
-// Good idea, I'll think about this
-// Might need help with these architectural decisions
+// Fetch all posts and comments a single user has made
 app.get('/:id', verifyRole, (request, response) => {
   const userID = request.params.id;
-
   User.find({ id: userID })
     .then((user) => {
-      // Model helper functions need to be seperate due to Knex's limitations
       User.fetchPosts(userID)
         .then((posts) => {
           User.fetchComments(userID)
             .then((comments) =>
               response.status(200).json({ ...user, posts, comments })
             )
-            .catch((e) => {
-              console.log(e);
+            .catch((err) => {
+              console.log(err);
               response
                 .status(500)
-                .json({ message: "Error fetching user's comments" });
+                .json({ message: 'Error fetching user\'s comments' });
             });
         })
         .catch((err) => {
           console.log(err);
-          response.status(500).json({ message: "Error fetching user's posts" });
+          response.status(500).json({ message: 'Error fetching user\'s posts' });
         });
     })
     .catch((err) => {
@@ -70,67 +64,56 @@ app.get('/:id', verifyRole, (request, response) => {
     });
 });
 
-// These are similar, but the one above works for any user
-
-// Fetch user's liked posts
+// Fetch a users liked posts
 app.get('/post/like', verifyRole, (request, response) => {
   const userID = request.user.id;
-
   User.fetchUsersLikedPosts(userID)
     .then((res) => response.status(200).json(res))
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error fetching user's liked posts" });
+        .json({ message: 'Error fetching user\'s liked posts' });
     });
 });
 
 // Fetch a user's liked comments
 app.get('/comment/like', verifyRole, (request, response) => {
   const userID = request.user.id;
-
   User.fetchUsersLikedComments(userID)
     .then((res) => response.status(200).json(res))
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error fetching user's liked comments" });
+        .json({ message: 'Error fetching user\'s liked comments' });
     });
 });
 
 // Update user's display name
 app.put('/displayname', verifyRole, (request, response) => {
   const { userID, displayName } = request.body;
-
   User.update(userID, { display_name: displayName })
-    .then((res) =>
-      response
-        .status(200)
-        .json({ message: "Updated user's display name successfully" })
-    )
-    .catch((err) =>
-      response
-        .status(500)
-        .json({ message: "Error updating user's display name" })
-    );
+    .then(() => {
+      response.status(200).json({ message: 'Updated user\'s display name successfully' });
+    })
+    .catch((err) => {
+      console.log(err);
+      response.status(500).json({ message: 'Error updating user\'s display name' });
+    });
 });
 
 // Set and update user's track
 app.put('/track', verifyRole, (request, response) => {
-  userID = request.user.id;
-  track = request.body.track;
-  token = request.body.token;
-
+  const userID = request.user.id;
+  const track = request.body.track;
+  const token = request.body.token;
   if (track === 'Career Coach') {
     if (token === process.env.LAN_TOKEN) {
       User.update(userID, { track })
-        .then((res) =>
-          response
-            .status(200)
-            .json({ message: "Updated user's track successfully" })
-        )
+        .then(() => {
+          response.status(200).json({ message: 'Updated user\'s track successfully' });
+        })
         .catch((err) => {
           console.log(err);
           response.status(500).json({ message: 'Error updating user track' });
@@ -140,11 +123,9 @@ app.put('/track', verifyRole, (request, response) => {
     }
   } else {
     User.update(userID, { track })
-      .then((res) =>
-        response
-          .status(200)
-          .json({ message: "Updated user's track successfully" })
-      )
+      .then(() => {
+        response.status(200).json({ message: 'Updated user\'s track successfully' });
+      })
       .catch((err) => {
         console.log(err);
         response.status(500).json({ message: 'Error updating user track' });
@@ -154,31 +135,23 @@ app.put('/track', verifyRole, (request, response) => {
 
 // Set a user's onboarded field to true
 app.put('/onboard', verifyRole, (request, response) => {
-  userID = request.user.id;
-
+  const userID = request.user.id;
   User.onboard(userID)
-    .then((res) =>
-      response
-        .status(200)
-        .json({ message: "Updated user's onboarded field successfully", user })
+    .then(() =>
+      response.status(200).json({ message: 'Updated user\'s onboarded field successfully', user })
     )
     .catch((err) => {
       console.log(err);
-      response
-        .status(500)
-        .json({ message: "Error updating user's onboarded field" });
+      response.status(500).json({ message: 'Error updating user\'s onboarded field' });
     });
 });
 
-//remove a specific user with the userID passed in req param
+// Delete a user
 app.delete('/settings/remove-user/:id', verifyRole, (req, res) => {
   const userID = req.user.id;
-
   User.remove(userID)
-    .then((numberOfRecordsDeleted) => {
-      res
-        .status(200)
-        .json({ message: `user ${userID} has been removed from DB` });
+    .then(() => {
+      res.status(200).json({ message: `user ${userID} has been removed from DB` });
     })
     .catch((err) => {
       res.status(500).json({ err });

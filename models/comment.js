@@ -1,13 +1,20 @@
 const database = require("../database/dbConfig");
 
-// Add comment
+// Add a comment
 const add = (userID, postID, comment) => {
   return database("comments")
     .insert({ user_id: userID, post_id: postID, comment: comment })
     .returning("*");
 };
 
+// Delete a comment
+const deleteComments = (id) => {
+  return database('comments').where({id}).del();
+};
+
+// Add a comment like
 const addCommentLike = (userID, commentID) => {
+
   return database("liked_comments").insert({
     user_id: userID,
     comment_id: commentID,
@@ -77,7 +84,6 @@ const removeCommentLike = (userID, commentID) => {
 };
 
 // helper to delete comments (moderator)
-
 const deleteComments = async (id) => {
   await database("comments").where({ id }).update({ visible: false });
   return database("flagged_comments")
