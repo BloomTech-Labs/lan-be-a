@@ -17,14 +17,18 @@ app.post('/post/:id', (req, res) => {
 app.post('/comment', (req, res) => {});
 
 // Fetches flagged posts
-app.get('/posts', (_, res) => {
-  Flag.getFlaggedPosts()
-    .then((posts) => {
-      res.status(200).json(posts);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'Could not retrieve posts' });
-    });
+app.get('/posts', (req, res) => {
+  if (req.user.role_id > 1) {
+    Flag.getFlaggedPosts()
+      .then((posts) => {
+        res.status(200).json(posts);
+      })
+      .catch(() => {
+        res.status(500).json({ message: 'Could not retrieve posts' });
+      });
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
 });
 
 // Fetches flagged comments
