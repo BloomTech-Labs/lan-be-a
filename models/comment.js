@@ -65,6 +65,16 @@ const removeCommentLike = (userID, commentID) => {
     return database('liked_comments').where({ user_id: userID, comment_id: commentID }).del();
 };
 
+// helper to delete comments (moderator)
+
+const deleteComments = (id) => {
+    return database("comments").where({id}).del()
+}
+// const deleteComments = (post_id) =>{
+//     return database('comments').where('id', post_id).del()
+// }
+
+
 module.exports = {
     add,
     addCommentLike,
@@ -72,5 +82,6 @@ module.exports = {
     fetchPopular,
     incrementCommentLikes,
     decrementCommentLikes,
-    removeCommentLike
+    removeCommentLike,
+    deleteComments
 };
