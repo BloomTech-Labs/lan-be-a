@@ -1,6 +1,7 @@
 const database = require('../database/dbConfig');
 
-// Create a post
+
+// Create post
 const createPost = (post) => {
   return database('posts').insert(post).returning('id');
 };
@@ -14,6 +15,7 @@ const createRoomPostEntry = (post_id, room_id) => {
 const addPostLike = (userID, postID) => {
   return database('liked_posts').insert({ user_id: userID, post_id: postID });
 };
+
 
 // Add 1 to post likes column
 const incrementPostLikes = postID => {
@@ -119,6 +121,13 @@ const fetchSearch = (search) => {
     ]);
 };
 
+//helper for updating a post with given postID and newDescription
+const postUpdate = (postID, newDescription) => {
+  return database('posts')
+    .where('id', postID)
+    .update({ description: newDescription })
+    .returning('*');
+};
 module.exports = {
   createPost,
   createRoomPostEntry,
@@ -132,4 +141,6 @@ module.exports = {
   fetchRecent,
   fetchPopular,
   fetchSearch,
+  postUpdate,
 };
+
