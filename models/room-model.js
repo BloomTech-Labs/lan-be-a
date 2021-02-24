@@ -56,7 +56,8 @@ const fetchPopularByRoomId = (room_id) => {
       'p.created_at',
       'p.updated_at',
     ])
-    .where({['rtp.room_id']: room_id, ['p.visible']: true });
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1);
 };
 
 // Fetch posts in a room based on user search input
@@ -78,7 +79,8 @@ const searchWithRoomId = (room_id, search) => {
       'p.created_at',
       'p.updated_at',
     ])
-    .where({['rtp.room_id']: room_id, ['p.visible']: true});
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1);
 };
 
 module.exports = {
