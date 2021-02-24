@@ -5,20 +5,20 @@ const passport = require('passport');
 const session = require('express-session');
 const passportSetup = require('./config/passportSetup'); // eslint-disable-line
 const knexSessionStore = require('connect-session-knex')(session);
-
 const config = require('./database/dbConfig');
+
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
-const User = require('./models/user');
 const adminRouter = require('./routes/admin');
 const roomRouter = require('./routes/room-route');
 
+const User = require('./models/user');
+
 const app = express();
 
-const FRONTEND_URL =
-  process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -29,6 +29,7 @@ app.use(
     origin: FRONTEND_URL,
   })
 );
+
 app.use(
   session({
     // name: 'LAN',
@@ -38,15 +39,15 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false,
-      // Set to true once in production
-      // Set to false in local development
+      secure: process.env.SECURE_TRUE || false, // Set to true once in production
+      SameSite: 'none'
     },
     store: new knexSessionStore({
       knex: config,
     }),
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 

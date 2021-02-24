@@ -9,11 +9,7 @@ exports.up = (knex, Promise) => {
       table.string('email').notNullable().unique();
       table.string('display_name').index();
       table.string('profile_picture');
-      // I believe the components are there in the frontend for manual sign-ups and sign-ins, but due to design decisions and security concerns,
-      // I don't think we will be doing them. Commenting out just in case.
-      // table.string('password');
       table.string('track');
-      // table.integer("likes").defaultTo(0);
       table.boolean('onboarded').defaultTo('false');
       table.timestamps(true, true);
       table
@@ -42,11 +38,6 @@ exports.up = (knex, Promise) => {
       table.integer('likes').defaultTo(0);
       table.integer('comments').defaultTo(0);
       table.boolean('visible').defaultTo(1);
-      // table
-      //   .string("track")
-      //   // .notNullable()
-      //   .index();
-      // table.string("category").notNullable().index();
       table.timestamps(true, true);
     })
     .createTable('comments', (table) => {

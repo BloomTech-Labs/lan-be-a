@@ -1,12 +1,18 @@
 const database = require("../database/dbConfig");
 
-// Add comment
+// Add a comment
 const add = (userID, postID, comment) => {
   return database("comments")
     .insert({ user_id: userID, post_id: postID, comment: comment })
     .returning("*");
 };
 
+// Delete a comment
+const deleteComments = (id) => {
+  return database('comments').where({id}).del();
+};
+
+// Add a comment like
 const addCommentLike = (userID, commentID) => {
   return database("liked_comments").insert({
     user_id: userID,
