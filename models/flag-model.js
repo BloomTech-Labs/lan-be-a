@@ -1,8 +1,8 @@
 const database = require('../database/dbConfig');
 
 // Create a flagged post
-const createFlaggedPost = (postId, userId) => {
-  // Justin
+const createFlaggedPost = (post_id, user_id) => {
+  return database('flagged_posts').insert({ post_id, user_id });
 };
 
 // Create a flagged comment
