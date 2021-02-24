@@ -12,8 +12,7 @@ const createFlaggedComment = (commentId, userId) => {
 
 // Fetch Flagged Posts
 const getFlaggedPosts = () => {
-  // Only flagged posts that reviewed = false
-  // Jake
+  return database('flagged_posts').where({ reviewed: false });
 };
 
 // Fetch Flagged comments
