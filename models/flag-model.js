@@ -1,25 +1,23 @@
 const database = require('../database/dbConfig');
 
 // Create a flagged post
-const createFlaggedPost = (postId, userId) => {
-  // Justin
+const createFlaggedPost = (post_id, user_id) => {
+  return database('flagged_posts').insert({ post_id, user_id });
 };
 
 // Create a flagged comment
 const createFlaggedComment = (commentId, userId) => {
-  // Yvette
+  // Yvette / Tyler
 };
 
 // Fetch Flagged Posts
 const getFlaggedPosts = () => {
-  // Only flagged posts that reviewed = false
-  // Jake
+  return database('flagged_posts').where({ reviewed: false });
 };
 
 // Fetch Flagged comments
 const getFlaggedComments = () => {
-  // Only flagged comments that reviewed = false
-  // James
+  return database('flagged_comments').where({reviewed: false});
 };
 
 // Archive a flagged post

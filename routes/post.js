@@ -1,5 +1,8 @@
 const express = require('express');
 const Post = require('../models/post');
+const Comment = require('../models/comment');
+const { response } = require('express');
+
 
 const app = express.Router();
 
@@ -7,8 +10,10 @@ const app = express.Router();
 app.post('/create', (request, response) => {
   const userID = request.user.id;
   const { title, description, room_id } = request.body;
+
   Post.createPost({ user_id: userID, title, description })
     .then(([res]) => {
+
       Post.createRoomPostEntry(res, room_id)
         .then(() => {
           response.status(200).json({ message: 'Post created successfully' });
@@ -102,6 +107,21 @@ app.delete('/like/:id', (request, response) => {
     .catch((err) => {
       console.log(err);
       response.status(500).json({ message: 'Error decrementing post\'s comment count' });
+    });
+});
+
+//Update a post must be the user that created post
+app.put('/update/:id', (request, response) => {
+  const postID = request.params.id;
+
+  const { newDescription } = request.body;
+  if (postID !== request.user.id) {
+    response.status(401).json({ message: 'unathorized user' });
+  }
+  Post.postUpdate(postID, newDescription)
+    .then((data) => response.status(200).json(data))
+    .catch((err) => {
+      response.status(500).json(err);
     });
 });
 
