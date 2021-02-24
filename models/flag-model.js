@@ -34,6 +34,14 @@ const archiveComment = async (commentId) => {
 };
 
 // Resolve flagged post without archiving
+const resolveFlaggedPostWithoutArchiving = (postId) => {
+  return database('flagged_comments').where('post_id', postId).update({ reviewed: true });
+};
+
+// Resolve flagged post without archiving
+const resolveFlaggedCommentWithoutArchiving = (commentId) => {
+  return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
+};
 
 module.exports = {
   createFlaggedPost,
@@ -42,4 +50,6 @@ module.exports = {
   getFlaggedComments,
   archivePost,
   archiveComment,
+  resolveFlaggedPostWithoutArchiving,
+  resolveFlaggedCommentWithoutArchiving
 };

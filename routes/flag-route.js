@@ -53,10 +53,36 @@ app.delete('/post/:id', (req, res) => {});
 app.delete('/post/:id', (req, res) => {});
 
 // Resolve a flagged post without removing
-app.put('/post/:id', (req, res) => {});
+app.put('/post/:id', (req, res) => {
+  if (req.user.role_id > 1) {
+    Flag.resolveFlaggedPostWithoutArchiving(req.params.id)
+      .then(() => {
+        res.status(200).json({ message: 'Flag resolved'});
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: 'Unable to resolve flag'});
+      });
+  } else {
+    res.status(401).json({ message: 'Unauthorized'});
+  }
+});
 
 // Resolve a flagged comment without removing
-app.put('/post/:id', async (req, res) => {});
+app.put('/post/:id', async (req, res) => {
+  if (req.user.role_id > 1) {
+    Flag.resolveFlaggedCommentWithoutArchiving(req.params.id)
+      .then(() => {
+        res.status(200).json({ message: 'Flag resolved'});
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: 'Unable to resolve flag'});
+      });
+  } else {
+    res.status(401).json({ message: 'Unauthorized'});
+  }
+});
 
 // Archive a flagged comment
 app.put('/comments/:id', async (req, res) => {
