@@ -3,8 +3,14 @@ const app = express.Router();
 const Flag = require('../models/flag-model');
 
 // Flag a post
-app.post('/post', (req, res) => {
-  
+app.post('/post/:id', (req, res) => {
+  Flag.createFlaggedPost(req.params.id, req.user.id)
+    .then(() => {
+      res.status(200).json({ message: 'successfully flagged post' });
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'failed to flag post' });
+    });
 });
 
 // Flag a comment
