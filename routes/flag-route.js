@@ -28,7 +28,19 @@ app.get('/posts', (_, res) => {
 });
 
 // Fetches flagged comments
-app.get('/comments', (req, res) => {});
+app.get('/comments', (req, res) => {
+  if (req.user.role_id > 1) {
+    Flag.getFlaggedComments()
+      .then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    res.status(401).json({ message: 'Unauthroized'});
+  }
+});
 
 // Remove a post
 app.delete('/post/:id', (req, res) => {});
