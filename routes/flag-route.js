@@ -14,14 +14,10 @@ app.post('/post/:id', (req, res) => {
 });
 
 // Flag a comment
-app.post('/comment', (req, res) => {
-  
-});
+app.post('/comment', (req, res) => {});
 
 // Fetches flagged posts
-app.get('/posts', (req, res) => {
-    
-});
+app.get('/posts', (req, res) => {});
 
 // Fetches flagged comments
 app.get('/comments', (req, res) => {
@@ -39,23 +35,15 @@ app.get('/comments', (req, res) => {
 });
 
 // Remove a post
-app.delete('/post/:id', (req, res) => {
-    
-});
+app.delete('/post/:id', (req, res) => {});
 
 // Remove a comment
-app.delete('/post/:id', (req, res) => {
-    
-});
+app.delete('/post/:id', (req, res) => {});
 
 // Resolve a flagged post without removing
-app.put('/post/:id', (req, res) => {
-
-});
+app.put('/post/:id', (req, res) => {});
 
 // Resolve a flagged comment without removing
-app.put('/post/:id', (req, res) => {
-
-});
+app.put('/post/:id', (req, res) => {});
 
 module.exports = app;
