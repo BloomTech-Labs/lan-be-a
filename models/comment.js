@@ -83,7 +83,6 @@ const removeCommentLike = (userID, commentID) => {
 };
 
 // helper to delete comments (moderator)
-
 const deleteComments = async (id) => {
   await database("comments").where({ id }).update({ visible: false });
   return database("flagged_comments")
