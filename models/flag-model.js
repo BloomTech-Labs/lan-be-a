@@ -29,9 +29,6 @@ const archivePost = (postId) => {
 
 // Archive a flagged comment
 const archiveComment = async (commentId) => {
-  // set visible to false on comment
-  // set reviewed to true in flagged_comments table
-  // Gerardo
   await database('comments').where('id', commentId).update({ visible: false });
   return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
 };
