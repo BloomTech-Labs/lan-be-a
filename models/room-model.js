@@ -1,22 +1,21 @@
 const database = require('../database/dbConfig');
 
-//helper to get all the rooms
-const getAllRooms = () => {
-  return database('rooms').orderBy('room_name');
-};
-
-//helper to add a room to the db
+// Create a room
 const add = (room) => {
   return database('rooms').insert(room).returning('*');
 };
 
-//helper to remove a room from the db
+// Delete a room
 const remove = (roomId) => {
   return database('rooms').where('id', roomId).del();
 };
 
-// Fetch all posts
-// This is where search and sorting will occur
+// Fetch all rooms
+const getAllRooms = () => {
+  return database('rooms').orderBy('room_name');
+};
+
+// Fetch all posts in a room ordered by most recent
 const fetchRecentByRoomId = (room_id) => {
   return database('posts as p')
     .join('users as u', 'p.user_id', 'u.id')
@@ -37,7 +36,7 @@ const fetchRecentByRoomId = (room_id) => {
     .where('rtp.room_id', room_id);
 };
 
-// Fetch all posts based on popularity
+// Fetch all posts in a room ordered by likes
 const fetchPopularByRoomId = (room_id) => {
   return database('posts as p')
     .join('users as u', 'p.user_id', 'u.id')
@@ -58,7 +57,7 @@ const fetchPopularByRoomId = (room_id) => {
     .where('rtp.room_id', room_id);
 };
 
-// Fetch based on search terms
+// Fetch posts in a room based on user search input
 const searchWithRoomId = (room_id, search) => {
   return database('posts as p')
     .join('users as u', 'p.user_id', 'u.id')
@@ -81,9 +80,9 @@ const searchWithRoomId = (room_id, search) => {
 };
 
 module.exports = {
-  getAllRooms,
   add,
   remove,
+  getAllRooms,
   fetchRecentByRoomId,
   fetchPopularByRoomId,
   searchWithRoomId,

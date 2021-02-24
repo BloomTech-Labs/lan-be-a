@@ -1,21 +1,50 @@
 const database = require('../database/dbConfig');
 
+
 // Create post
 const createPost = (post) => {
   return database('posts').insert(post).returning('id');
 };
 
+// Create an entry of a post in the room_to_posts table
 const createRoomPostEntry = (post_id, room_id) => {
   return database('rooms_to_posts').insert({ post_id, room_id });
 };
 
-// Add entry for post like
+// Add like to a post
 const addPostLike = (userID, postID) => {
   return database('liked_posts').insert({ user_id: userID, post_id: postID });
 };
 
+
+// Add 1 to post likes column
+const incrementPostLikes = postID => {
+  return database('posts').where('id', postID).increment('likes', 1);
+};
+
+// Remove entry for post like
+const removePostLike = (userID, postID) => {
+  return database('liked_posts').where({ user_id: userID, post_id: postID }).del();
+};
+
+// Remove 1 from post likes column
+const decrementPostLikes = postID => {
+  return database('posts').where('id', postID).decrement('likes', 1);
+};
+
+// Add 1 to posts' comments colu,m
+const incrementCommentCount = postID => {
+  return database('posts').where('id', postID).increment('comments', 1);
+};
+  
+  
+// Remove 1 from posts' comments column
+const decrementCommentCount = postID => {
+  return database('posts').where('id', postID).decrement('comments', 1);
+};
+
 // Fetch individual post
-const fetch = (postID) => {
+const fetch = postID => {
   return database('posts')
     .join('users', 'posts.user_id', 'users.id')
     .where('posts.id', postID)
@@ -29,13 +58,12 @@ const fetch = (postID) => {
       'posts.likes',
       'posts.comments',
       'posts.created_at',
-      'posts.updated_at',
+      'posts.updated_at'
     ])
     .first();
 };
 
-// Fetch all posts
-// This is where search and sorting will occur
+// Fetch all posts ordered by most recent
 const fetchRecent = () => {
   return database('posts')
     .join('users', 'posts.user_id', 'users.id')
@@ -50,11 +78,11 @@ const fetchRecent = () => {
       'posts.likes',
       'posts.comments',
       'posts.created_at',
-      'posts.updated_at',
+      'posts.updated_at'
     ]);
 };
 
-// Fetch all posts based on popularity
+// Fetch all posts ordered by most likes
 const fetchPopular = () => {
   return database('posts')
     .join('users', 'posts.user_id', 'users.id')
@@ -69,10 +97,11 @@ const fetchPopular = () => {
       'posts.likes',
       'posts.comments',
       'posts.created_at',
-      'posts.updated_at',
+      'posts.updated_at'
     ]);
 };
 
+// Fetch posts based on user search input
 const fetchSearch = (search) => {
   return database('posts')
     .join('users', 'posts.user_id', 'users.id')
@@ -88,31 +117,8 @@ const fetchSearch = (search) => {
       'posts.likes',
       'posts.comments',
       'posts.created_at',
-      'posts.updated_at',
+      'posts.updated_at'
     ]);
-};
-
-const incrementPostLikes = (postID) => {
-  return database('posts').where('id', postID).increment('likes', 1);
-};
-
-const decrementPostLikes = (postID) => {
-  return database('posts').where('id', postID).decrement('likes', 1);
-};
-
-const incrementCommentCount = (postID) => {
-  return database('posts').where('id', postID).increment('comments', 1);
-};
-
-const decrementCommentCount = (postID) => {
-  return database('posts').where('id', postID).decrement('comments', 1);
-};
-
-// Remove entry for post like
-const removePostLike = (userID, postID) => {
-  return database('liked_posts')
-    .where({ user_id: userID, post_id: postID })
-    .del();
 };
 
 //helper for updating a post with given postID and newDescription
@@ -126,14 +132,15 @@ module.exports = {
   createPost,
   createRoomPostEntry,
   addPostLike,
+  incrementPostLikes,
+  removePostLike,
+  decrementPostLikes,
+  incrementCommentCount,
+  decrementCommentCount,
   fetch,
   fetchRecent,
   fetchPopular,
   fetchSearch,
-  incrementPostLikes,
-  decrementPostLikes,
-  incrementCommentCount,
-  decrementCommentCount,
-  removePostLike,
   postUpdate,
 };
+
