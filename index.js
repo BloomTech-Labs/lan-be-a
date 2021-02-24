@@ -39,7 +39,8 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false, // Set to true once in production
+      secure: process.env.SECURE_TRUE || false, // Set to true once in production
+      SameSite: 'none'
     },
     store: new knexSessionStore({
       knex: config,

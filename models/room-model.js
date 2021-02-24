@@ -23,6 +23,7 @@ const fetchRecentByRoomId = (room_id) => {
     .orderBy('p.created_at', 'desc')
     .select([
       'p.id',
+      'p.visible',
       'u.id as user_id',
       'u.profile_picture',
       'u.display_name',
@@ -33,7 +34,8 @@ const fetchRecentByRoomId = (room_id) => {
       'p.created_at',
       'p.updated_at',
     ])
-    .where('rtp.room_id', room_id);
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1);
 };
 
 // Fetch all posts in a room ordered by likes
@@ -54,7 +56,8 @@ const fetchPopularByRoomId = (room_id) => {
       'p.created_at',
       'p.updated_at',
     ])
-    .where('rtp.room_id', room_id);
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1);
 };
 
 // Fetch posts in a room based on user search input
@@ -76,7 +79,8 @@ const searchWithRoomId = (room_id, search) => {
       'p.created_at',
       'p.updated_at',
     ])
-    .where('rtp.room_id', room_id);
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1);
 };
 
 module.exports = {
