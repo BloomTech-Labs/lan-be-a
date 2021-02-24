@@ -1,40 +1,46 @@
 const database = require('../database/dbConfig');
 
-const add = (user) => {
-  return database('users').insert(user).returning('*');
-};
-
+// Get a user
 const find = (filter) => {
   return database('users').where(filter).first();
 };
 
-// Fetch all of a single user's posts
-const fetchPosts = (userID) => {
-  return database('posts').where('user_id', userID);
+// Add a user
+const add = (user) => {
+  return database('users').insert(user).returning('*');
 };
 
-// Can we mix these two? Should we?
-
-// Fetch all of a single user's comments
-const fetchComments = (userID) => {
-  return database('comments').where('user_id', userID);
-};
-
-// Fetch user's liked posts
-const fetchUsersLikedPosts = (userID) => {
-  return database('liked_posts').where('user_id', userID);
-};
-
-// Fetch user's liked comments
-const fetchUsersLikedComments = (userID) => {
-  return database('liked_comments').where('user_id', userID);
-};
-
+// Update a user
 const update = (id, value) => {
   return database('users').where('id', id).update(value).returning('*');
 };
 
-// Set a user's onboarded field to true
+// Delete a user
+const remove = (userID) => {
+  return database('users').where('id', userID).del();
+};
+
+// Fetch all of a users posts
+const fetchPosts = (userID) => {
+  return database('posts').where('user_id', userID);
+};
+
+// Fetch all of a users comments
+const fetchComments = (userID) => {
+  return database('comments').where('user_id', userID);
+};
+
+// Fetch all posts a user has liked
+const fetchUsersLikedPosts = (userID) => {
+  return database('liked_posts').where('user_id', userID);
+};
+
+// Fetch all comments a user has liked
+const fetchUsersLikedComments = (userID) => {
+  return database('liked_comments').where('user_id', userID);
+};
+
+// Set a users onboarded field to true
 const onboard = (userID) => {
   return database('users')
     .where('id', userID)
@@ -42,19 +48,14 @@ const onboard = (userID) => {
     .returning('*');
 };
 
-//remove a specific user with the userID passed in req param
-const remove = (userID) => {
-  return database('users').where('id', userID).del();
-};
-
 module.exports = {
-  add,
   find,
+  add,
+  update,
+  remove,
   fetchPosts,
   fetchComments,
   fetchUsersLikedPosts,
   fetchUsersLikedComments,
-  update,
   onboard,
-  remove,
 };
