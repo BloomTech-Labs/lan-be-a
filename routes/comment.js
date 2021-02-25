@@ -20,20 +20,25 @@ app.post('/', (request, response) => {
     });
 });
 
-// Deletes a comment from a post
-app.delete('/comments/:id', (request, response) => {
+// Deletes a comment from a post (USER)
+app.delete('/comments/:id', async (request, response) => {
   const commentId = request.params.id;
-  Comment.deleteComments(commentId)
-    .then((num) =>{
-      if (num === 1) {
-        response.status(200).json({ successMessage: 'This comment is successfully deleted'});
-      } else {
-        response.status(404).json({ message:'Failed to delete comment'}).end();
-      }
-    })
-    .catch((err) =>{
-      response.status(500).json({message:'ERR in DELETE COMMENT', error: err.message});
-    });
+  const comment_id = await fetchCommentId(comment_id)
+  if (comment.user_id === request.user.id) {
+     Comment.removeComments(commentId)
+       .then((num) =>{
+         if (num === 1) {
+           response.status(200).json({ successMessage: 'This comment is successfully deleted'});
+         } else {
+           response.status(404).json({ message:'Failed to delete comment'}).end();
+         }
+       })
+       .catch((err) =>{
+         response.status(500).json({message:'ERR in DELETE COMMENT', error: err.message});
+       });
+    } else {
+         response.status(401).json({ message: 'unauthorized' })
+    }
 });
 
 // Fetch a posts' comments order by most recent
