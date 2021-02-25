@@ -17,20 +17,23 @@ const getFlaggedPosts = () => {
 
 // Fetch Flagged comments
 const getFlaggedComments = () => {
-  return database('flagged_comments').where({reviewed: false});
+  return database('flagged_comments').where({ reviewed: false });
 };
 
 // Archive a flagged post
-const archivePost = (postId) => {
-  // set visible to false on post
-  // set reviewed to true in flagged_posts table
-  // Sal
+const archivePost = async (postId) => {
+  await database('posts').where('id', postId).update({ visible: false });
+  return database('flaggedPosts')
+    .where('post_id', postId)
+    .update({ reviewed: true });
 };
 
 // Archive a flagged comment
 const archiveComment = async (commentId) => {
   await database('comments').where('id', commentId).update({ visible: false });
-  return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
+  return database('flagged_comments')
+    .where('comment_id', commentId)
+    .update({ reviewed: true });
 };
 
 // Resolve flagged post without archiving

@@ -56,7 +56,19 @@ app.delete('/post/:id', (req, res) => {});
 app.put('/post/:id', (req, res) => {});
 
 // Resolve a flagged comment without removing
-app.put('/post/:id', async (req, res) => {});
+app.put('/post/:id', async (req, res) => {
+  const flaggedPost= (req.params.id)
+  try {
+    if (req.user.role_id > 1) {
+      await Flag.archivePost(flaggedPost)
+      res.status(200.json({ message: 'Successfuly archived post'}))
+    } else {
+      res.status(401).json ({ message: 'Unauthorized'})
+    }
+  } catch(err) {
+    res.status(500).json({message: err.message})
+  }
+});
 
 // Archive a flagged comment
 app.put('/comments/:id', async (req, res) => {
