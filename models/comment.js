@@ -20,16 +20,30 @@ const addCommentLike = (userID, commentID) => {
   });
 };
 
-// Fetch post comments by recent
-// Should this be in post model? Maybe not because the URI will end in /comment anyway.
+// Add 1 to a comments likes column
+const incrementCommentLikes = (commentID) => {
+  return database('comments').where('id', commentID).increment('likes', 1);
+};
+
+// Remove a comment like
+const removeCommentLike = (userID, commentID) => {
+  return database('liked_comments')
+    .where({ user_id: userID, comment_id: commentID })
+    .del();
+};
+
+// Remove 1 from a comments likes column
+const decrementCommentLikes = (commentID) => {
+  return database('comments').where('id', commentID).decrement('likes', 1);
+};
+
+// Fetch a posts' comments ordered by more recent
 const fetchRecent = (postID) => {
   return (
     database('comments')
       .join('users', 'comments.user_id', 'users.id')
       .where('post_id', postID)
       .orderBy('comments.created_at', 'desc')
-      // Check what else is available here
-      // user.id or comments.user_id?, research Knex as keyword so that you can use user.id
       .select([
         'comments.id',
         'comments.user_id',
@@ -45,14 +59,13 @@ const fetchRecent = (postID) => {
   );
 };
 
+// Fetch a posts' comments ordered by most likes
 const fetchPopular = (postID) => {
   return (
     database('comments')
       .join('users', 'comments.user_id', 'users.id')
       .where('post_id', postID)
       .orderBy('comments.likes', 'desc')
-      // Check what else is available here
-      // user.id or comments.user_id?, research Knex as keyword so that you can use user.id
       .select([
         'comments.id',
         'comments.user_id',
@@ -66,20 +79,6 @@ const fetchPopular = (postID) => {
         'comments.updated_at',
       ])
   );
-};
-
-const incrementCommentLikes = (commentID) => {
-  return database('comments').where('id', commentID).increment('likes', 1);
-};
-
-const decrementCommentLikes = (commentID) => {
-  return database('comments').where('id', commentID).decrement('likes', 1);
-};
-
-const removeCommentLike = (userID, commentID) => {
-  return database('liked_comments')
-    .where({ user_id: userID, comment_id: commentID })
-    .del();
 };
 
 // helper to delete comments (moderator)
@@ -90,14 +89,13 @@ const removeCommentLike = (userID, commentID) => {
 //     .update({ reviewed: true });
 // };
 
-
 module.exports = {
   add,
+  // deleteComments,
   addCommentLike,
+  incrementCommentLikes,
+  removeCommentLike,
+  decrementCommentLikes,
   fetchRecent,
   fetchPopular,
-  incrementCommentLikes,
-  decrementCommentLikes,
-  removeCommentLike,
-  // deleteComments,
 };
