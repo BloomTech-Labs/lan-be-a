@@ -7,7 +7,7 @@ const createFlaggedPost = (post_id, user_id) => {
 
 // Create a flagged comment
 const createFlaggedComment = (commentId, userId) => {
-  // Yvette / Tyler
+  return database('flagged_comments').insert({commentId, userId});
 };
 
 // Fetch Flagged Posts
