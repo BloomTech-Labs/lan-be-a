@@ -32,25 +32,25 @@ app.post("/", (request, response) => {
 // ENDPOINT GOES HERE
 
 // DELETE a comment from a post
-app.delete("/comments/:id", (request, response) => {
-  const commentId = request.params.id;
+// app.delete("/comments/:id", (request, response) => {
+//   const commentId = request.params.id;
 
-  Comment.deleteComments(commentId)
-    .then((num) => {
-      if (num === 1) {
-        res
-          .status(200)
-          .json({ successMessage: "This comment is successfully deleted" });
-      } else {
-        res.status(404).json({ message: "Failed to delete comment" }).end();
-      }
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({ message: "ERR in DELETE COMMENT", error: err.message });
-    });
-});
+//   Comment.deleteComments(commentId)
+//     .then((num) => {
+//       if (num === 1) {
+//         res
+//           .status(200)
+//           .json({ successMessage: "This comment is successfully deleted" });
+//       } else {
+//         res.status(404).json({ message: "Failed to delete comment" }).end();
+//       }
+//     })
+//     .catch((err) => {
+//       res
+//         .status(500)
+//         .json({ message: "ERR in DELETE COMMENT", error: err.message });
+//     });
+// });
 // ENDPOINT GOES HERE
 
 // Fetch a post's comments by recent

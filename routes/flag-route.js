@@ -48,9 +48,30 @@ app.get('/comments', (req, res) => {
 
 // Remove a post
 app.delete('/post/:id', (req, res) => {});
+// DELETE a comment from a post
+
 
 // Remove a comment
-app.delete('/post/:id', (req, res) => {});
+// app.delete('/post/:id', (req, res) => {});
+app.delete("/comments/:id", (request, response) => {
+  const commentId = request.params.id;
+
+  Comment.deleteComments(commentId)
+    .then((num) => {
+      if (num === 1) {
+        res
+          .status(200)
+          .json({ successMessage: "This comment is successfully deleted" });
+      } else {
+        res.status(404).json({ message: "Failed to delete comment" }).end();
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: "ERR in DELETE COMMENT", error: err.message });
+    });
+});
 
 // Resolve a flagged post without removing
 app.put('/post/:id', (req, res) => {});

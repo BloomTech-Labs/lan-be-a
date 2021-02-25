@@ -83,12 +83,12 @@ const removeCommentLike = (userID, commentID) => {
 };
 
 // helper to delete comments (moderator)
-const deleteComments = async (id) => {
-  await database("comments").where({ id }).update({ visible: false });
-  return database("flagged_comments")
-    .where({ comment_id: id })
-    .update({ reviewed: true });
-};
+// const deleteComments = async (id) => {
+//   await database("comments").where({ id }).update({ visible: false });
+//   return database("flagged_comments")
+//     .where({ comment_id: id })
+//     .update({ reviewed: true });
+// };
 
 
 module.exports = {
@@ -99,5 +99,5 @@ module.exports = {
   incrementCommentLikes,
   decrementCommentLikes,
   removeCommentLike,
-  deleteComments,
+  // deleteComments,
 };
