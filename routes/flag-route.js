@@ -3,7 +3,7 @@ const app = express.Router();
 const Flag = require('../models/flag-model');
 
 // Flag a post
-app.post('/post/:id', (req, res) => {
+app.post('/posts/:id', (req, res) => {
   Flag.createFlaggedPost(req.params.id, req.user.id)
     .then(() => {
       res.status(200).json({ message: 'successfully flagged post' });
@@ -14,13 +14,13 @@ app.post('/post/:id', (req, res) => {
 });
 
 // Flag a comment
-app.post('/comment', (req, res) => {
+app.post('/comments/:id', (req, res) => {
   Flag.createFlaggedComment(req.params.id, req.user.id)
     .then(() => {
-      res.status(200).json({ message: 'successfully flagged post' });
+      res.status(200).json({ message: 'successfully flagged Comment' });
     })
     .catch(() => {
-      res.status(500).json({ message: 'failed to flag post' });
+      res.status(500).json({ message: 'failed to flag Comment' });
     });
 });
 
@@ -46,8 +46,8 @@ app.get('/comments', (req, res) => {
       .then((data) => {
         res.status(200).json(data);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        res.status(500).json({ message: 'Failed to fetch comments'});
       });
   } else {
     res.status(401).json({ message: 'Unauthroized'});
@@ -75,7 +75,7 @@ app.delete('/comments/:id', (request, response) => {
 });
 
 // Archive a flagged post
-app.delete('/post/:id', async (req, res) => {
+app.delete('/posts/:id', async (req, res) => {
   const flaggedPost= (req.params.id);
   try {
     if (req.user.role_id > 1) {
@@ -104,14 +104,13 @@ app.delete('/comments/:id', async (req, res) => {
 });
 
 // Resolve a flagged post without removing
-app.put('/post/:id', (req, res) => {
+app.put('/posts/:id', (req, res) => {
   if (req.user.role_id > 1) {
     Flag.resolveFlaggedPostWithoutArchiving(req.params.id)
       .then(() => {
         res.status(200).json({ message: 'Flag resolved'});
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         res.status(500).json({ message: 'Unable to resolve flag'});
       });
   } else {
@@ -120,14 +119,13 @@ app.put('/post/:id', (req, res) => {
 });
 
 // Resolve a flagged comment without removing
-app.put('/post/:id', async (req, res) => {
+app.put('/comments/:id', async (req, res) => {
   if (req.user.role_id > 1) {
     Flag.resolveFlaggedCommentWithoutArchiving(req.params.id)
       .then(() => {
         res.status(200).json({ message: 'Flag resolved'});
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         res.status(500).json({ message: 'Unable to resolve flag'});
       });
   } else {
