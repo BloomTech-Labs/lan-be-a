@@ -37,7 +37,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: process.env.SECURE_TRUE || false, // Set to true once in production
       SameSite: 'none'
