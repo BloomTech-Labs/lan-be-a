@@ -7,9 +7,9 @@ const app = express.Router();
 
 // Add a comment to a post
 app.post('/', (request, response) => {
-  userID = request.user.id;
-  postID = request.body.postID;
-  comment = request.body.comment;
+  const userID = request.user.id;
+  const postID = request.body.postID;
+  const comment = request.body.comment;
 
   Post.incrementCommentCount(postID)
     .then((res) => {
