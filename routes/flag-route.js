@@ -15,6 +15,8 @@ app.post('/post/:id', (req, res) => {
 
 // Flag a comment
 app.post('/comment', (req, res) => {});
+  // NEED
+
 
 // Fetches flagged posts
 app.get('/posts', (req, res) => {
@@ -46,11 +48,35 @@ app.get('/comments', (req, res) => {
   }
 });
 
-// Remove a post
-app.delete('/post/:id', (req, res) => {});
+// Archive a flagged post
+app.delete('/post/:id', (req, res) => {
+  const flaggedPost= (req.params.id)
+    try {
+      if (req.user.role_id > 1) {
+        await Flag.archivePost(flaggedPost)
+        res.status(200.json({ message: 'Successfuly archived post'}))
+      } else {
+        res.status(401).json ({ message: 'Unauthorized'})
+      }
+    } catch(err) {
+      res.status(500).json({message: err.message})
+    }
+});
 
-// Remove a comment
-app.delete('/post/:id', (req, res) => {});
+// Archive a flagged comment
+app.delete('/comments/:id', async (req, res) => {
+  try {
+    if (req.user.role_id > 1) {
+      await Flag.archiveComment(req.params.id);
+      res.status(200).json({ message: 'Successfully archived comment' });
+    } else {
+      res.status(401).json({ message: 'Unauthorized' });
+    }
+  } catch(err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Resolve a flagged post without removing
 app.put('/post/:id', (req, res) => {
@@ -81,20 +107,6 @@ app.put('/post/:id', async (req, res) => {
       });
   } else {
     res.status(401).json({ message: 'Unauthorized'});
-  }
-});
-
-// Archive a flagged comment
-app.put('/comments/:id', async (req, res) => {
-  try {
-    if (req.user.role_id > 1) {
-      await Flag.archiveComment(req.params.id);
-      res.status(200).json({ message: 'Successfully archived comment' });
-    } else {
-      res.status(401).json({ message: 'Unauthorized' });
-    }
-  } catch(err) {
-    res.status(500).json({ message: err.message });
   }
 });
 
