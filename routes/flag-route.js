@@ -50,7 +50,7 @@ app.get('/comments', (req, res) => {
         res.status(500).json({ message: 'Failed to fetch comments'});
       });
   } else {
-    res.status(401).json({ message: 'Unauthroized'});
+    res.status(401).json({ message: 'Unauthroized' });
   }
 });
 
@@ -98,7 +98,7 @@ app.delete('/comments/:id', async (req, res) => {
     } else {
       res.status(401).json({ message: 'Unauthorized' });
     }
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
@@ -108,13 +108,13 @@ app.put('/posts/:id', (req, res) => {
   if (req.user.role_id > 1) {
     Flag.resolveFlaggedPostWithoutArchiving(req.params.id)
       .then(() => {
-        res.status(200).json({ message: 'Flag resolved'});
+        res.status(200).json({ message: 'Flag resolved' });
       })
       .catch(() => {
         res.status(500).json({ message: 'Unable to resolve flag'});
       });
   } else {
-    res.status(401).json({ message: 'Unauthorized'});
+    res.status(401).json({ message: 'Unauthorized' });
   }
 });
 
@@ -123,13 +123,13 @@ app.put('/comments/:id', async (req, res) => {
   if (req.user.role_id > 1) {
     Flag.resolveFlaggedCommentWithoutArchiving(req.params.id)
       .then(() => {
-        res.status(200).json({ message: 'Flag resolved'});
+        res.status(200).json({ message: 'Flag resolved' });
       })
       .catch(() => {
         res.status(500).json({ message: 'Unable to resolve flag'});
       });
   } else {
-    res.status(401).json({ message: 'Unauthorized'});
+    res.status(401).json({ message: 'Unauthorized' });
   }
 });
 

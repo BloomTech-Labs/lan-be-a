@@ -7,10 +7,6 @@ const add = (userID, postID, comment) => {
     .returning("*");
 };
 
-// Delete a comment
-const deleteComments = (id) => {
-  return database('comments').where({id}).del();
-};
 
 // Add a comment like
 const addCommentLike = (userID, commentID) => {
@@ -82,20 +78,30 @@ const fetchPopular = (postID) => {
 };
 
 // helper to delete comments (moderator)
-// const deleteComments = async (id) => {
-//   await database("comments").where({ id }).update({ visible: false });
-//   return database("flagged_comments")
-//     .where({ comment_id: id })
-//     .update({ reviewed: true });
-// };
+const removeComments = async (id) => {
+  await database("comments").where({ id }).update({ visible: false });
+  return database("flagged_comments")
+    .where({ comment_id: id })
+    .update({ reviewed: true });
+};
 
+// fetch comment with ID 
+const fetchCommentId = comment_id =>{
+  return database('comments').where('id', comment_id) 
+}
+
+// // Delete a comment
+// const deleteComments = (id) => {
+//   return database('comments').where({id}).del();
+// };
 module.exports = {
   add,
-  // deleteComments,
   addCommentLike,
   incrementCommentLikes,
   removeCommentLike,
   decrementCommentLikes,
   fetchRecent,
   fetchPopular,
+  removeComments,
+  fetchCommentId
 };
