@@ -23,7 +23,7 @@ app.post('/', (request, response) => {
 // Deletes a comment from a post (USER)
 app.delete('/comments/:id', async (request, response) => {
   const commentId = request.params.id;
-  const comment_id = await fetchCommentId(comment_id)
+  const comment = await fetchCommentId(commentId)
   if (comment.user_id === request.user.id) {
      Comment.removeComments(commentId)
        .then((num) =>{
