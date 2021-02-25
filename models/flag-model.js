@@ -41,6 +41,14 @@ const resolveFlaggedPostWithoutArchiving = (postId) => {
   return database('flagged_comments').where('post_id', postId).update({ reviewed: true });
 };
 
+// helper to delete comments (moderator)
+const deleteComments = async (id) => {
+  await database("comments").where({ id }).update({ visible: false });
+  return database("flagged_comments")
+    .where({ comment_id: id })
+    .update({ reviewed: true });
+};
+
 // Resolve flagged post without archiving
 const resolveFlaggedCommentWithoutArchiving = (commentId) => {
   return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
@@ -53,6 +61,7 @@ module.exports = {
   getFlaggedComments,
   archivePost,
   archiveComment,
+  deleteComments,
   resolveFlaggedPostWithoutArchiving,
   resolveFlaggedCommentWithoutArchiving
 };

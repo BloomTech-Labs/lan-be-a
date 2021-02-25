@@ -48,6 +48,26 @@ app.get('/comments', (req, res) => {
   }
 });
 
+// Deletes a comment
+app.delete('/comments/:id', (request, response) => {
+  const commentId = request.params.id;
+  Comment.deleteComments(commentId)
+    .then((num) => {
+      if (num === 1) {
+        res
+          .status(200)
+          .json({ successMessage: 'This comment is successfully deleted' });
+      } else {
+        res.status(404).json({ message: 'Failed to delete comment' }).end();
+      }
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: 'ERR in DELETE COMMENT', error: err.message });
+    });
+});
+
 // Archive a flagged post
 app.delete('/post/:id', (req, res) => {
   const flaggedPost= (req.params.id)
@@ -76,7 +96,6 @@ app.delete('/comments/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // Resolve a flagged post without removing
 app.put('/post/:id', (req, res) => {
