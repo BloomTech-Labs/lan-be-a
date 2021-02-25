@@ -1,12 +1,12 @@
-const express = require("express");
-const Post = require("../models/post");
-const Comment = require("../models/comment");
-const { response } = require("express");
+const express = require('express');
+const Post = require('../models/post');
+const Comment = require('../models/comment');
+const { response } = require('express');
 
 const app = express.Router();
 
 // Add a comment to a post
-app.post("/", (request, response) => {
+app.post('/', (request, response) => {
   userID = request.user.id;
   postID = request.body.postID;
   comment = request.body.comment;
@@ -16,14 +16,14 @@ app.post("/", (request, response) => {
       Comment.add(userID, postID, comment).then((r) =>
         response
           .status(200)
-          .json({ message: "Added comment successfully", comment: r[0] })
+          .json({ message: 'Added comment successfully', comment: r[0] })
       );
     })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error incrementing comment count on post" });
+        .json({ message: 'Error incrementing comment count on post' });
     });
 });
 
@@ -54,7 +54,7 @@ app.post("/", (request, response) => {
 // ENDPOINT GOES HERE
 
 // Fetch a post's comments by recent
-app.get("/recent/:id", (request, response) => {
+app.get('/recent/:id', (request, response) => {
   const postID = request.params.id;
 
   Comment.fetchRecent(postID)
@@ -63,12 +63,12 @@ app.get("/recent/:id", (request, response) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error fetching post's comments by recent" });
+        .json({ message: 'Error fetching posts comments by recent' });
     });
 });
 
 // Fetch a post's comments by popular
-app.get("/popular/:id", (request, response) => {
+app.get('/popular/:id', (request, response) => {
   const postID = request.params.id;
 
   Comment.fetchPopular(postID)
@@ -77,7 +77,7 @@ app.get("/popular/:id", (request, response) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error fetching post's comments by popular" });
+        .json({ message: 'Error fetching posts comments by popular' });
     });
 });
 
@@ -86,7 +86,7 @@ app.get("/popular/:id", (request, response) => {
 
 // Like comment
 // We need this in order to keep track of what comments a user has liked
-app.get("/like/:id", (request, response) => {
+app.get('/like/:id', (request, response) => {
   userID = request.user.id;
   commentID = Number(request.params.id);
 
@@ -94,24 +94,24 @@ app.get("/like/:id", (request, response) => {
     .then((res) => {
       Comment.addCommentLike(userID, commentID)
         .then((r) =>
-          response.status(200).json({ message: "Liked comment successfully" })
+          response.status(200).json({ message: 'Liked comment successfully' })
         )
         .catch((e) => {
           console.log(e);
-          response.status(500).json({ message: "Error adding comment like" });
+          response.status(500).json({ message: 'Error adding comment like' });
         });
     })
     .catch((err) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error incrementing comment likes" });
+        .json({ message: 'Error incrementing comment likes' });
     });
 });
 
 // Unlike comment
 // There is no 'downvote' feature, only 'upvote', therefore this just undoes what the endpoint above does
-app.delete("/like/:id", (request, response) => {
+app.delete('/like/:id', (request, response) => {
   userID = request.user.id;
   commentID = Number(request.params.id);
 
@@ -119,18 +119,18 @@ app.delete("/like/:id", (request, response) => {
     .then((res) => {
       Comment.removeCommentLike(userID, commentID)
         .then((r) =>
-          response.status(200).json({ message: "Unliked comment successfully" })
+          response.status(200).json({ message: 'Unliked comment successfully' })
         )
         .catch((e) => {
           console.log(e);
-          response.status(500).json({ message: "Error removing comment like" });
+          response.status(500).json({ message: 'Error removing comment like' });
         });
     })
     .catch((err) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error decrementing comment likes" });
+        .json({ message: 'Error decrementing comment likes' });
     });
 });
 
