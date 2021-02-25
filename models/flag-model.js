@@ -7,13 +7,12 @@ const createFlaggedPost = (post_id, user_id) => {
 
 // Create a flagged comment
 const createFlaggedComment = (commentId, userId) => {
-  // Yvette / Tyler
+  return database('flagged_comments').insert({commentId, userId});
 };
 
 // Fetch Flagged Posts
 const getFlaggedPosts = () => {
-  // Only flagged posts that reviewed = false
-  // Jake
+  return database('flagged_posts').where({reviewed: false});
 };
 
 // Fetch Flagged comments
@@ -22,20 +21,26 @@ const getFlaggedComments = () => {
 };
 
 // Archive a flagged post
-const archivePost = (postId) => {
-  // set visible to false on post
-  // set reviewed to true in flagged_posts table
-  // Sal
+const archivePost = async(postId) => {
+  await database('posts').where('id', postId).update({ visible: false });
+  return database('flagged_posts').where('post_id', postId).update({ reviewed: true });
 };
 
 // Archive a flagged comment
-const archiveComment = (commentId) => {
-  // set visible to false on comment
-  // set reviewed to true in flagged_comments table
-  // Gerardo
+const archiveComment = async(commentId) => {
+  await database('comments').where('id', commentId).update({ visible: false });
+  return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
 };
 
 // Resolve flagged post without archiving
+const resolvePost = (postId) =>{
+  return database('flagged_posts').where('post_id', postId).update({ reviewed: true });
+};
+// Resolve flagged comment without archiving
+const resolveComment = (commentId) => {
+  return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
+};
+
 
 module.exports = {
   createFlaggedPost,
@@ -44,4 +49,6 @@ module.exports = {
   getFlaggedComments,
   archivePost,
   archiveComment,
+  resolveComment,
+  resolvePost
 };

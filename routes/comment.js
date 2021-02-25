@@ -1,7 +1,6 @@
 const express = require('express');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
-const { response } = require('express');
 
 const app = express.Router();
 
