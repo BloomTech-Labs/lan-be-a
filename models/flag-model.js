@@ -6,8 +6,8 @@ const createFlaggedPost = (post_id, user_id) => {
 };
 
 // Create a flagged comment
-const createFlaggedComment = (commentId, userId) => {
-  // Yvette / Tyler
+const createFlaggedComment = (comment_id, user_id) => {
+  return database('flagged_comments').insert({ comment_id, user_id });
 };
 
 // Fetch Flagged Posts
@@ -43,8 +43,8 @@ const resolveFlaggedPostWithoutArchiving = (postId) => {
 
 // helper to delete comments (moderator)
 const deleteComments = async (id) => {
-  await database("comments").where({ id }).update({ visible: false });
-  return database("flagged_comments")
+  await database('comments').where({ id }).update({ visible: false });
+  return database('flagged_comments')
     .where({ comment_id: id })
     .update({ reviewed: true });
 };

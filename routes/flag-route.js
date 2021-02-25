@@ -14,9 +14,15 @@ app.post('/post/:id', (req, res) => {
 });
 
 // Flag a comment
-app.post('/comment', (req, res) => {});
-  // NEED
-
+app.post('/comment', (req, res) => {
+  Flag.createFlaggedComment(req.params.id, req.user.id)
+    .then(() => {
+      res.status(200).json({ message: 'successfully flagged post' });
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'failed to flag post' });
+    });
+});
 
 // Fetches flagged posts
 app.get('/posts', (req, res) => {
@@ -54,33 +60,33 @@ app.delete('/comments/:id', (request, response) => {
   Comment.deleteComments(commentId)
     .then((num) => {
       if (num === 1) {
-        res
+        response
           .status(200)
           .json({ successMessage: 'This comment is successfully deleted' });
       } else {
-        res.status(404).json({ message: 'Failed to delete comment' }).end();
+        response.status(404).json({ message: 'Failed to delete comment' }).end();
       }
     })
     .catch((err) => {
-      res
+      response
         .status(500)
         .json({ message: 'ERR in DELETE COMMENT', error: err.message });
     });
 });
 
 // Archive a flagged post
-app.delete('/post/:id', (req, res) => {
-  const flaggedPost= (req.params.id)
-    try {
-      if (req.user.role_id > 1) {
-        await Flag.archivePost(flaggedPost)
-        res.status(200.json({ message: 'Successfuly archived post'}))
-      } else {
-        res.status(401).json ({ message: 'Unauthorized'})
-      }
-    } catch(err) {
-      res.status(500).json({message: err.message})
+app.delete('/post/:id', async (req, res) => {
+  const flaggedPost= (req.params.id);
+  try {
+    if (req.user.role_id > 1) {
+      await Flag.archivePost(flaggedPost);
+      res.status(200).json({ message: 'Successfuly archived post'});
+    } else {
+      res.status(401).json ({ message: 'Unauthorized'});
     }
+  } catch(err) {
+    res.status(500).json({message: err.message});
+  }
 });
 
 // Archive a flagged comment
