@@ -1,7 +1,6 @@
 const express = require('express');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
-const { response } = require('express');
 
 
 const app = express.Router();
@@ -113,16 +112,16 @@ app.delete('/like/:id', (request, response) => {
 //Update a post must be the user that created post
 app.put('/update/:id', (request, response) => {
   const postID = request.params.id;
-
   const { newDescription } = request.body;
   if (postID !== request.user.id) {
     response.status(401).json({ message: 'unathorized user' });
+  } else {
+    Post.postUpdate(postID, newDescription)
+      .then((data) => response.status(200).json(data))
+      .catch((err) => {
+        response.status(500).json(err);
+      });
   }
-  Post.postUpdate(postID, newDescription)
-    .then((data) => response.status(200).json(data))
-    .catch((err) => {
-      response.status(500).json(err);
-    });
 });
 
 module.exports = app;

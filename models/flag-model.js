@@ -6,24 +6,28 @@ const createFlaggedPost = (post_id, user_id) => {
 };
 
 // Create a flagged comment
-const createFlaggedComment = (commentId, userId) => {
-  return database('flagged_comments').insert({commentId, userId});
+const createFlaggedComment = (comment_id, user_id) => {
+  return database('flagged_comments').insert({ comment_id, user_id });
 };
 
 // Fetch Flagged Posts
 const getFlaggedPosts = () => {
-  return database('flagged_posts').where({ reviewed: false });
+  return database('flagged_posts')
+    .join('posts', 'flagged_posts.post_id', 'posts.id')
+    .where( 'flagged_posts.reviewed', false );
 };
 
 // Fetch Flagged comments
 const getFlaggedComments = () => {
-  return database('flagged_comments').where({ reviewed: false });
+  return database('flagged_comments')
+    .join('comments', 'flagged_comments.comment_id', 'comments.id')
+    .where( 'flagged_comments.reviewed', false );
 };
 
 // Archive a flagged post
 const archivePost = async (postId) => {
   await database('posts').where('id', postId).update({ visible: false });
-  return database('flaggedPosts')
+  return database('flagged_posts')
     .where('post_id', postId)
     .update({ reviewed: true });
 };
@@ -38,15 +42,7 @@ const archiveComment = async (commentId) => {
 
 // Resolve flagged post without archiving
 const resolveFlaggedPostWithoutArchiving = (postId) => {
-  return database('flagged_comments').where('post_id', postId).update({ reviewed: true });
-};
-
-// helper to delete comments (moderator)
-const deleteComments = async (id) => {
-  await database("comments").where({ id }).update({ visible: false });
-  return database("flagged_comments")
-    .where({ comment_id: id })
-    .update({ reviewed: true });
+  return database('flagged_posts').where('post_id', postId).update({ reviewed: true });
 };
 
 // Resolve flagged post without archiving
@@ -61,7 +57,6 @@ module.exports = {
   getFlaggedComments,
   archivePost,
   archiveComment,
-  deleteComments,
   resolveFlaggedPostWithoutArchiving,
   resolveFlaggedCommentWithoutArchiving
 };
