@@ -4,7 +4,7 @@ const database = require('../database/dbConfig');
 const add = (userID, postID, comment) => {
   return database('comments')
     .insert({ user_id: userID, post_id: postID, comment: comment })
-    .returning("*");
+    .returning('*');
 };
 
 
@@ -39,6 +39,7 @@ const fetchRecent = (postID) => {
     database('comments')
       .join('users', 'comments.user_id', 'users.id')
       .where('post_id', postID)
+      .andWhere('comments.visible', true)
       .orderBy('comments.created_at', 'desc')
       .select([
         'comments.id',
@@ -61,6 +62,7 @@ const fetchPopular = (postID) => {
     database('comments')
       .join('users', 'comments.user_id', 'users.id')
       .where('post_id', postID)
+      .andWhere('comments.visible', true)
       .orderBy('comments.likes', 'desc')
       .select([
         'comments.id',
@@ -79,22 +81,22 @@ const fetchPopular = (postID) => {
 
 // helper to delete comments (moderator)
 const removeComments = async (id) => {
-    return await database('comments').where({id}).del();
-  // await database("comments").where({ id }).update({ visible: false });
-  // return database("flagged_comments")
-  //   .where({ comment_id: id })
-  //   .update({ reviewed: true });
+  await database('comments').where({ id }).update({ visible: false });
+  return database('flagged_comments')
+    .where({ comment_id: id })
+    .update({ reviewed: true });
 };
 
 // fetch comment with ID 
 const fetchCommentId = comment_id =>{
-  return database('comments').where('id', comment_id) 
-}
+  return database('comments').where('id', comment_id); 
+};
 
 // // Delete a comment
 // const deleteComments = (id) => {
 //   return database('comments').where({id}).del();
 // };
+
 module.exports = {
   add,
   addCommentLike,
