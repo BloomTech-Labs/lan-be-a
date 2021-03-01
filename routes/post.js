@@ -2,7 +2,6 @@ const express = require('express');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
 
-
 const app = express.Router();
 
 // Create post
@@ -12,17 +11,16 @@ app.post('/create', (request, response) => {
 
   Post.createPost({ user_id: userID, title, description })
     .then(([res]) => {
-
       Post.createRoomPostEntry(res, room_id)
         .then(() => {
           response.status(200).json({ message: 'Post created successfully' });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           response.status(500).json({ message: 'Error creating post' });
         });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       response.status(500).json({ message: 'Error creating post' });
     });
@@ -32,8 +30,8 @@ app.post('/create', (request, response) => {
 app.get('/:id', (request, response) => {
   const postID = request.params.id;
   Post.fetch(postID)
-    .then(post => response.status(200).json(post))
-    .catch(error => {
+    .then((post) => response.status(200).json(post))
+    .catch((error) => {
       console.log(error);
       response.status(500).json({ message: 'Error fetching individual post' });
     });
@@ -42,32 +40,31 @@ app.get('/:id', (request, response) => {
 // Fetch posts ordered by most recent
 app.post('/recent', (request, response) => {
   Post.fetchRecent()
-    .then(res => response.status(200).json(res))
-    .catch(err => {
+    .then((res) => response.status(200).json(res))
+    .catch((err) => {
       console.log(err);
-      response.status(500).json({message: 'Error fetching recent posts'});
+      response.status(500).json({ message: 'Error fetching recent posts' });
     });
 });
 
 // Fetch posts ordered by most popular
 app.post('/popular', (request, response) => {
   Post.fetchPopular()
-    .then(res => response.status(200).json(res))
-    .catch(err => {
+    .then((res) => response.status(200).json(res))
+    .catch((err) => {
       console.log(err);
-      response.status(500).json({message: 'Error fetching popular posts'});
+      response.status(500).json({ message: 'Error fetching popular posts' });
     });
 });
-
 
 // Search for a post based on user search input
 app.post('/search', (request, response) => {
   const search = request.body.search;
   Post.fetchSearch(search)
-    .then(res => response.status(200).json(res))
-    .catch(err => {
+    .then((res) => response.status(200).json(res))
+    .catch((err) => {
       console.log(err);
-      response.status(500).json({message: 'Error fetching posts'});
+      response.status(500).json({ message: 'Error fetching posts' });
     });
 });
 
@@ -78,7 +75,9 @@ app.get('/like/:id', (request, response) => {
   Post.incrementPostLikes(postID)
     .then(() => {
       Post.addPostLike(userID, postID)
-        .then(() => response.status(200).json({ message: 'Post liked successfully' }))
+        .then(() =>
+          response.status(200).json({ message: 'Post liked successfully' })
+        )
         .catch((err) => {
           console.log(err);
           response.status(500).json({ message: 'Error adding post like' });
@@ -86,7 +85,9 @@ app.get('/like/:id', (request, response) => {
     })
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error incrementing post\'s comment count' });
+      response
+        .status(500)
+        .json({ message: "Error incrementing post's comment count" });
     });
 });
 
@@ -97,7 +98,9 @@ app.delete('/like/:id', (request, response) => {
   Post.decrementPostLikes(postID)
     .then(() => {
       Post.removePostLike(userID, postID)
-        .then(() => response.status(200).json({ message: 'Post unliked successfully' }))
+        .then(() =>
+          response.status(200).json({ message: 'Post unliked successfully' })
+        )
         .catch((err) => {
           console.log(err);
           response.status(500).json({ message: 'Error removing post like' });
@@ -105,15 +108,20 @@ app.delete('/like/:id', (request, response) => {
     })
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error decrementing post\'s comment count' });
+      response
+        .status(500)
+        .json({ message: "Error decrementing post's comment count" });
     });
 });
 
 //Update a post must be the user that created post
-app.put('/update/:id', (request, response) => {
-  const postID = request.params.id;
+app.put('/update/:userID/:postID', (request, response) => {
+  console.log(request.params);
+  const postID = request.params.postID;
+  const userID = request.params.userID;
   const { newDescription } = request.body;
-  if (postID !== request.user.id) {
+
+  if (userID !== request.user.id) {
     response.status(401).json({ message: 'unathorized user' });
   } else {
     Post.postUpdate(postID, newDescription)
