@@ -79,10 +79,11 @@ const fetchPopular = (postID) => {
 
 // helper to delete comments (moderator)
 const removeComments = async (id) => {
-  await database("comments").where({ id }).update({ visible: false });
-  return database("flagged_comments")
-    .where({ comment_id: id })
-    .update({ reviewed: true });
+    return await database('comments').where({id}).del();
+  // await database("comments").where({ id }).update({ visible: false });
+  // return database("flagged_comments")
+  //   .where({ comment_id: id })
+  //   .update({ reviewed: true });
 };
 
 // fetch comment with ID 
