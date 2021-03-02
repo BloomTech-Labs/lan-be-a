@@ -1,3 +1,4 @@
+const { count } = require('../database/dbConfig');
 const database = require('../database/dbConfig');
 
 // Create a room
@@ -16,11 +17,13 @@ const getAllRooms = () => {
 };
 
 // Fetch all posts in a room ordered by most recent
-const fetchRecentByRoomId = (room_id) => {
-  return database('posts as p')
+const fetchRecentByRoomId = async (room_id, page, limit) => {
+  const posts = await database('posts as p')
     .join('users as u', 'p.user_id', 'u.id')
     .join('rooms_to_posts as rtp', 'p.id', 'rtp.post_id')
     .orderBy('p.created_at', 'desc')
+    .limit(limit)
+    .offset((page - 1) * limit)
     .select([
       'p.id',
       'p.visible',
@@ -36,11 +39,21 @@ const fetchRecentByRoomId = (room_id) => {
     ])
     .where('rtp.room_id', room_id)
     .andWhere('p.visible', 1);
+  const count = await database('posts as p')
+    .join('users as u', 'p.user_id', 'u.id')
+    .join('rooms_to_posts as rtp', 'p.id', 'rtp.post_id')
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1)
+    .count('p.id');
+  return {
+    posts: posts,
+    totalPages: (Math.ceil(count[0].count / limit))
+  };
 };
 
 // Fetch all posts in a room ordered by likes
-const fetchPopularByRoomId = (room_id) => {
-  return database('posts as p')
+const fetchPopularByRoomId = async (room_id, page, limit) => {
+  const posts = await database('posts as p')
     .join('users as u', 'p.user_id', 'u.id')
     .join('rooms_to_posts as rtp', 'p.id', 'rtp.post_id')
     .orderBy('p.likes', 'desc')
@@ -56,8 +69,20 @@ const fetchPopularByRoomId = (room_id) => {
       'p.created_at',
       'p.updated_at',
     ])
+    .limit(limit)
+    .offset((page - 1) * limit)
     .where('rtp.room_id', room_id)
     .andWhere('p.visible', 1);
+  const count = await database('posts as p')
+    .join('users as u', 'p.user_id', 'u.id')
+    .join('rooms_to_posts as rtp', 'p.id', 'rtp.post_id')
+    .where('rtp.room_id', room_id)
+    .andWhere('p.visible', 1)
+    .count('p.id');
+  return {
+    posts: posts,
+    totalPages: (Math.ceil(count[0].count / limit))
+  };
 };
 
 // Fetch posts in a room based on user search input
