@@ -96,6 +96,7 @@ const fetchCommentId = comment_id =>{
 // const deleteComments = (id) => {
 //   return database('comments').where({id}).del();
 // };
+
 module.exports = {
   add,
   addCommentLike,
