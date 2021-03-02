@@ -138,7 +138,7 @@ app.put('/onboard', verifyRole, (request, response) => {
   const userID = request.user.id;
   User.onboard(userID)
     .then(() =>
-      response.status(200).json({ message: 'Updated user\'s onboarded field successfully', user })
+      response.status(200).json({ message: 'Updated user\'s onboarded field successfully' })
     )
     .catch((err) => {
       console.log(err);
