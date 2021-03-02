@@ -1,12 +1,11 @@
-const express = require("express");
-const Post = require("../models/post");
-const Comment = require("../models/comment");
-const { request, response } = require("express");
-
+const express = require('express');
+const Post = require('../models/post');
+const Comment = require('../models/comment');
+const { request, response } = require('express');
 const app = express.Router();
 
 // Add a comment to a post
-app.post("/", (request, response) => {
+app.post('/', (request, response) => {
   const userID = request.user.id;
   const postID = request.body.postID;
   const comment = request.body.comment;
@@ -15,14 +14,14 @@ app.post("/", (request, response) => {
       Comment.add(userID, postID, comment).then((r) =>
         response
           .status(200)
-          .json({ message: "Added comment successfully", comment: r[0] })
+          .json({ message: 'Added comment successfully', comment: r[0] })
       );
     })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error incrementing comment count on post" });
+        .json({ message: 'Error incrementing comment count on post' });
     });
 });
 
@@ -39,21 +38,21 @@ app.delete('/:id', async (request, response) => {
         if (num === 1) {
           response
             .status(200)
-            .json({ successMessage: "This comment is successfully deleted" });
+            .json({ successMessage: 'This comment is successfully deleted' });
         } else {
           response
             .status(404)
-            .json({ message: "Failed to delete comment" })
+            .json({ message: 'Failed to delete comment' })
             .end();
         }
       })
       .catch((err) => {
         response
           .status(500)
-          .json({ message: "ERR in DELETE COMMENT", error: err.message });
+          .json({ message: 'ERR in DELETE COMMENT', error: err.message });
       });
   } else {
-    response.status(401).json({ message: "unauthorized" });
+    response.status(401).json({ message: 'unauthorized' });
   }
 });
 
@@ -63,23 +62,21 @@ app.get('/:id', (request, response) => {
   const commentId = request.params.id;
   Comment.fetchCommentId(commentId)
     .then((comment) =>
-      response
-        .status(200)
-        .json({
-          successMessage: "This comment is successfully fetched",
-          comment,
-        })
+      response.status(200).json({
+        successMessage: 'This comment is successfully fetched',
+        comment,
+      })
     )
     .catch((error) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error in fetching comment", err: err.message });
+        .json({ message: 'Error in fetching comment', err: err.message });
     });
 });
 
 // Fetch a posts' comments order by most recent
-app.get("/recent/:id", (request, response) => {
+app.get('/recent/:id', (request, response) => {
   const postID = request.params.id;
   Comment.fetchRecent(postID)
     .then((comments) => response.status(200).json(comments))
@@ -92,7 +89,7 @@ app.get("/recent/:id", (request, response) => {
 });
 
 // Fetch a posts' comments ordered by most likes
-app.get("/popular/:id", (request, response) => {
+app.get('/popular/:id', (request, response) => {
   const postID = request.params.id;
   Comment.fetchPopular(postID)
     .then((comments) => response.status(200).json(comments))
@@ -105,48 +102,48 @@ app.get("/popular/:id", (request, response) => {
 });
 
 // Add user like to a comment
-app.get("/like/:id", (request, response) => {
+app.get('/like/:id', (request, response) => {
   const userID = request.user.id;
   const commentID = Number(request.params.id);
   Comment.incrementCommentLikes(commentID)
     .then(() => {
       Comment.addCommentLike(userID, commentID)
         .then(() =>
-          response.status(200).json({ message: "Liked comment successfully" })
+          response.status(200).json({ message: 'Liked comment successfully' })
         )
         .catch((err) => {
           console.log(err);
-          response.status(500).json({ message: "Error adding comment like" });
+          response.status(500).json({ message: 'Error adding comment like' });
         });
     })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error incrementing comment likes" });
+        .json({ message: 'Error incrementing comment likes' });
     });
 });
 
 // Remove a users like from a comment
-app.delete("/like/:id", (request, response) => {
+app.delete('/like/:id', (request, response) => {
   const userID = request.user.id;
   const commentID = Number(request.params.id);
   Comment.decrementCommentLikes(commentID)
     .then(() => {
       Comment.removeCommentLike(userID, commentID)
         .then(() =>
-          response.status(200).json({ message: "Unliked comment successfully" })
+          response.status(200).json({ message: 'Unliked comment successfully' })
         )
         .catch((err) => {
           console.log(err);
-          response.status(500).json({ message: "Error removing comment like" });
+          response.status(500).json({ message: 'Error removing comment like' });
         });
     })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error decrementing comment likes" });
+        .json({ message: 'Error decrementing comment likes' });
     });
 });
 
