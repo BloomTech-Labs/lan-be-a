@@ -51,8 +51,12 @@ app.delete('/:id', (req, res) => {
 
 // Fetch posts in a room ordered by most recent
 app.get('/:id/recent', (request, response) => {
-  Room.fetchRecentByRoomId(request.params.id)
-    .then((data) => response.status(200).json(data))
+  const page = request.query.page || 1;
+  const limit = request.query.limit || 10;
+  Room.fetchRecentByRoomId(request.params.id, page, limit)
+    .then((data) => {
+      response.status(200).json(data);
+    })
     .catch((err) =>
       response.status(400).json({
         message: `Failed to fetch all posts for room with ID:${request.params.id}`,
@@ -63,7 +67,9 @@ app.get('/:id/recent', (request, response) => {
 
 // Fetch posts in a room ordered by most likes
 app.get('/:id/popular', (request, response) => {
-  Room.fetchPopularByRoomId(request.params.id)
+  const page = request.query.page || 1;
+  const limit = request.query.limit || 10;
+  Room.fetchPopularByRoomId(request.params.id, page, limit)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
