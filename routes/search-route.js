@@ -4,7 +4,8 @@ const Search = require('../models/search-model');
 
 // Fetch posts, comments, users, rooms based on search input 
 app.get('/full/:search', (request, response) => {
-  Search.getFullSearchResults(request.params.search)
+  const search = request.params.search.toLowerCase();
+  Search.getFullSearchResults(search)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -15,7 +16,8 @@ app.get('/full/:search', (request, response) => {
 
 // Fetch posts based on search input 
 app.get('/posts/:search', (request, response) => {
-  Search.getPostSearchResults(request.params.search)
+  const search = request.params.search.toLowerCase();
+  Search.getPostSearchResults(search)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -26,7 +28,8 @@ app.get('/posts/:search', (request, response) => {
 
 // Fetch comments based on search input
 app.get('/comments/:search', (request, response) => {
-  Search.getCommentSearchResults(request.params.search)
+  const search = request.params.search.toLowerCase();
+  Search.getCommentSearchResults(search)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -37,7 +40,8 @@ app.get('/comments/:search', (request, response) => {
 
 // Fetch users based on search input
 app.get('/users/:search', (request, response) => {
-  Search.getUserSearchResults(request.params.search)
+  const search = request.params.search.toLowerCase(); 
+  Search.getUserSearchResults(search)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -48,7 +52,8 @@ app.get('/users/:search', (request, response) => {
 
 // Fetch rooms based on search input
 app.get('/rooms/:search', (request, response) => {
-  Search.getRoomSearchResults(request.params.search)
+  const search = request.params.search.toLowerCase(); 
+  Search.getRoomSearchResults(search)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -59,7 +64,8 @@ app.get('/rooms/:search', (request, response) => {
 
 // Fetch posts from room based on user search input
 app.get('/rooms/:search/:room_id', (request, response) => {
-  Search.getPostSearchResultsByRoom(request.params.search, request.params.room_id)
+  const search = request.params.search.toLowerCase();
+  Search.getPostSearchResultsByRoom(search, request.params.room_id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
@@ -70,7 +76,8 @@ app.get('/rooms/:search/:room_id', (request, response) => {
 
 // Fetch comments from post based on user search input
 app.get('/rooms/:search/:post_id', (request, response) => {
-  Search.getCommentSearchResultsByPost(request.params.search, request.params.post_id)
+  const search = request.params.search.toLowerCase();
+  Search.getCommentSearchResultsByPost(search, request.params.post_id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
       response.status(400).json({
