@@ -6,6 +6,11 @@ const createPost = (post) => {
   return database('posts').insert(post).returning('id');
 };
 
+// Delete post
+const deletePost = (postID) => {
+  return database('posts').where({id: postID}).update('visible', false);
+};
+
 // Create an entry of a post in the room_to_posts table
 const createRoomPostEntry = (post_id, room_id) => {
   return database('rooms_to_posts').insert({ post_id, room_id });
@@ -130,6 +135,7 @@ const postUpdate = (postID, newDescription) => {
 };
 module.exports = {
   createPost,
+  deletePost,
   createRoomPostEntry,
   addPostLike,
   incrementPostLikes,

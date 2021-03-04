@@ -26,6 +26,19 @@ app.post('/create', (request, response) => {
     });
 });
 
+//Delete a post
+app.delete('/delete/:postID', (request, response) => {
+  const postID = request.params.postID;
+  Post.deletePost(postID)
+    .then(() => {
+      response.status(200).json({ message: 'Post archived'});
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(500).json({ message: 'Error archiving post' });
+    });
+});
+  
 // Fetch a single post
 app.get('/:id', (request, response) => {
   const postID = request.params.id;
@@ -87,7 +100,7 @@ app.get('/like/:id', (request, response) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error incrementing post's comment count" });
+        .json({ message: 'Error incrementing post\'s comment count' });
     });
 });
 
@@ -110,7 +123,7 @@ app.delete('/like/:id', (request, response) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error decrementing post's comment count" });
+        .json({ message: 'Error decrementing post\'s comment count' });
     });
 });
 
