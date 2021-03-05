@@ -23,7 +23,10 @@ const app = express();
 const FRONTEND_URL =
   process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
 const PORT = process.env.PORT || 5000;
-
+app.all('/*', function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+});
 app.use(express.json());
 app.use(helmet());
 app.use((req, res, next) => {
