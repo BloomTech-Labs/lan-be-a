@@ -26,6 +26,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(helmet());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', 'https://main.d37zm5ayhfot8q.amplifyapp.com');
+  next();
+});
 app.use(
   cors({
     credentials: true,
