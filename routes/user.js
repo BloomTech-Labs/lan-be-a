@@ -18,21 +18,25 @@ async function verifyRole(req, res, next) {
 
 // Fetch logged-in user's object
 app.get('/', async (request, response) => {
-  const verifiedUser = await User.find({ id: request.user.id });
-  response.status(200).json({
-    message: 'Successfully fetched user object',
-    user: {
-      id: request.user.id,
-      email: verifiedUser.email,
-      displayName: verifiedUser.display_name,
-      profilePicture: verifiedUser.profile_picture,
-      track: verifiedUser.track,
-      onboarded: verifiedUser.onboarded,
-      created_at: request.user.created_at,
-      updated_at: request.user.updated_at,
-      role_id: verifiedUser.role_id,
-    },
-  });
+  try {
+    const verifiedUser = await User.find({ id: request.user.id });
+    response.status(200).json({
+      message: 'Successfully fetched user object',
+      user: {
+        id: request.user.id,
+        email: verifiedUser.email,
+        displayName: verifiedUser.display_name,
+        profilePicture: verifiedUser.profile_picture,
+        track: verifiedUser.track,
+        onboarded: verifiedUser.onboarded,
+        created_at: request.user.created_at,
+        updated_at: request.user.updated_at,
+        role_id: verifiedUser.role_id,
+      },
+    });
+  } catch (err) {
+    return response.status(500).json({error: err.message, stack: err.stack, pm: 'Gets through?'});
+  }
 });
 
 // Fetch all posts and comments a single user has made
