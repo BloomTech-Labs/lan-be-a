@@ -1,9 +1,30 @@
 exports.up = (knex, Promise) => {
   return knex.schema
+  //Permissions Table 
+  .createTable("permissions", table => {
+    table.increments();
+    table.boolean("UC").defaultTo(false).notNullable();
+    table.boolean("UU").defaultTo(false).notNullable();
+    table.boolean("UD").defaultTo(false).notNullable();
+    table.boolean("PCU").defaultTo(false).notNullable();
+    table.boolean("PCD").defaultTo(false).notNullable();
+    table.boolean("RC").defaultTo(false).notNullable();
+    table.boolean("RU").defaultTo(false).notNullable();
+    table.boolean("RD").defaultTo(false).notNullable();
+})
     .createTable('roles', (table) => {
       table.increments();
-      table.string('role').notNullable();
+      table.string('role').notNullable().unique();
+      //Added Permission's colorm for roles table 
+      table.integer("permission_id").references("id").inTable("permissions").onDelete("CASCADE").onUpdate("CASCADE");
     })
+    //user_roles table 1 to 1 linking userid to role 
+    .createTable("user_roles", table => {
+      table.increments();
+      table.string('user_id').notNullable().unsigned().references('id').inTable('users').onUpdate('CASCADE').onDelete('CASCADE');
+      table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
+      table.unique(["user_id", "role_id"]);
+  })
     .createTable('users', (table) => {
       table.string('id').unique();
       table.string('email').notNullable().unique();
@@ -157,10 +178,13 @@ exports.up = (knex, Promise) => {
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
     })
+    //Added ICON and Banner_iamge in 
     .createTable('rooms', (table) => {
       table.increments();
       table.string('room_name').notNullable().unique();
       table.string('description').notNullable().unique();
+      table.string("icon").notNullable().defaultTo("localhost:5000/images/room-icon.png");
+      table.string("banner_image").notNullable().defaultTo("localhost:5000/images/room-banner.jpg");
     })
     .createTable('tags', (table) => {
       table.increments();
@@ -220,5 +244,8 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists('flagged_posts')
     .dropTableIfExists('posts')
     .dropTableIfExists('users')
-    .dropTableIfExists('roles');
+    .dropTableIfExists('roles')
+    .dropTableIfExists('user_roles')
+    .dropTableIfExists('permissions')
+
 };
