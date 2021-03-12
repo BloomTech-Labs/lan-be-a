@@ -1,7 +1,7 @@
 exports.up = (knex, Promise) => {
   return knex.schema
   //Permissions Table 
-  .createTable("permissions", table => {
+  .createTable("permissions", (table) => {
     table.increments();
     table.boolean("UC").defaultTo(false).notNullable();
     table.boolean("UU").defaultTo(false).notNullable();
@@ -12,19 +12,29 @@ exports.up = (knex, Promise) => {
     table.boolean("RU").defaultTo(false).notNullable();
     table.boolean("RD").defaultTo(false).notNullable();
 })
-    .createTable('roles', (table) => {
-      table.increments();
-      table.string('role').notNullable().unique();
-      //Added Permission's colorm for roles table 
-      table.integer("permission_id").references("id").inTable("permissions").onDelete("CASCADE").onUpdate("CASCADE");
-    })
+//Roles Table 
+  .createTable('roles', (table) => {
+    table.increments();
+    table.string('role').notNullable().unique();
+    //Added Permission's colorm for roles table 
+    table.integer("permission_id").references("id").inTable("permissions").onDelete("CASCADE").onUpdate("CASCADE");
+})
+
     //user_roles table 1 to 1 linking userid to role 
-    .createTable("user_roles", table => {
-      table.increments();
-      table.string('user_id').notNullable().unsigned().references('id').inTable('users').onUpdate('CASCADE').onDelete('CASCADE');
-      table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
-      table.unique(["user_id", "role_id"]);
-  })
+  .createTable("user_roles", (table) => {
+    table.increments();
+    table
+    .string('user_id')
+    .notNullable()
+    .unsigned()
+    .references('id')
+    .inTable('users')
+    .onUpdate('CASCADE')
+    .onDelete('CASCADE');
+    table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
+    table.unique(["user_id", "role_id"]);
+})
+//User's Table 
     .createTable('users', (table) => {
       table.string('id').unique();
       table.string('email').notNullable().unique();
@@ -33,17 +43,11 @@ exports.up = (knex, Promise) => {
       table.string('track');
       table.boolean('onboarded').defaultTo('false');
       table.timestamps(true, true);
-      table
-        .integer('role_id')
-        .notNullable()
-        .unsigned()
-        .defaultTo(1)
-        .references('id')
-        .inTable('roles')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE');
+      table.integer('role_id').notNullable().unsigned().defaultTo(1).references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
       table.boolean('visible').defaultTo(1);
     })
+
+//Posts
     .createTable('posts', (table) => {
       table.increments();
       table
@@ -61,6 +65,8 @@ exports.up = (knex, Promise) => {
       table.boolean('visible').defaultTo(1);
       table.timestamps(true, true);
     })
+
+// Comments 
     .createTable('comments', (table) => {
       table.increments();
       table
