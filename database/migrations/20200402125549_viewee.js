@@ -1,5 +1,7 @@
 exports.up = (knex, Promise) => {
   return knex.schema
+
+  t6
   //Permissions Table 
   .createTable("permissions", (table) => {
     table.increments();
@@ -20,20 +22,7 @@ exports.up = (knex, Promise) => {
     table.integer("permission_id").references("id").inTable("permissions").onDelete("CASCADE").onUpdate("CASCADE");
 })
 
-    //user_roles table 1 to 1 linking userid to role 
-  .createTable("user_roles", (table) => {
-    table.increments();
-    table
-    .string('user_id')
-    .notNullable()
-    .unsigned()
-    .references('id')
-    .inTable('users')
-    .onUpdate('CASCADE')
-    .onDelete('CASCADE');
-    table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
-    table.unique(["user_id", "role_id"]);
-})
+
 //User's Table 
     .createTable('users', (table) => {
       table.string('id').unique();
@@ -47,6 +36,22 @@ exports.up = (knex, Promise) => {
       table.boolean('visible').defaultTo(1);
     })
 
+
+//user_roles table 1 to 1 linking userid to role 
+.createTable("user_roles", (table) => {
+  table.increments();
+  table
+      .string('user_id')
+      .notNullable()
+      .unsigned()
+      .references('id')
+      .inTable('users')
+      .onUpdate('CASCADE')
+      .onDelete('CASCADE');
+  table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
+  table.unique(["user_id", "role_id"]);
+})
+    
 //Posts
     .createTable('posts', (table) => {
       table.increments();
@@ -90,6 +95,8 @@ exports.up = (knex, Promise) => {
       table.boolean('visible').defaultTo(1);
       table.timestamps(true, true);
     })
+
+    //Flagged Posts 
     .createTable('flagged_posts', (table) => {
       table.increments();
       table
@@ -110,6 +117,8 @@ exports.up = (knex, Promise) => {
         .onDelete('CASCADE');
       table.boolean('reviewed').defaultTo(0);
     })
+
+    // Flagged Comments 
     .createTable('flagged_comments', (table) => {
       table.increments();
       table
@@ -130,6 +139,8 @@ exports.up = (knex, Promise) => {
         .onDelete('CASCADE');
       table.boolean('reviewed').defaultTo(0);
     })
+
+    // Liked Posts 
     .createTable('liked_posts', (table) => {
       table
         .string('user_id')
@@ -148,6 +159,8 @@ exports.up = (knex, Promise) => {
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
     })
+
+    //Liked Comments 
     .createTable('liked_comments', (table) => {
       table
         .string('user_id')
@@ -166,6 +179,8 @@ exports.up = (knex, Promise) => {
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
     })
+
+    //Saved Posts 
     .createTable('saved_posts', (table) => {
       table
         .string('user_id')
@@ -196,6 +211,8 @@ exports.up = (knex, Promise) => {
       table.increments();
       table.string('tag_name').notNullable().unique();
     })
+
+    //Rooms to Posts 
     .createTable('rooms_to_posts', (table) => {
       table.increments();
       table
@@ -215,6 +232,8 @@ exports.up = (knex, Promise) => {
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
     })
+
+    //Posts to tags 
     .createTable('posts_to_tags', (table) => {
       table.increments();
       table
@@ -250,8 +269,8 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists('flagged_posts')
     .dropTableIfExists('posts')
     .dropTableIfExists('users')
-    .dropTableIfExists('roles')
     .dropTableIfExists('user_roles')
+    .dropTableIfExists('roles')
     .dropTableIfExists('permissions')
 
 };
