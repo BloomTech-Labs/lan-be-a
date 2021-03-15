@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 exports.up = (knex, Promise) => {
   return knex.schema
     .createTable('roles', (table) => {
@@ -162,6 +163,25 @@ exports.up = (knex, Promise) => {
       table.string('room_name').notNullable().unique();
       table.string('description').notNullable().unique();
     })
+    .createTable('room_to_moderator', (table) => {
+      table.increments();
+      table
+        .string('user_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table
+        .integer('room_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('rooms')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+    })
     .createTable('tags', (table) => {
       table.increments();
       table.string('tag_name').notNullable().unique();
@@ -206,6 +226,7 @@ exports.up = (knex, Promise) => {
     });
 };
 
+// eslint-disable-next-line no-unused-vars
 exports.down = (knex, Promise) => {
   return knex.schema
     .dropTableIfExists('posts_to_tags')
