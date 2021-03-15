@@ -17,6 +17,11 @@ const getAllRooms = () => {
   return database('rooms').orderBy('room_name');
 };
 
+// Fetch a room by filter
+const getRoomBy = filter => {
+  return database('rooms').where(filter).first();
+};
+
 // Fetch all posts in a room ordered by most recent
 const fetchRecentByRoomId = async (room_id, page, limit) => {
   const posts = await database('posts as p')
@@ -113,6 +118,7 @@ module.exports = {
   add,
   remove,
   getAllRooms,
+  getRoomBy,
   fetchRecentByRoomId,
   fetchPopularByRoomId,
   searchWithRoomId

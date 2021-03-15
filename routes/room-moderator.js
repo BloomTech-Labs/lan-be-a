@@ -2,25 +2,33 @@ const express = require('express');
 const app = express.Router();
 const RoomModerator = require('../models/room-moderator');
 
+const {
+  displayNameToId,
+  roomNameToId,
+  findRoomModeratorPair
+} = require('../middleware');
+
 // Add a moderator to a room
-app.post('/', (req, res) => {
+app.post('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res) => {
   const { role_id } = req.user;
-  const { user_id, room_id } = req.body;
+  const { display_name, room_name, pair, user_id, room_id } = req.body;
   if (role_id !== 3) {
     res.status(403).json({ message: 'Access denied.' });
-  } else if (!room_id) {
-    res.status(400).json({ message: 'Must designate user_id and room_id to continue.' });
   } else {
-    RoomModerator.addRoomModerator(user_id, room_id)
-      .then((data) => {
-        res.status(201).json(data);
-      })
-      .catch((err) => {
-        res.status(500).json({ 
-          message: 'Failed to add moderator to room.', 
-          error: err.message
+    if (pair.length === 0) {
+      RoomModerator.addRoomModerator(user_id, room_id)
+        .then((data) => {
+          res.status(201).json(data);
+        })
+        .catch((err) => {
+          res.status(500).json({ 
+            message: `Failed to add moderator display_name: ${display_name} to room_name: ${room_name}.`, 
+            error: err.message
+          });
         });
-      });
+    } else {
+      res.status(400).json({ message: `The moderator display_name: ${display_name} is already assigned to room_name: ${room_name}.` });
+    }
   }
 });
   
@@ -46,16 +54,16 @@ app.get('/', (req, res) => {
 });
   
 // Find a room and all added moderators or a moderator and all assigned rooms
-app.get('/findBy', (req, res) => {
+app.get('/findBy', displayNameToId, roomNameToId, (req, res) => {
   const { role_id } = req.user;
-  const { user_id, room_id } = req.body;
+  const { display_name, room_name, user_id, room_id } = req.body;
   // const page = req.query.page || 1;    --- add limiters
   // const limit = req.query.limit || 10;
   if (role_id != 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
     if (!user_id && !room_id) {
-      res.status(400).json({ message: 'Must designate user_id or room_id to continue.' });
+      res.status(400).json({ message: 'Must designate moderator display_name or room_name or both to continue.' });
     } else if (user_id && room_id) {
       RoomModerator.findRoomModeratorBy({ user_id, room_id }, /* page, limit */)
         .then(data => {
@@ -63,7 +71,7 @@ app.get('/findBy', (req, res) => {
         })
         .catch(err => {
           res.status(500).json({ 
-            message: `Failed to retrieve rooms for moderator with ID: ${user_id}`,
+            message: `Failed to retrieve room_name: ${room_name}, for moderator display_name: ${display_name}.`,
             error: err.message
           });
         });
@@ -74,7 +82,7 @@ app.get('/findBy', (req, res) => {
         })
         .catch(err => {
           res.status(500).json({ 
-            message: `Failed to retrieve rooms for moderator with ID: ${user_id}`,
+            message: `Failed to retrieve rooms for moderator display_name: ${display_name}.`,
             error: err.message
           });
         });
@@ -85,7 +93,7 @@ app.get('/findBy', (req, res) => {
         })
         .catch(err => {
           return res.status(200).json({
-            message: `Failed to retrieve moderators for room with ID: ${room_id}`,
+            message: `Failed to retrieve moderators for room_name: ${room_name}.`,
             error: err.message
           });
         });
@@ -93,18 +101,27 @@ app.get('/findBy', (req, res) => {
   }
 });
   
-app.delete('/', (req, res) => {
-  const { user_id, room_id } = req.body;
-  RoomModerator.removeRoomModerator(user_id, room_id)
-    .then(() => {
-      res.status(200).json(`Moderator ID: ${user_id} was removed from room ID: ${room_id}`);
-    })
-    .catch(err => {
-      res.status(400).json({ 
-        message: 'Failed to remove moderator from the room.',
-        error: err.message
-      });
-    });
+app.delete('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res) => {
+  const { role_id } = req.user;
+  const { display_name, room_name, pair, user_id, room_id } = req.body;
+  if (role_id != 3) {
+    res.status(403).json({ message: 'Access denied.' });
+  } else {
+    if (pair.length === 1) {
+      RoomModerator.removeRoomModerator(user_id, room_id)
+        .then(() => {
+          res.status(200).json(`Moderator display_name: ${display_name} was removed from room_name: ${room_name}.`);
+        })
+        .catch(err => {
+          res.status(400).json({ 
+            message: 'Failed to remove moderator from the room.',
+            error: err.message
+          });
+        });
+    } else {
+      res.status(400).json({ message: `The moderator display_name: ${display_name} is not assigned to room_name: ${room_name} ` });
+    }
+  }
 });
   
 module.exports = app;

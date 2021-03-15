@@ -55,7 +55,7 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false, // Set to true once in production // This is causing the auth fail when true (only used over https?)
+      secure: false, // Set to true once in production // This is causing the initial user fatch fail when true
       SameSite: 'none',
     },
     store: new knexSessionStore({

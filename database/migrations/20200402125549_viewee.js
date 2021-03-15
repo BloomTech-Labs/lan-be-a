@@ -232,6 +232,7 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists('posts_to_tags')
     .dropTableIfExists('rooms_to_posts')
     .dropTableIfExists('tags')
+    .dropTableIfExists('room_to_moderator')
     .dropTableIfExists('rooms')
     .dropTableIfExists('saved_posts')
     .dropTableIfExists('liked_comments')
