@@ -8,7 +8,7 @@ exports.up = (knex, Promise) => {
     .createTable('users', (table) => {
       table.string('id').unique();
       table.string('email').notNullable().unique();
-      table.string('display_name').index();
+      table.string('display_name').unique().index();
       table.string('profile_picture');
       table.string('track');
       table.boolean('onboarded').defaultTo('false');
