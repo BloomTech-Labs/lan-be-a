@@ -18,7 +18,7 @@ async function verifyRole(req, res, next) {
 
 // Fetch logged-in user's object
 app.get('/', async (request, response) => {
-  try {
+  try { // Corey: Added try...catch due to UnhandledPromise err
     const verifiedUser = await User.find({ id: request.user.id });
     response.status(200).json({
       message: 'Successfully fetched user object',

@@ -27,15 +27,35 @@ Make sure you have [PostgreSQL](https://www.postgresql.org/) installed on your c
 
 2. Install dependencies with `npm install`.
 
-3. Create a `.env` file and set your environment variables (LinkedIn tokens will need to be provided).
+3. Create a `.env` file and set your environment variables (LinkedIn tokens will need to be provided). It should look like this:
 
-4. Create a database in PostgreSQL.
+    1. "DATABASE" should be the name you give your ***database*** (not your server) in pgAdmin
+    2. "USER" should match the "username" when you create your database
+    3. "PASSWORD" should match the password for your database
+
+```
+DATABASE=yourdatabase
+USER=youruser
+PASSWORD=yourpassword
+LAN_TOKEN=anythinggoeshere
+SESSION_SECRET=bagelsinthewind
+LINKEDIN_CLIENT_ID=786t2e05bh0c2d
+LINKEDIN_CLIENT_SECRET=P6uAEw94o9jNOMaE
+```
+
+4. Create a database in PostgreSQL (and make sure you have pgAdmin).
 
 5. Update `DATABASE`, `USER`, and `PASSWORD` in `.env` with your credentials.
 
 6. Run the Knex migrations with `npx knex migrate:latest`.
 
 7. Run the server with `npm run server`.
+
+8. In pgAdmin, find the query tool and set your role to admin with:
+
+```sql
+update users set role_id = 3
+```
 
 ### Environment Variables
 `SESSION_SECRET`
