@@ -54,7 +54,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // Remove for production(?)
       secure: false, // Set to true once in production // This is causing the initial user fatch fail when true
       SameSite: 'none',
     },

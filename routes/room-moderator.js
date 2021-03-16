@@ -12,6 +12,7 @@ const {
 app.post('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res) => {
   const { role_id } = req.user;
   const { display_name, room_name, pair, user_id, room_id } = req.body;
+  
   if (role_id !== 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
@@ -27,29 +28,10 @@ app.post('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res) =
           });
         });
     } else {
-      res.status(400).json({ message: `The moderator display_name: ${display_name} is already assigned to room_name: ${room_name}.` });
-    }
-  }
-});
-  
-// Find all rooms and all added moderators
-app.get('/', (req, res) => {
-  const { role_id } = req.user;
-  // const page = req.query.page || 1;    --- add limiters
-  // const limit = req.query.limit || 10;
-  if (role_id != 3) {
-    res.status(403).json({ message: 'Access denied.' });
-  } else {
-    RoomModerator.findRoomModerator(/* page, limit */)
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((err) => {
-        res.status(500).json({ 
-          message: 'Failed to retrieve rooms and moderators.',
-          error: err.message 
-        });
+      res.status(400).json({ 
+        message: `The moderator display_name: ${display_name} is already assigned to room_name: ${room_name}.` 
       });
+    }
   }
 });
   
@@ -57,15 +39,16 @@ app.get('/', (req, res) => {
 app.get('/findBy', displayNameToId, roomNameToId, (req, res) => {
   const { role_id } = req.user;
   const { display_name, room_name, user_id, room_id } = req.body;
-  // const page = req.query.page || 1;    --- add limiters
-  // const limit = req.query.limit || 10;
+
   if (role_id != 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
     if (!user_id && !room_id) {
-      res.status(400).json({ message: 'Must designate moderator display_name or room_name or both to continue.' });
+      res.status(400).json({ 
+        message: 'Must designate moderator display_name or room_name or both to continue.' 
+      });
     } else if (user_id && room_id) {
-      RoomModerator.findRoomModeratorBy({ user_id, room_id }, /* page, limit */)
+      RoomModerator.findRoomModeratorBy({ user_id, room_id })
         .then(data => {
           return res.status(200).json(data);
         })
@@ -76,7 +59,7 @@ app.get('/findBy', displayNameToId, roomNameToId, (req, res) => {
           });
         });
     } else if (user_id) {
-      RoomModerator.findRoomModeratorBy({ user_id }, /* page, limit */)
+      RoomModerator.findRoomModeratorBy({ user_id })
         .then(data => {
           return res.status(200).json(data);
         })
@@ -87,7 +70,7 @@ app.get('/findBy', displayNameToId, roomNameToId, (req, res) => {
           });
         });
     } else {
-      RoomModerator.findRoomModeratorBy({ room_id }, /* page, limit */)
+      RoomModerator.findRoomModeratorBy({ room_id })
         .then(data => {
           return res.status(200).json(data);
         })
@@ -104,13 +87,16 @@ app.get('/findBy', displayNameToId, roomNameToId, (req, res) => {
 app.delete('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res) => {
   const { role_id } = req.user;
   const { display_name, room_name, pair, user_id, room_id } = req.body;
+
   if (role_id != 3) {
     res.status(403).json({ message: 'Access denied.' });
   } else {
     if (pair.length === 1) {
       RoomModerator.removeRoomModerator(user_id, room_id)
         .then(() => {
-          res.status(200).json(`Moderator display_name: ${display_name} was removed from room_name: ${room_name}.`);
+          res.status(200).json({
+            message: `Moderator display_name: ${display_name} was removed from room_name: ${room_name}.`
+          });
         })
         .catch(err => {
           res.status(400).json({ 
@@ -119,7 +105,9 @@ app.delete('/', displayNameToId, roomNameToId, findRoomModeratorPair, (req, res)
           });
         });
     } else {
-      res.status(400).json({ message: `The moderator display_name: ${display_name} is not assigned to room_name: ${room_name} ` });
+      res.status(400).json({ 
+        message: `The moderator display_name: ${display_name} is not assigned to room_name: ${room_name} ` 
+      });
     }
   }
 });
