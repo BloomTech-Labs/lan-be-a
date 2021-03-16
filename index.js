@@ -48,6 +48,7 @@ app.use(
   })
 );
 
+app.set('trust proxy', 1);
 console.log(process.env.SECURE_TRUE || false);
 
 app.use(
