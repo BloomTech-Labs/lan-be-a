@@ -1,7 +1,5 @@
 exports.up = (knex, Promise) => {
   return knex.schema
-
-  t6
   //Permissions Table 
   .createTable("permissions", (table) => {
     table.increments();
@@ -51,7 +49,7 @@ exports.up = (knex, Promise) => {
   table.integer('role_id').notNullable().unsigned().references('id').inTable('roles').onUpdate('CASCADE').onDelete('CASCADE');
   table.unique(["user_id", "role_id"]);
 })
-    
+
 //Posts
     .createTable('posts', (table) => {
       table.increments();
