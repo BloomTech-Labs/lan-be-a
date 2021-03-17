@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const { count } = require('../database/dbConfig');
 const database = require('../database/dbConfig');
 
@@ -14,6 +15,11 @@ const remove = (roomId) => {
 // Fetch all rooms
 const getAllRooms = () => {
   return database('rooms').orderBy('room_name');
+};
+
+// Fetch a room by filter
+const getRoomBy = filter => {
+  return database('rooms').where(filter).first();
 };
 
 // Fetch all posts in a room ordered by most recent
@@ -112,7 +118,8 @@ module.exports = {
   add,
   remove,
   getAllRooms,
+  getRoomBy,
   fetchRecentByRoomId,
   fetchPopularByRoomId,
-  searchWithRoomId,
+  searchWithRoomId
 };

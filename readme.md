@@ -142,3 +142,13 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | GET    | /api/comment/popular/:id  | Fetch a post's comments by popular          | id of post fetching comments for must be in url params 
 | GET    | /api/comment/like/:id     | Like a comment                              | id of comment to like in params of url
 | DELETE | /api/comment/like/:id     | Delete a comment like                       | if of comment to remove like in params of url
+
+Assigning Moderator To Room Operations
+------------------------
+API hosted at: https://lan-team-a-be.herokuapp.com/
+### Room To Moderator Endpoints 
+| Method | Endpoint              | Description                                                          | Requirements
+| ------ | --------------------- | -------------------------------------------------------------------- | -------------------
+| POST   | /api/moderator        | Ties a user to a room as a moderator                                 | a user display name and a room name in request body
+| GET    | /api/moderator/findBy | Get rooms belonging to a moderator or moderators belonging to a room | a user display name or room name in request body 
+| DELETE | /api/moderator        | Removes a user as moderator from a room                              | a user display name and a room name in request body

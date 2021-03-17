@@ -15,6 +15,7 @@ const adminRouter = require('./routes/admin');
 const roomRouter = require('./routes/room-route');
 const modRouter = require('./routes/flag-route');
 const searchRouter = require('./routes/search-route');
+const moderatorRouter = require('./routes/room-moderator');
 
 const User = require('./models/user');
 
@@ -27,10 +28,6 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(helmet());
 
-app.all('/*', function(req, res, next) {
-  
-  next();
-});
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -93,6 +90,7 @@ app.use('/api/room', verifyRole, roomRouter);
 app.use('/api/admin', verifyRole, adminRouter);
 app.use('/api/mod', verifyRole, modRouter);
 app.use('/api/search', verifyRole, searchRouter);
+app.use('/api/moderator', verifyRole, moderatorRouter);
 
 app.get('/', (request, response) =>
   response.send({ message: 'Server working' })
