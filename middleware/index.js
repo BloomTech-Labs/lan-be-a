@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Room = require('../models/room-model');
+const Flag = require('../models/flag-model');
 const RoomModerator = require('../models/room-moderator');
 
 async function verifyUser(req, res, next) {
@@ -103,11 +104,24 @@ const findRoomModeratorPair = async (req, res, next) => {
   }
 };
 
+const findReasonIdByReason = async (req, res, next) => {
+  const { reason } = req.body;
+
+  if (!reason) {
+    res.status(400).json({ message: 'Must designate reason for flagging post.' });
+  } else {
+    const reasonData = await Flag.getReasonIdByReason(reason);
+    req.body.reason_id = reasonData.id;
+    next();
+  }
+};
+
 module.exports = {
   verifyUser,
   verifyAdmin,
   verifyModeratorOrAdmin,
   findUserByDisplayName,
   findRoomByRoomName,
-  findRoomModeratorPair
+  findRoomModeratorPair,
+  findReasonIdByReason
 };
