@@ -11,6 +11,15 @@ const addRoomModerator = async (user_id, room_id) => {
     .returning('*')
     .first();
 };
+
+// Find all rooms and all added moderators
+const findRoomModerator = () => {
+  return db('room_to_moderator as rtm')
+    .join('users as u', 'rtm.user_id', 'u.id')
+    .join('rooms as r', 'rtm.room_id', 'r.id')
+    .returning('*')
+    .orderBy('room_id');
+};
   
 // Find all rooms or users assigned by room_id or user_id, or a single room by both
 const findRoomModeratorBy = filter => {
@@ -18,7 +27,7 @@ const findRoomModeratorBy = filter => {
   
   if (user_id && !room_id) {
     return db('room_to_moderator as rtm')
-      .where('room_id', user_id)
+      .where('user_id', user_id)
       .join('users as u', 'rtm.user_id', 'u.id')
       .join('rooms as r', 'rtm.room_id', 'r.id')
       .returning('*')
@@ -51,6 +60,7 @@ const removeRoomModerator = (user_id, room_id) => {
 
 module.exports = {
   addRoomModerator,
+  findRoomModerator,
   findRoomModeratorBy,
   removeRoomModerator
 };

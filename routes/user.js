@@ -2,19 +2,7 @@ const express = require('express');
 const User = require('../models/user');
 const app = express.Router();
 
-async function verifyRole(req, res, next) {
-  const userId = req.user.id;
-  try {
-    const verifiedUser = await User.find({ id: userId });
-    if (verifiedUser) {
-      req.user.role_id = verifiedUser.role_id;
-      return next();
-    }
-    return res.status(401).send('User does not exist');
-  } catch (error) {
-    return res.status(500).send('Database error');
-  }
-}
+const { verifyUser } = require('../middleware');
 
 // Fetch logged-in user's object
 app.get('/', async (request, response) => {
@@ -35,12 +23,12 @@ app.get('/', async (request, response) => {
       },
     });
   } catch (err) {
-    return response.status(500).json({error: err.message, stack: err.stack, pm: 'Gets through?'});
+    return response.status(500).json({error: err.message, stack: err.stack});
   }
 });
 
 // Fetch all posts and comments a single user has made
-app.get('/:id', verifyRole, (request, response) => {
+app.get('/:id', verifyUser, (request, response) => {
   const userID = request.params.id;
   User.find({ id: userID })
     .then((user) => {
@@ -69,7 +57,7 @@ app.get('/:id', verifyRole, (request, response) => {
 });
 
 // Fetch a users liked posts
-app.get('/post/like', verifyRole, (request, response) => {
+app.get('/post/like', verifyUser, (request, response) => {
   const userID = request.user.id;
   User.fetchUsersLikedPosts(userID)
     .then((res) => response.status(200).json(res))
@@ -82,7 +70,7 @@ app.get('/post/like', verifyRole, (request, response) => {
 });
 
 // Fetch a user's liked comments
-app.get('/comment/like', verifyRole, (request, response) => {
+app.get('/comment/like', verifyUser, (request, response) => {
   const userID = request.user.id;
   User.fetchUsersLikedComments(userID)
     .then((res) => response.status(200).json(res))
@@ -95,7 +83,7 @@ app.get('/comment/like', verifyRole, (request, response) => {
 });
 
 // Update user's display name
-app.put('/displayname', verifyRole, (request, response) => {
+app.put('/displayname', verifyUser, (request, response) => {
   const { userID, displayName } = request.body;
   User.update(userID, { display_name: displayName })
     .then(() => {
@@ -108,7 +96,7 @@ app.put('/displayname', verifyRole, (request, response) => {
 });
 
 // Set and update user's track
-app.put('/track', verifyRole, (request, response) => {
+app.put('/track', verifyUser, (request, response) => {
   const userID = request.user.id;
   const track = request.body.track;
   const token = request.body.token;
@@ -138,7 +126,7 @@ app.put('/track', verifyRole, (request, response) => {
 });
 
 // Set a user's onboarded field to true
-app.put('/onboard', verifyRole, (request, response) => {
+app.put('/onboard', verifyUser, (request, response) => {
   const userID = request.user.id;
   User.onboard(userID)
     .then(() =>
@@ -151,7 +139,7 @@ app.put('/onboard', verifyRole, (request, response) => {
 });
 
 // Delete a user
-app.delete('/settings/remove-user/:id', verifyRole, (req, res) => {
+app.delete('/settings/remove-user/:id', verifyUser, (req, res) => {
   const userID = req.user.id;
   User.remove(userID)
     .then(() => {

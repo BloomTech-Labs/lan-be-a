@@ -1,7 +1,6 @@
 const express = require('express');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
-const { request, response } = require('express');
 const app = express.Router();
 
 // Add a comment to a post
@@ -26,12 +25,9 @@ app.post('/', (request, response) => {
 });
 
 // Deletes a comment from a post (USER)
-// app.delete("/comment/:id", async (request, response) => {
 app.delete('/:id', async (request, response) => {
   const commentId = request.params.id;
   const comment = await Comment.fetchCommentId(commentId);
-  // console.log(comment)
-  // console.log(request.user.id)
   if (comment[0].user_id === request.user.id) {
     Comment.removeComments(commentId)
       .then((num) => {
@@ -57,7 +53,6 @@ app.delete('/:id', async (request, response) => {
 });
 
 // Fetch Comment by ID
-// app.get("/comment/:id", (request, response) => {
 app.get('/:id', (request, response) => {
   const commentId = request.params.id;
   Comment.fetchCommentId(commentId)
@@ -71,7 +66,7 @@ app.get('/:id', (request, response) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: 'Error in fetching comment', err: err.message });
+        .json({ message: 'Error in fetching comment', err: error.message });
     });
 });
 
@@ -84,7 +79,7 @@ app.get('/recent/:id', (request, response) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error fetching post's comments by recent" });
+        .json({ message: 'Error fetching post\'s comments by recent' });
     });
 });
 
@@ -97,7 +92,7 @@ app.get('/popular/:id', (request, response) => {
       console.log(error);
       response
         .status(500)
-        .json({ message: "Error fetching post's comments by popular" });
+        .json({ message: 'Error fetching post\'s comments by popular' });
     });
 });
 
