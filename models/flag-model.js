@@ -1,13 +1,13 @@
 const database = require('../database/dbConfig');
 
 // Create a flagged post
-const createFlaggedPost = async (post_id, user_id, reason_id) => {
-  return database('flagged_posts').insert({ post_id, user_id, reason_id });
+const createFlaggedPost = async (post_id, user_id, {reason_id, note}) => {
+  return database('flagged_posts').insert({ post_id, user_id, reason_id, note });
 };
 
 // Create a flagged comment
-const createFlaggedComment = (comment_id, user_id, reason_id) => {
-  return database('flagged_comments').insert({ comment_id, user_id, reason_id });
+const createFlaggedComment = (comment_id, user_id, {reason_id, note}) => {
+  return database('flagged_comments').insert({ comment_id, user_id, reason_id, note });
 };
 
 // Fetch Flagged Posts

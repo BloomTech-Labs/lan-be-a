@@ -9,7 +9,7 @@ const {
 
 // Flag a post
 app.post('/posts/:id', findReasonIdByReason, (req, res) => {
-  Flag.createFlaggedPost(req.params.id, req.user.id, req.body.reason_id)
+  Flag.createFlaggedPost(req.params.id, req.user.id, req.body)
     .then(() => {
       res.status(200).json({ message: 'successfully flagged post' });
     })
@@ -20,7 +20,7 @@ app.post('/posts/:id', findReasonIdByReason, (req, res) => {
 
 // Flag a comment
 app.post('/comments/:id', findReasonIdByReason, (req, res) => {
-  Flag.createFlaggedComment(req.params.id, req.user.id, req.body.reason_id)
+  Flag.createFlaggedComment(req.params.id, req.user.id, req.body)
     .then(() => {
       res.status(200).json({ message: 'successfully flagged Comment' });
     })
