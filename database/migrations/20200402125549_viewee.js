@@ -95,6 +95,7 @@ exports.up = (knex, Promise) => {
         .inTable('flagged_reason')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      table.string('note', 255);
       table.boolean('reviewed').defaultTo(0);
     })
     .createTable('flagged_comments', (table) => {
@@ -123,6 +124,7 @@ exports.up = (knex, Promise) => {
         .inTable('flagged_reason')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      table.string('note', 255);
       table.boolean('reviewed').defaultTo(0);
     })
     .createTable('liked_posts', (table) => {
