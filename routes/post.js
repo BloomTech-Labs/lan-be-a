@@ -1,6 +1,5 @@
 const express = require('express');
 const Post = require('../models/post');
-const Comment = require('../models/comment');
 
 const app = express.Router();
 
@@ -129,7 +128,6 @@ app.delete('/like/:id', (request, response) => {
 
 //Update a post must be the user that created post
 app.put('/update/:userID/:postID', (request, response) => {
-  console.log(request.params);
   const postID = request.params.postID;
   const userID = request.params.userID;
   const { newDescription } = request.body;

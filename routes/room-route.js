@@ -2,6 +2,8 @@ const express = require('express');
 const app = express.Router();
 const Room = require('../models/room-model');
 
+const { verifyAdmin } = require('../middleware');
+
 // Get all rooms
 app.get('/', (req, res) => {
   Room.getAllRooms()
@@ -14,12 +16,9 @@ app.get('/', (req, res) => {
 });
 
 // Create a room
-app.post('/', (req, res) => {
-  const { role_id } = req.user;
+app.post('/', verifyAdmin, (req, res) => {
   const { room_name, description } = req.body;
-  if (role_id !== 3) {
-    res.status(403).json({ message: 'Access denied.' });
-  } else if (!room_name || !description) {
+  if (!room_name || !description) {
     res.status(400).json({ message: 'Must designate room name to continue.' });
   } else {
     Room.add(req.body)
@@ -33,20 +32,15 @@ app.post('/', (req, res) => {
 });
 
 // Delete a room
-app.delete('/:id', (req, res) => {
-  const { role_id } = req.user;
+app.delete('/:id', verifyAdmin, (req, res) => {
   const roomId = req.params.id;
-  if (role_id != 3) {
-    res.status(403).json({ message: 'Access denied.' });
-  } else {
-    Room.remove(roomId)
-      .then(() => {
-        res.status(200).json({ message: `room ${roomId} has been removed from DB` });
-      })
-      .catch((err) => {
-        res.status(500).json({ message: err.message });
-      });
-  }
+  Room.remove(roomId)
+    .then(() => {
+      res.status(200).json({ message: `room ${roomId} has been removed from DB` });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
 });
 
 // Fetch posts in a room ordered by most recent

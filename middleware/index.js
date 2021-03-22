@@ -2,7 +2,41 @@ const User = require('../models/user');
 const Room = require('../models/room-model');
 const RoomModerator = require('../models/room-moderator');
 
-const displayNameToId = async (req, res, next) => {
+async function verifyUser(req, res, next) {
+  const userId = req.user.id;
+  try {
+    const verifiedUser = await User.find({ id: userId });
+    if (verifiedUser) {
+      req.user.role_id = verifiedUser.role_id;
+      return next();
+    }
+    return res.status(401).send('User does not exist');
+  } catch (error) {
+    return res.status(500).send('Database error');
+  }
+}
+
+const verifyAdmin = (req, res, next) => {
+  const { role_id } = req.user;
+
+  if (role_id !== 3) {
+    res.status(403).json({ message: 'Access denied.' });
+  } else {
+    next();
+  }
+};
+
+const verifyModeratorOrAdmin = (req, res, next) => {
+  const { role_id } = req.user;
+
+  if (role_id > 1) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access denied.' });
+  }
+};
+
+const findUserByDisplayName = async (req, res, next) => {
   if (!req.body.display_name){
     next();
   } else {
@@ -26,7 +60,7 @@ const displayNameToId = async (req, res, next) => {
   }
 };
 
-const roomNameToId = async (req, res, next) => {
+const findRoomByRoomName = async (req, res, next) => {
   if (!req.body.room_name){
     next();
   } else {
@@ -70,7 +104,10 @@ const findRoomModeratorPair = async (req, res, next) => {
 };
 
 module.exports = {
-  displayNameToId,
-  roomNameToId,
+  verifyUser,
+  verifyAdmin,
+  verifyModeratorOrAdmin,
+  findUserByDisplayName,
+  findRoomByRoomName,
   findRoomModeratorPair
 };
