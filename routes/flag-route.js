@@ -2,11 +2,14 @@ const express = require('express');
 const app = express.Router();
 const Flag = require('../models/flag-model');
 
-const { verifyModeratorOrAdmin } = require('../middleware');
+const { 
+  verifyModeratorOrAdmin,
+  findReasonIdByReason
+} = require('../middleware');
 
 // Flag a post
-app.post('/posts/:id', (req, res) => {
-  Flag.createFlaggedPost(req.params.id, req.user.id)
+app.post('/posts/:id', findReasonIdByReason, (req, res) => {
+  Flag.createFlaggedPost(req.params.id, req.user.id, req.body)
     .then(() => {
       res.status(200).json({ message: 'successfully flagged post' });
     })
@@ -16,8 +19,8 @@ app.post('/posts/:id', (req, res) => {
 });
 
 // Flag a comment
-app.post('/comments/:id', (req, res) => {
-  Flag.createFlaggedComment(req.params.id, req.user.id)
+app.post('/comments/:id', findReasonIdByReason, (req, res) => {
+  Flag.createFlaggedComment(req.params.id, req.user.id, req.body)
     .then(() => {
       res.status(200).json({ message: 'successfully flagged Comment' });
     })

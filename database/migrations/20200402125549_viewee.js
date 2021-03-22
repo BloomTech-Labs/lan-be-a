@@ -5,6 +5,11 @@ exports.up = (knex, Promise) => {
       table.increments();
       table.string('role').notNullable();
     })
+    .createTable('flagged_reason', (table) => {
+      table.increments();
+      table.string('reason').notNullable().unique();
+      table.integer('weight').notNullable();
+    })
     .createTable('users', (table) => {
       table.string('id').unique();
       table.string('email').notNullable().unique();
@@ -82,6 +87,15 @@ exports.up = (knex, Promise) => {
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      table
+        .integer('reason_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('flagged_reason')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.string('note', 255);
       table.boolean('reviewed').defaultTo(0);
     })
     .createTable('flagged_comments', (table) => {
@@ -102,6 +116,15 @@ exports.up = (knex, Promise) => {
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
+      table
+        .integer('reason_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('flagged_reason')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.string('note', 255);
       table.boolean('reviewed').defaultTo(0);
     })
     .createTable('liked_posts', (table) => {
@@ -242,5 +265,6 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists('flagged_posts')
     .dropTableIfExists('posts')
     .dropTableIfExists('users')
+    .dropTableIfExists('flagged_reason')
     .dropTableIfExists('roles');
 };
