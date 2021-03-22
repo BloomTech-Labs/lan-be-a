@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 // Create a room
-app.post('/', verifyAdmin, (req, res) => {
+app.post('/', (req, res) => {
   const { room_name, description } = req.body;
   if (!room_name || !description) {
     res.status(400).json({ message: 'Must designate room name to continue.' });
@@ -32,7 +32,7 @@ app.post('/', verifyAdmin, (req, res) => {
 });
 
 // Delete a room
-app.delete('/:id', verifyAdmin, (req, res) => {
+app.delete('/:id', (req, res) => {
   const roomId = req.params.id;
   Room.remove(roomId)
     .then(() => {
