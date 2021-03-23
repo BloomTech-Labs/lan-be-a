@@ -7,6 +7,13 @@ const add = (userID, postID, comment) => {
     .returning('*');
 };
 
+// Get comment like
+const findCommentLike = (user_id, comment_id) => {
+  return database('liked_comments')
+    .where('user_id', user_id)
+    .where('comment_id', comment_id)
+    .first();
+};
 
 // Add a comment like
 const addCommentLike = (userID, commentID) => {
@@ -99,6 +106,7 @@ const fetchCommentId = comment_id =>{
 
 module.exports = {
   add,
+  findCommentLike,
   addCommentLike,
   incrementCommentLikes,
   removeCommentLike,

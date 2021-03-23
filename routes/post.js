@@ -3,6 +3,8 @@ const Post = require('../models/post');
 
 const app = express.Router();
 
+const { findIfPostLiked } = require('../middleware');
+
 // Create post
 app.post('/create', (request, response) => {
   const userID = request.user.id;
@@ -81,49 +83,63 @@ app.post('/search', (request, response) => {
 });
 
 // Like a post
-app.get('/like/:id', (request, response) => {
+app.get('/like/:id', findIfPostLiked, (request, response) => {
   const userID = request.user.id;
   const postID = request.params.id;
-  Post.incrementPostLikes(postID)
-    .then(() => {
-      Post.addPostLike(userID, postID)
-        .then(() =>
-          response.status(200).json({ message: 'Post liked successfully' })
-        )
-        .catch((err) => {
-          console.log(err);
-          response.status(500).json({ message: 'Error adding post like' });
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      response
-        .status(500)
-        .json({ message: 'Error incrementing post\'s comment count' });
+  const pair = request.body.pair;
+  if (!pair) {
+    Post.incrementPostLikes(postID)
+      .then(() => {
+        Post.addPostLike(userID, postID)
+          .then(() =>
+            response.status(200).json({ message: 'Post liked successfully' })
+          )
+          .catch((err) => {
+            console.log(err);
+            response.status(500).json({ message: 'Error adding post like' });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        response
+          .status(500)
+          .json({ message: 'Error incrementing post\'s comment count' });
+      });
+  } else {
+    response.status(400).json({
+      message: 'Ooops, already liked that post.'
     });
+  }
 });
 
 // Remove like from a post
-app.delete('/like/:id', (request, response) => {
+app.delete('/like/:id', findIfPostLiked, (request, response) => {
   const userID = request.user.id;
   const postID = request.params.id;
-  Post.decrementPostLikes(postID)
-    .then(() => {
-      Post.removePostLike(userID, postID)
-        .then(() =>
-          response.status(200).json({ message: 'Post unliked successfully' })
-        )
-        .catch((err) => {
-          console.log(err);
-          response.status(500).json({ message: 'Error removing post like' });
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      response
-        .status(500)
-        .json({ message: 'Error decrementing post\'s comment count' });
+  const pair = request.body.pair;
+  if (pair) {
+    Post.decrementPostLikes(postID)
+      .then(() => {
+        Post.removePostLike(userID, postID)
+          .then(() =>
+            response.status(200).json({ message: 'Post unliked successfully' })
+          )
+          .catch((err) => {
+            console.log(err);
+            response.status(500).json({ message: 'Error removing post like' });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        response
+          .status(500)
+          .json({ message: 'Error decrementing post\'s comment count' });
+      });
+  } else {
+    response.status(400).json({
+      message: 'Ooops, haven\'t liked that post.'
     });
+  }
 });
 
 //Update a post must be the user that created post
