@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
-const session = require('express-session');
+
+const jwt = require('jsonwebtoken');
+
 const passportSetup = require('./config/passportSetup'); // eslint-disable-line
-const knexSessionStore = require('connect-session-knex')(session);
-const config = require('./database/dbConfig');
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
@@ -45,25 +45,6 @@ app.use(
   })
 );
 
-app.set('trust proxy', 1);
- 
-app.use(
-  session({
-    name: 'LAN',
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.SECURE_TRUE || false, // Set to true once in production
-      SameSite: 'none',
-    },
-    store: new knexSessionStore({
-      knex: config,
-    }),
-  })
-);
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -82,14 +63,34 @@ async function verifyRole(req, res, next) {
 }
 
 app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
-app.use('/api/post', verifyRole, postRouter);
-app.use('/api/comment', verifyRole, commentRouter);
-app.use('/api/room', verifyRole, roomRouter);
-app.use('/api/admin', verifyRole, adminRouter);
-app.use('/api/mod', verifyRole, modRouter);
-app.use('/api/search', verifyRole, searchRouter);
-app.use('/api/moderator', verifyRole, moderatorRouter);
+
+const tokenVerified = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token) {
+    const secret = process.env.SESSION_SECRET || 'potatoes in the sky';
+    jwt.verify(token, secret, (err, decodedToken) => {
+      if (err) {
+        // token is invalid
+        res.status(401).json({ you: 'Limited Access' });
+      } else {
+        // token is valid
+        req.user = decodedToken;
+        next();
+      }
+    });
+  } else {
+    res.status(401).json({ you: 'Access Denied' });
+  }
+};
+
+app.use('/api/user', tokenVerified, userRouter);
+app.use('/api/post', tokenVerified, verifyRole, postRouter);
+app.use('/api/comment', tokenVerified, verifyRole, commentRouter);
+app.use('/api/room', tokenVerified, verifyRole, roomRouter);
+app.use('/api/admin', tokenVerified, verifyRole, adminRouter);
+app.use('/api/mod', tokenVerified, verifyRole, modRouter);
+app.use('/api/search', tokenVerified, verifyRole, searchRouter);
+app.use('/api/moderator', tokenVerified, verifyRole, moderatorRouter);
 
 app.get('/', (request, response) =>
   response.send({ message: 'Server working' })
