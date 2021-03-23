@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Post = require('../models/post');
+const Comment = require('../models/comment');
 const Room = require('../models/room-model');
 const Flag = require('../models/flag-model');
 const RoomModerator = require('../models/room-moderator');
@@ -116,6 +118,46 @@ const findReasonIdByReason = async (req, res, next) => {
   }
 };
 
+const findIfPostLiked = async (req, res, next) => {
+  const user_id = req.user.id;
+  const post_id = req.params.id;
+
+  if (!user_id || !post_id) {
+    res.status(400).json({ message: 'A user_id required in request and post_id required in request params.' });
+  } else {
+    try {
+      const pair = await Post.findPostLike(user_id, post_id);
+      req.body.pair = pair;
+      next();
+    } catch (err) {
+      res.status(500).json({
+        message: 'There was a problem communicating with the server.',
+        error: err.message
+      });
+    }
+  }
+};
+
+const findIfCommentLiked = async (req, res, next) => {
+  const user_id = req.user.id;
+  const comment_id = req.params.id;
+
+  if (!user_id || !comment_id) {
+    res.status(400).json({ message: 'A user_id required in request and comment_id required in request params.' });
+  } else {
+    try {
+      const pair = await Comment.findCommentLike(user_id, comment_id);
+      req.body.pair = pair;
+      next();
+    } catch (err) {
+      res.status(500).json({
+        message: 'There was a problem communicating with the server.',
+        error: err.message
+      });
+    }
+  }
+};
+
 module.exports = {
   verifyUser,
   verifyAdmin,
@@ -123,5 +165,7 @@ module.exports = {
   findUserByDisplayName,
   findRoomByRoomName,
   findRoomModeratorPair,
-  findReasonIdByReason
+  findReasonIdByReason,
+  findIfPostLiked,
+  findIfCommentLiked
 };
