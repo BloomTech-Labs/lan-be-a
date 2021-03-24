@@ -3,7 +3,28 @@ const passport = require('passport');
 
 const app = express.Router();
 
+const jwt = require('jsonwebtoken');
+
 const FRONTEND_URL = process.env.FRONTEND_DEPLOYED_URL || 'http://localhost:3000';
+
+function getJwt(user) {
+  const payload = {
+    id: user.id,
+    email: user.email,
+    displayName: user.display_name,
+    profilePicture: user.profile_picture,
+    track: user.track,
+    onboarded: user.onboarded,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
+    role_id: user.role_id,
+  };
+  const jwtOptions = {
+    expiresIn: '8h',
+  };
+  const secret = process.env.SESSION_SECRET || 'potatoes in the sky';
+  return jwt.sign(payload, secret, jwtOptions);
+}
 
 // LinkedIn Auth Launch
 app.get('/linkedin', passport.authenticate('linkedin'));
@@ -12,7 +33,8 @@ app.get('/linkedin', passport.authenticate('linkedin'));
 app.get('/linkedin/redirect', passport.authenticate('linkedin', {
   failureRedirect: `${FRONTEND_URL}/error`
 }), (request, response) => {
-  response.redirect(`${FRONTEND_URL}/success`);
+  const token = getJwt(request.user);
+  response.redirect(`${FRONTEND_URL}/success/` + token);
 }
 );
 
