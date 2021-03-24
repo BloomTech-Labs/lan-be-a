@@ -3,6 +3,8 @@ const Post = require('../models/post');
 const Comment = require('../models/comment');
 const app = express.Router();
 
+const { findIfCommentLiked } = require('../middleware');
+
 // Add a comment to a post
 app.post('/', (request, response) => {
   const userID = request.user.id;
@@ -97,49 +99,63 @@ app.get('/popular/:id', (request, response) => {
 });
 
 // Add user like to a comment
-app.get('/like/:id', (request, response) => {
+app.get('/like/:id', findIfCommentLiked, (request, response) => {
   const userID = request.user.id;
   const commentID = Number(request.params.id);
-  Comment.incrementCommentLikes(commentID)
-    .then(() => {
-      Comment.addCommentLike(userID, commentID)
-        .then(() =>
-          response.status(200).json({ message: 'Liked comment successfully' })
-        )
-        .catch((err) => {
-          console.log(err);
-          response.status(500).json({ message: 'Error adding comment like' });
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      response
-        .status(500)
-        .json({ message: 'Error incrementing comment likes' });
+  const pair = request.body.pair;
+  if (!pair) {
+    Comment.incrementCommentLikes(commentID)
+      .then(() => {
+        Comment.addCommentLike(userID, commentID)
+          .then(() =>
+            response.status(200).json({ message: 'Liked comment successfully' })
+          )
+          .catch((err) => {
+            console.log(err);
+            response.status(500).json({ message: 'Error adding comment like' });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        response
+          .status(500)
+          .json({ message: 'Error incrementing comment likes' });
+      });
+  } else {
+    response.status(400).json({
+      message: 'Ooops, already liked that comment.'
     });
+  }
 });
 
 // Remove a users like from a comment
-app.delete('/like/:id', (request, response) => {
+app.delete('/like/:id', findIfCommentLiked, (request, response) => {
   const userID = request.user.id;
   const commentID = Number(request.params.id);
-  Comment.decrementCommentLikes(commentID)
-    .then(() => {
-      Comment.removeCommentLike(userID, commentID)
-        .then(() =>
-          response.status(200).json({ message: 'Unliked comment successfully' })
-        )
-        .catch((err) => {
-          console.log(err);
-          response.status(500).json({ message: 'Error removing comment like' });
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      response
-        .status(500)
-        .json({ message: 'Error decrementing comment likes' });
+  const pair = request.body.pair;
+  if (pair) {
+    Comment.decrementCommentLikes(commentID)
+      .then(() => {
+        Comment.removeCommentLike(userID, commentID)
+          .then(() =>
+            response.status(200).json({ message: 'Unliked comment successfully' })
+          )
+          .catch((err) => {
+            console.log(err);
+            response.status(500).json({ message: 'Error removing comment like' });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        response
+          .status(500)
+          .json({ message: 'Error decrementing comment likes' });
+      });
+  } else {
+    response.status(400).json({
+      message: 'Ooops, haven\'t liked that comment.'
     });
+  }
 });
 
 module.exports = app;

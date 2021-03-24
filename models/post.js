@@ -16,6 +16,14 @@ const createRoomPostEntry = (post_id, room_id) => {
   return database('rooms_to_posts').insert({ post_id, room_id });
 };
 
+// Get post like
+const findPostLike = (user_id, post_id) => {
+  return database('liked_posts')
+    .where('user_id', user_id)
+    .where('post_id', post_id)
+    .first();
+};
+
 // Add like to a post
 const addPostLike = (userID, postID) => {
   return database('liked_posts').insert({ user_id: userID, post_id: postID });
@@ -137,6 +145,7 @@ module.exports = {
   createPost,
   deletePost,
   createRoomPostEntry,
+  findPostLike,
   addPostLike,
   incrementPostLikes,
   removePostLike,
