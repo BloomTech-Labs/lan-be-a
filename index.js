@@ -62,8 +62,6 @@ async function verifyRole(req, res, next) {
   }
 }
 
-app.use('/api/auth', authRouter);
-
 const tokenVerified = (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
@@ -71,7 +69,7 @@ const tokenVerified = (req, res, next) => {
     jwt.verify(token, secret, (err, decodedToken) => {
       if (err) {
         // token is invalid
-        res.status(401).json({ you: 'Limited Access' });
+        res.status(401).json({ message: 'Invalid token' });
       } else {
         // token is valid
         req.user = decodedToken;
@@ -79,9 +77,11 @@ const tokenVerified = (req, res, next) => {
       }
     });
   } else {
-    res.status(401).json({ you: 'Access Denied' });
+    res.status(401).json({ message: 'Access Denied' });
   }
 };
+
+app.use('/api/auth', authRouter);
 
 app.use('/api/user', tokenVerified, userRouter);
 app.use('/api/post', tokenVerified, verifyRole, postRouter);
