@@ -29,7 +29,7 @@ app.post('/comments/:id', findReasonIdByReason, (req, res) => {
     });
 });
 
-// Fetches flagged posts
+// Fetches all instances of all flagged posts (includes duplicates)
 app.get('/posts', verifyModeratorOrAdmin, (req, res) => {
   Flag.getFlaggedPosts()
     .then((posts) => {
@@ -37,6 +37,23 @@ app.get('/posts', verifyModeratorOrAdmin, (req, res) => {
     })
     .catch(() => {
       res.status(500).json({ message: 'Could not retrieve posts' });
+    });
+});
+
+// Fetches one instance of all flagged posts (excludes duplicates)
+app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
+  Flag.getFlaggedPosts()
+    .then(async distinctPosts => {
+      const getFlaggedPosts = async (list) => {
+        return Promise.all(list.map(async post => {
+          let flaggedPost = {...post};
+          let flags = await Flag.getFlagsByPostId(post.post_id);
+          flaggedPost.flags = flags;
+          return flaggedPost;
+        }));
+      };
+      let flags = await getFlaggedPosts(distinctPosts);
+      res.status(200).json(flags);
     });
 });
 

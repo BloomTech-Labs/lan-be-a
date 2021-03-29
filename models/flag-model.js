@@ -1,3 +1,4 @@
+const { response } = require('express');
 const database = require('../database/dbConfig');
 
 // Create a flagged post
@@ -10,12 +11,25 @@ const createFlaggedComment = (comment_id, user_id, {reason_id, note}) => {
   return database('flagged_comments').insert({ comment_id, user_id, reason_id, note });
 };
 
-// Fetch Flagged Posts
+// Fetch a single instance of each flagged post
 const getFlaggedPosts = () => {
-  return database('flagged_posts')
-    .join('posts', 'flagged_posts.post_id', 'posts.id')
-    .join('flagged_reason', 'flagged_posts.reason_id', 'flagged_reason.id')
-    .where( 'flagged_posts.reviewed', false );
+  return database('flagged_posts as fp')
+    .join('posts as p', 'fp.post_id', 'p.id')
+    .distinct('fp.post_id', 'p.title', 'p.description')
+    .orderBy('post_id');
+};
+
+// Fetch flags for each distinct post
+const getFlagsByPostId = (post_id) => {
+  return database('flagged_posts as fp')
+    .join('flagged_reason as fr', 'fp.reason_id', 'fr.id')
+    .join('users as u', 'fp.user_id', 'u.id')
+    .where('fp.post_id', post_id)
+    .select(
+      'fp.user_id as flagger_id', 
+      'u.display_name as flagger_name', 
+      'fr.reason',
+      'fp.note');
 };
 
 // Fetch Flagged comments
@@ -61,6 +75,7 @@ module.exports = {
   createFlaggedPost,
   createFlaggedComment,
   getFlaggedPosts,
+  getFlagsByPostId,
   getFlaggedComments,
   archivePost,
   archiveComment,
