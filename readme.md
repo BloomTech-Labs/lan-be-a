@@ -152,3 +152,14 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | POST   | /api/moderator        | Ties a user to a room as a moderator                                 | a user display name and a room name in request body
 | GET    | /api/moderator/findBy | Get rooms belonging to a moderator or moderators belonging to a room | a user display name or room name in request body 
 | DELETE | /api/moderator        | Removes a user as moderator from a room                              | a user display name and a room name in request body
+
+Getting Flagged Posts/Comments Operations
+------------------------
+API hosted at: https://lan-team-a-be.herokuapp.com/
+### Flagged Post/Comment Endpoints 
+| Method | Endpoint                     | Description                                                          | Requirements
+| ------ | ---------------------------- | -------------------------------------------------------------------- | -------------------
+| POST   | /api/mod/posts/:id           | Flag a post                                                          | A post id in the url, a valid flag reason and optional note from user in request body
+| POST   | /api/mod/comments/:id        | Flag a comment                                                       | A comment id in the url, a valid flag reason and optional note from user in request body
+| GET    | /api/mod/posts/flagged       | Get all flagged posts and associated flags                           |
+| GET    | /api/mod/comments/flagged    | Get all flagged comments and associated flags                        |
