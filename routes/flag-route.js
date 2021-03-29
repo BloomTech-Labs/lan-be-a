@@ -29,17 +29,6 @@ app.post('/comments/:id', findReasonIdByReason, (req, res) => {
     });
 });
 
-// Fetches all instances of all flagged posts (includes duplicates)
-app.get('/posts', verifyModeratorOrAdmin, (req, res) => {
-  Flag.getFlaggedPosts()
-    .then((posts) => {
-      res.status(200).json(posts);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'Could not retrieve posts' });
-    });
-});
-
 // Fetches one instance of all flagged posts (excludes duplicates)
 app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
   Flag.getFlaggedPosts()
@@ -57,14 +46,20 @@ app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
     });
 });
 
-// Fetches flagged comments
-app.get('/comments', verifyModeratorOrAdmin, (req, res) => {
+// Fetches one instance of all flagged comments (excludes duplicates)
+app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
   Flag.getFlaggedComments()
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to fetch comments'});
+    .then(async distinctComments => {
+      const getFlaggedComments = async (list) => {
+        return Promise.all(list.map(async comment => {
+          let flaggedComment = {...comment};
+          let flags = await Flag.getFlagsByCommentId(comment.comment_id);
+          flaggedComment.flags = flags;
+          return flaggedComment;
+        }));
+      };
+      let flags = await getFlaggedComments(distinctComments);
+      res.status(200).json(flags);
     });
 });
 
