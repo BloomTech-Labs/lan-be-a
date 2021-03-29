@@ -15,7 +15,7 @@ const createFlaggedComment = (comment_id, user_id, {reason_id, note}) => {
 const getFlaggedPosts = () => {
   return database('flagged_posts as fp')
     .join('posts as p', 'fp.post_id', 'p.id')
-    .distinct('fp.post_id', 'p.title', 'p.description')
+    .distinct('fp.post_id', 'p.title')
     .orderBy('post_id');
 };
 
@@ -32,12 +32,25 @@ const getFlagsByPostId = (post_id) => {
       'fp.note');
 };
 
-// Fetch Flagged comments
+// Fetch a single instance of each flagged comment
 const getFlaggedComments = () => {
-  return database('flagged_comments')
-    .join('comments', 'flagged_comments.comment_id', 'comments.id')
-    .join('flagged_reason', 'flagged_comments.reason_id', 'flagged_reason.id')
-    .where( 'flagged_comments.reviewed', false );
+  return database('flagged_comments as fc')
+    .join('comments as c', 'fc.comment_id', 'c.id')
+    .distinct('fc.comment_id', 'c.comment')
+    .orderBy('fc.comment_id');
+};
+
+// Fetch flags for each distinct post
+const getFlagsByCommentId = (comment_id) => {
+  return database('flagged_comments as fc')
+    .join('flagged_reason as fr', 'fc.reason_id', 'fr.id')
+    .join('users as u', 'fc.user_id', 'u.id')
+    .where('fc.comment_id', comment_id)
+    .select(
+      'fc.user_id as flagger_id', 
+      'u.display_name as flagger_name', 
+      'fr.reason',
+      'fc.note');
 };
 
 // Archive a flagged post
@@ -77,6 +90,7 @@ module.exports = {
   getFlaggedPosts,
   getFlagsByPostId,
   getFlaggedComments,
+  getFlagsByCommentId,
   archivePost,
   archiveComment,
   resolveFlaggedPostWithoutArchiving,
