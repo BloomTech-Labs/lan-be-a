@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express.Router();
 const Flag = require('../models/flag-model');
+const Room = require('../models/room-model');
+const Comment = require('../models/comment');
 
 const { 
   verifyModeratorOrAdmin,
@@ -29,7 +31,7 @@ app.post('/comments/:id', findReasonIdByReason, (req, res) => {
     });
 });
 
-// Fetches one instance of all flagged posts (excludes duplicates)
+// Fetches one instance of all flagged posts
 app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
   Flag.getFlaggedPosts()
     .then(async distinctPosts => {
@@ -46,7 +48,29 @@ app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
     });
 });
 
-// Fetches one instance of all flagged comments (excludes duplicates)
+// Fetches one instance of all posts by room
+app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
+  const room_id = req.params.id;
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 10;
+
+  Room.fetchRecentByRoomId(room_id, page, limit)
+    .then(async roomPosts => {
+      const getFlaggedPosts = async (list) => {
+        return Promise.all(list.map(async post => {
+          let flaggedPost = {...post};
+          let flags = await Flag.getFlagsByPostId(post.id);
+          console.log('FLAGS: ', flags);
+          flaggedPost.flags = flags;
+          return flaggedPost;
+        }));
+      };
+      let flags = await getFlaggedPosts(roomPosts.posts);
+      res.status(200).json(flags);
+    });
+});
+
+// Fetches one instance of all flagged comments
 app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
   Flag.getFlaggedComments()
     .then(async distinctComments => {
@@ -54,6 +78,25 @@ app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
         return Promise.all(list.map(async comment => {
           let flaggedComment = {...comment};
           let flags = await Flag.getFlagsByCommentId(comment.comment_id);
+          flaggedComment.flags = flags;
+          return flaggedComment;
+        }));
+      };
+      let flags = await getFlaggedComments(distinctComments);
+      res.status(200).json(flags);
+    });
+});
+
+// Fetches one instance of all flagged comments by room
+app.get('/comments/:id', verifyModeratorOrAdmin, async (req, res) => {
+  const post_id = req.params.id;
+
+  Comment.fetchRecent(post_id)
+    .then(async distinctComments => {
+      const getFlaggedComments = async (list) => {
+        return Promise.all(list.map(async comment => {
+          let flaggedComment = {...comment};
+          let flags = await Flag.getFlagsByCommentId(comment.id);
           flaggedComment.flags = flags;
           return flaggedComment;
         }));

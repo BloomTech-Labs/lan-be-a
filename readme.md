@@ -130,7 +130,6 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | GET    | /api/post/like/:id  | Like a post                           | id of post must be in url params
 | DELETE | /api/post/like/:id  | Unlike a post                         | id of post must be in url params
 
-
 Comment Operations
 ------------------------
 API hosted at: https://lan-team-a-be.herokuapp.com/
@@ -163,3 +162,5 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | POST   | /api/mod/comments/:id        | Flag a comment                                                       | A comment id in the url, a valid flag reason and optional note from user in request body
 | GET    | /api/mod/posts/flagged       | Get all flagged posts and associated flags                           |
 | GET    | /api/mod/comments/flagged    | Get all flagged comments and associated flags                        |
+| GET    | /api/mod/posts/:id           | Get all posts in a room and associated flags                         | A room id in the url
+| GET    | /api/mod/comments/:id        | Get all comments on a post and associated flags                      | A post id in the url
