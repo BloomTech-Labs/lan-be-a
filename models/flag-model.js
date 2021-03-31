@@ -40,7 +40,16 @@ const getFlaggedComments = () => {
     .orderBy('fc.comment_id');
 };
 
-// Fetch flags for each distinct post
+// Fetch a single instance of each flagged comment by post id
+const getFlaggedCommentsByPostId = (post_id) => {
+  return database('flagged_comments as fc')
+    .join('comments as c', 'fc.comment_id', 'c.id')
+    .where('c.post_id', post_id)
+    .distinct('fc.comment_id', 'c.comment')
+    .orderBy('fc.comment_id');
+};
+
+// Fetch flags for each distinct comment
 const getFlagsByCommentId = (comment_id) => {
   return database('flagged_comments as fc')
     .join('flagged_reason as fr', 'fc.reason_id', 'fr.id')
@@ -96,6 +105,7 @@ module.exports = {
   getFlaggedPosts,
   getFlagsByPostId,
   getFlaggedComments,
+  getFlaggedCommentsByPostId,
   getFlagsByCommentId,
   archivePost,
   archiveComment,
