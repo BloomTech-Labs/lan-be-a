@@ -26,18 +26,23 @@ app.post('/', (request, response) => {
 
 // Deletes a comment from a post (USER)
 app.delete('/:id', async (request, response) => {
-  const commentId = request.params.id;  
-  Comment.removeComments(commentId)
-    .then(() => {        
-      response
-        .status(200)
-        .json({ successMessage: 'This comment is successfully deleted' });      
-    })
-    .catch((err) => {
-      response
-        .status(500)
-        .json({ message: 'ERR in DELETE COMMENT', error: err.message });
-    }); 
+  const commentId = request.params.id;
+  const commentFromDb = await Comment.fetchCommentId(commentId);
+  if (commentFromDb[0].user_id === request.user.id) {
+    Comment.removeComments(commentId)
+      .then(() => {
+        response
+          .status(200)
+          .json({ successMessage: 'This comment is successfully deleted' });
+      })
+      .catch((err) => {
+        response
+          .status(500)
+          .json({ message: 'ERR in DELETE COMMENT', error: err.message });
+      });
+  } else {
+    response.status(403).json({ message: "Access denied." });
+  }
 });
 
 // Fetch Comment by ID
