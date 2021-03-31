@@ -64,7 +64,16 @@ app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
           return flaggedPost;
         }));
       };
-      let flags = await getFlaggedPosts(roomPosts.posts);
+      const getFlaggedCommentsByPostId = async (list) => {
+        return Promise.all(list.map(async post => {
+          let flaggedPost = {...post};
+          let flaggedComments = await Flag.getFlaggedCommentsByPostId(post.id);
+          flaggedPost.flaggedComments = flaggedComments;
+          return flaggedPost;
+        }));
+      };
+      let flaggedPosts = await getFlaggedPosts(roomPosts.posts);
+      let flags = await getFlaggedCommentsByPostId(flaggedPosts);
       res.status(200).json(flags);
     });
 });
