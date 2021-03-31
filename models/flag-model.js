@@ -1,4 +1,3 @@
-const { response } = require('express');
 const database = require('../database/dbConfig');
 
 // Create a flagged post
@@ -15,7 +14,7 @@ const createFlaggedComment = (comment_id, user_id, {reason_id, note}) => {
 const getFlaggedPosts = () => {
   return database('flagged_posts as fp')
     .join('posts as p', 'fp.post_id', 'p.id')
-    .distinct('fp.post_id', 'p.title')
+    .distinct('fp.post_id', 'p.title', 'p.description')
     .orderBy('post_id');
 };
 
@@ -79,6 +78,11 @@ const resolveFlaggedCommentWithoutArchiving = (commentId) => {
   return database('flagged_comments').where('comment_id', commentId).update({ reviewed: true });
 };
 
+// Get a list of all flag reasons
+const getFlagReasons = () => {
+  return database('flagged_reason').select('reason');
+};
+
 // Get flagged reason id from reason
 const getReasonIdByReason = (reason) => {
   return database('flagged_reason').where({ reason }).first();
@@ -95,5 +99,6 @@ module.exports = {
   archiveComment,
   resolveFlaggedPostWithoutArchiving,
   resolveFlaggedCommentWithoutArchiving,
-  getReasonIdByReason
+  getFlagReasons,
+  getReasonIdByReason,
 };

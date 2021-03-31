@@ -60,7 +60,6 @@ app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
         return Promise.all(list.map(async post => {
           let flaggedPost = {...post};
           let flags = await Flag.getFlagsByPostId(post.id);
-          console.log('FLAGS: ', flags);
           flaggedPost.flags = flags;
           return flaggedPost;
         }));
@@ -156,6 +155,20 @@ app.put('/comments/:id', verifyModeratorOrAdmin, async (req, res) => {
     })
     .catch(() => {
       res.status(500).json({ message: 'Unable to resolve flag'});
+    });
+});
+
+// Get a list of all flag reasons
+app.get('/reasons', verifyModeratorOrAdmin, (req, res) => {
+  Flag.getFlagReasons()
+    .then(data => {
+      res.status(200).json(data);
+    })
+    .catch(err => {
+      res.status(400).json({
+        message: 'Failed to retrieve reasons',
+        error: err.message
+      });
     });
 });
 
