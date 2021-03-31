@@ -6,7 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('flagged_reason').insert([
         {reason: 'Spam', weight: 2},
-        {reason: 'Bullying or Harrasment', weight: 2},
+        {reason: 'Bullying or Harassment', weight: 2},
         {reason: 'Hate Speech or Symbols', weight: 2},
         {reason: 'Nudity or Sexual Content', weight: 2},
         {reason: 'I just dislike it', weight: 1},

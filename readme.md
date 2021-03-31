@@ -164,3 +164,4 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | GET    | /api/mod/comments/flagged    | Get all flagged comments and associated flags                        |
 | GET    | /api/mod/posts/:id           | Get all posts in a room and associated flags                         | A room id in the url
 | GET    | /api/mod/comments/:id        | Get all comments on a post and associated flags                      | A post id in the url
+| GET    | /api/mod/reasons             | Get all list of all flag reasons                                     | 
