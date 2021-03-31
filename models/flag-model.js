@@ -27,6 +27,7 @@ const getFlagsByPostId = (post_id) => {
     .select(
       'fp.user_id as flagger_id', 
       'u.display_name as flagger_name', 
+      'u.profile_picture as flagger_profile_picture',
       'fr.reason',
       'fp.note');
 };
@@ -48,6 +49,7 @@ const getFlagsByCommentId = (comment_id) => {
     .select(
       'fc.user_id as flagger_id', 
       'u.display_name as flagger_name', 
+      'u.profile_picture as flagger_profile_picture',
       'fr.reason',
       'fc.note');
 };
