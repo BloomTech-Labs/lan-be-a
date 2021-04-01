@@ -32,7 +32,7 @@ app.post('/comments/:id', findReasonIdByReason, (req, res) => {
 });
 
 // Fetches one instance of all flagged posts
-app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/posts/flagged', async (req, res) => {
   Flag.getFlaggedPosts()
     .then(async distinctPosts => {
       const getFlaggedPosts = async (list) => {
@@ -49,7 +49,7 @@ app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all posts by room
-app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/posts/:id', async (req, res) => {
   const room_id = req.params.id;
   const page = req.query.page || 1;
   const limit = req.query.limit || 10;
@@ -79,7 +79,7 @@ app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all flagged comments
-app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/comments/flagged', async (req, res) => {
   Flag.getFlaggedComments()
     .then(async distinctComments => {
       const getFlaggedComments = async (list) => {
@@ -96,7 +96,7 @@ app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all flagged comments by room
-app.get('/comments/:id', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/comments/:id', async (req, res) => {
   const post_id = req.params.id;
 
   Comment.fetchRecent(post_id)
