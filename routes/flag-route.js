@@ -32,7 +32,7 @@ app.post('/comments/:id', findReasonIdByReason, (req, res) => {
 });
 
 // Fetches one instance of all flagged posts
-app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/posts/flagged', async (req, res) => {
   Flag.getFlaggedPosts()
     .then(async distinctPosts => {
       const getFlaggedPosts = async (list) => {
@@ -49,7 +49,7 @@ app.get('/posts/flagged', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all posts by room
-app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/posts/:id', async (req, res) => {
   const room_id = req.params.id;
   const page = req.query.page || 1;
   const limit = req.query.limit || 10;
@@ -79,7 +79,7 @@ app.get('/posts/:id', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all flagged comments
-app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/comments/flagged', async (req, res) => {
   Flag.getFlaggedComments()
     .then(async distinctComments => {
       const getFlaggedComments = async (list) => {
@@ -96,7 +96,7 @@ app.get('/comments/flagged', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Fetches one instance of all flagged comments by room
-app.get('/comments/:id', verifyModeratorOrAdmin, async (req, res) => {
+app.get('/comments/:id', async (req, res) => {
   const post_id = req.params.id;
 
   Comment.fetchRecent(post_id)
@@ -115,7 +115,7 @@ app.get('/comments/:id', verifyModeratorOrAdmin, async (req, res) => {
 });
 
 // Archive a flagged post
-app.delete('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
+app.delete('/posts/:id', (req, res) => {
   const flaggedPost= (req.params.id);
   try {
     Flag.archivePost(flaggedPost)
@@ -131,7 +131,7 @@ app.delete('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
 });
 
 // Archive a flagged comment
-app.delete('/comments/:id', verifyModeratorOrAdmin, (req, res) => {
+app.delete('/comments/:id', (req, res) => {
   try {
     Flag.archiveComment(req.params.id)
       .then(() => {
@@ -146,7 +146,7 @@ app.delete('/comments/:id', verifyModeratorOrAdmin, (req, res) => {
 });
 
 // Resolve a flagged post without removing
-app.put('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
+app.put('/posts/:id', (req, res) => {
   Flag.resolveFlaggedPostWithoutArchiving(req.params.id)
     .then(() => {
       res.status(200).json({ message: 'Flag resolved' });
