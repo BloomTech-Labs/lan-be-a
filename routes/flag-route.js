@@ -115,7 +115,7 @@ app.get('/comments/:id', async (req, res) => {
 });
 
 // Archive a flagged post
-app.delete('/posts/:id', (req, res) => {
+app.delete('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
   const flaggedPost= (req.params.id);
   try {
     Flag.archivePost(flaggedPost)
@@ -131,7 +131,7 @@ app.delete('/posts/:id', (req, res) => {
 });
 
 // Archive a flagged comment
-app.delete('/comments/:id', (req, res) => {
+app.delete('/comments/:id', verifyModeratorOrAdmin, (req, res) => {
   try {
     Flag.archiveComment(req.params.id)
       .then(() => {
@@ -146,7 +146,7 @@ app.delete('/comments/:id', (req, res) => {
 });
 
 // Resolve a flagged post without removing
-app.put('/posts/:id', (req, res) => {
+app.put('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
   Flag.resolveFlaggedPostWithoutArchiving(req.params.id)
     .then(() => {
       res.status(200).json({ message: 'Flag resolved' });
