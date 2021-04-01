@@ -5,6 +5,7 @@ const Room = require('../models/room-model');
 const Flag = require('../models/flag-model');
 const RoomModerator = require('../models/room-moderator');
 
+// Checks if the user is in the database
 async function verifyUser(req, res, next) {
   const userId = req.user.id;
   try {
@@ -19,6 +20,7 @@ async function verifyUser(req, res, next) {
   }
 }
 
+// Checks if the user is an admin
 const verifyAdmin = (req, res, next) => {
   const { role_id } = req.user;
 
@@ -29,6 +31,7 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
+// Checks if the user is a moderator or admin
 const verifyModeratorOrAdmin = (req, res, next) => {
   const { role_id } = req.user;
 
@@ -39,6 +42,7 @@ const verifyModeratorOrAdmin = (req, res, next) => {
   }
 };
 
+// Gets user id by display_name
 const findUserByDisplayName = async (req, res, next) => {
   if (!req.body.display_name){
     next();
@@ -63,6 +67,7 @@ const findUserByDisplayName = async (req, res, next) => {
   }
 };
 
+// Get room id by room name
 const findRoomByRoomName = async (req, res, next) => {
   if (!req.body.room_name){
     next();
@@ -87,6 +92,7 @@ const findRoomByRoomName = async (req, res, next) => {
   }
 };
 
+// Checks if a moderator is assigned to a room
 const findRoomModeratorPair = async (req, res, next) => {
   const { user_id, room_id } = req.body;
 
@@ -106,6 +112,7 @@ const findRoomModeratorPair = async (req, res, next) => {
   }
 };
 
+// Gets reason id by reason
 const findReasonIdByReason = async (req, res, next) => {
   const { reason } = req.body;
 
@@ -118,6 +125,7 @@ const findReasonIdByReason = async (req, res, next) => {
   }
 };
 
+// Checks if a user has already liked a post
 const findIfPostLiked = async (req, res, next) => {
   const user_id = req.user.id;
   const post_id = req.params.id;
@@ -138,6 +146,7 @@ const findIfPostLiked = async (req, res, next) => {
   }
 };
 
+// Checks if a user has already liked a post
 const findIfCommentLiked = async (req, res, next) => {
   const user_id = req.user.id;
   const comment_id = req.params.id;
