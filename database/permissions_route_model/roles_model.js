@@ -1,3 +1,9 @@
+// !!!!!
+// -----------------------------------------
+// THIS MODEL IS UNTESTED, use for reference
+// -----------------------------------------
+// !!!!!
+
 const database = require('../database/dbConfig');
 const Permission =  require('./permission');
 
