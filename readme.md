@@ -66,7 +66,7 @@ update users set role_id = 3
 `LINKEDIN_CLIENT_SECRET`
 `LAN_TOKEN`
 
-### If encountering prettier/eslint errors run this script in terminal:
+### If encountering prettier/eslint errors run script in terminal:
 `npm run lint`
 
 ENDPOINTS
