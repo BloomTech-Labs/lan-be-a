@@ -43,7 +43,7 @@ LINKEDIN_CLIENT_ID=786t2e05bh0c2d
 LINKEDIN_CLIENT_SECRET=P6uAEw94o9jNOMaE
 ```
 
-4. Create a database in PostgreSQL (and make sure you have pgAdmin).
+4. Create a database in PostgreSQL (and make sure you have pgAdmin).cd 
 
 5. Update `DATABASE`, `USER`, and `PASSWORD` in `.env` with your credentials.
 
