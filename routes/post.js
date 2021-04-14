@@ -9,21 +9,28 @@ const { findIfPostLiked } = require('../middleware');
 app.post('/create', (request, response) => {
   const userID = request.user.id;
   const { title, description, room_id } = request.body;
+  
 
   Post.createPost({ user_id: userID, title, description })
     .then(([res]) => {
       Post.createRoomPostEntry(res, room_id)
         .then(() => {
-          response.status(200).json({ message: 'Post created successfully' });
+          response
+            .status(200)
+            .json({ message: 'Post created successfully' });
         })
         .catch((err) => {
           console.log(err);
-          response.status(500).json({ message: 'Error creating post' });
+          response
+            .status(500)
+            .json({ message: 'Error creating post' });
         });
     })
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error creating post' });
+      response
+        .status(500)
+        .json({ message: 'Error creating post' });
     });
 });
 
@@ -32,14 +39,18 @@ app.delete('/delete/:postID', (request, response) => {
   const postID = request.params.postID;
   Post.deletePost(postID)
     .then(() => {
-      response.status(200).json({ message: 'Post archived'});
+      response
+        .status(200)
+        .json({ message: 'Post archived' });
     })
     .catch((error) => {
       console.log(error);
-      response.status(500).json({ message: 'Error archiving post' });
+      response
+        .status(500)
+        .json({ message: 'Error archiving post' });
     });
 });
-  
+
 // Fetch a single post
 app.get('/:id', (request, response) => {
   const postID = request.params.id;
@@ -47,7 +58,11 @@ app.get('/:id', (request, response) => {
     .then((post) => response.status(200).json(post))
     .catch((error) => {
       console.log(error);
-      response.status(500).json({ message: 'Error fetching individual post' });
+      response
+        .status(500)
+        .json({
+          message: 'Error fetching individual post'
+        });
     });
 });
 
@@ -57,7 +72,9 @@ app.post('/recent', (request, response) => {
     .then((res) => response.status(200).json(res))
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error fetching recent posts' });
+      response
+        .status(500)
+        .json({ message: 'Error fetching recent posts' });
     });
 });
 
@@ -67,7 +84,9 @@ app.post('/popular', (request, response) => {
     .then((res) => response.status(200).json(res))
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error fetching popular posts' });
+      response
+        .status(500)
+        .json({ message: 'Error fetching popular posts' });
     });
 });
 
@@ -78,69 +97,101 @@ app.post('/search', (request, response) => {
     .then((res) => response.status(200).json(res))
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ message: 'Error fetching posts' });
+      response
+        .status(500)
+        .json({ message: 'Error fetching posts' });
     });
 });
 
 // Like a post
-app.get('/like/:id', findIfPostLiked, (request, response) => {
-  const userID = request.user.id;
-  const postID = request.params.id;
-  const pair = request.body.pair;
-  if (!pair) {
-    Post.incrementPostLikes(postID)
-      .then(() => {
-        Post.addPostLike(userID, postID)
-          .then(() =>
-            response.status(200).json({ message: 'Post liked successfully' })
-          )
-          .catch((err) => {
-            console.log(err);
-            response.status(500).json({ message: 'Error adding post like' });
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        response
-          .status(500)
-          .json({ message: 'Error incrementing post\'s comment count' });
+app.get(
+  '/like/:id',
+  findIfPostLiked,
+  (request, response) => {
+    const userID = request.user.id;
+    const postID = request.params.id;
+    const pair = request.body.pair;
+    if (!pair) {
+      Post.incrementPostLikes(postID)
+        .then(() => {
+          Post.addPostLike(userID, postID)
+            .then(() =>
+              response
+                .status(200)
+                .json({
+                  message: 'Post liked successfully'
+                })
+            )
+            .catch((err) => {
+              console.log(err);
+              response
+                .status(500)
+                .json({
+                  message: 'Error adding post like'
+                });
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          response
+            .status(500)
+            .json({
+              message:
+                "Error incrementing post's comment count"
+            });
+        });
+    } else {
+      response.status(400).json({
+        message: 'Ooops, already liked that post.'
       });
-  } else {
-    response.status(400).json({
-      message: 'Ooops, already liked that post.'
-    });
+    }
   }
-});
+);
 
 // Remove like from a post
-app.delete('/like/:id', findIfPostLiked, (request, response) => {
-  const userID = request.user.id;
-  const postID = request.params.id;
-  const pair = request.body.pair;
-  if (pair) {
-    Post.decrementPostLikes(postID)
-      .then(() => {
-        Post.removePostLike(userID, postID)
-          .then(() =>
-            response.status(200).json({ message: 'Post unliked successfully' })
-          )
-          .catch((err) => {
-            console.log(err);
-            response.status(500).json({ message: 'Error removing post like' });
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        response
-          .status(500)
-          .json({ message: 'Error decrementing post\'s comment count' });
+app.delete(
+  '/like/:id',
+  findIfPostLiked,
+  (request, response) => {
+    const userID = request.user.id;
+    const postID = request.params.id;
+    const pair = request.body.pair;
+    if (pair) {
+      Post.decrementPostLikes(postID)
+        .then(() => {
+          Post.removePostLike(userID, postID)
+            .then(() =>
+              response
+                .status(200)
+                .json({
+                  message: 'Post unliked successfully'
+                })
+            )
+            .catch((err) => {
+              console.log(err);
+              response
+                .status(500)
+                .json({
+                  message: 'Error removing post like'
+                });
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          response
+            .status(500)
+            .json({
+              message:
+                "Error decrementing post's comment count"
+            });
+        });
+    } else {
+      response.status(400).json({
+        message: "Ooops, haven't liked that post."
       });
-  } else {
-    response.status(400).json({
-      message: 'Ooops, haven\'t liked that post.'
-    });
+    }
   }
-});
+);
 
 //Update a post must be the user that created post
 app.put('/update/:userID/:postID', (request, response) => {
@@ -149,7 +200,9 @@ app.put('/update/:userID/:postID', (request, response) => {
   const { newDescription } = request.body;
 
   if (userID !== request.user.id) {
-    response.status(401).json({ message: 'unathorized user' });
+    response
+      .status(401)
+      .json({ message: 'unathorized user' });
   } else {
     Post.postUpdate(postID, newDescription)
       .then((data) => response.status(200).json(data))
