@@ -2,13 +2,21 @@ const database = require('../database/dbConfig');
 
 // Fetch posts, comments, users, rooms based on search input
 const getFullSearchResults = async (search) => {
+    // TODO: posts and comments should ideally come back with the authors display_name, in this context. 
+  // just need the right sql calls... 
   const posts = await database('posts')
+    .join('users', 'users.id', 'posts.user_id')
+    .select('users.display_name', 'posts.title', 'posts.description', 'posts.created_at')
     .whereRaw('LOWER(posts.title) LIKE ?', [`%${search}%`])
     .orWhereRaw('LOWER(posts.description) LIKE ?', [`%${search}%`])
     .where('posts.visible', 1);
+
   const comments = await database('comments')
+    .join('users', 'users.id', 'comments.user_id')
+    .select('users.display_name', 'comments.comment', 'comments.created_at')
     .whereRaw('LOWER(comments.comment) LIKE ?', [`%${search}%`])
-    .where('comments.visible', 1);
+    .where('comments.visible', 1)
+    // ? .join('users', 'users.id', 'comments.user_id');
   const users = await database('users')
     .whereRaw('LOWER(users.email) LIKE ?', [`%${search}%`])
     .orWhereRaw('LOWER(users.display_name) LIKE ?', [`%${search}%`])
@@ -16,11 +24,12 @@ const getFullSearchResults = async (search) => {
   const rooms = await database('rooms')
     .whereRaw('LOWER(rooms.room_name) LIKE ?', [`%${search}%`])
     .orWhereRaw('LOWER(rooms.description) LIKE ?', [`%${search}%`]);
+
   return {
     users: users,
     rooms: rooms,
-    posts: posts,
     comments: comments,
+    posts: posts
   };
 };
 
