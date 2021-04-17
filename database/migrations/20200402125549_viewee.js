@@ -318,12 +318,34 @@ exports.up = (knex, Promise) => {
         .inTable('tags')
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
-    });
+    })
+
+    // My_room table to hold followed rooms
+    .createTable('my_room',(table) => {
+      table.increments();
+      table
+        .string('user_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table
+        .integer('room_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('rooms')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+    })
 };
 
 // eslint-disable-next-line no-unused-vars
 exports.down = (knex, Promise) => {
   return knex.schema
+    .dropTableIfExists('my_room')
     .dropTableIfExists('posts_to_tags')
     .dropTableIfExists('rooms_to_posts')
     .dropTableIfExists('tags')

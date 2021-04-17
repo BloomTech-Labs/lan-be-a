@@ -16,7 +16,7 @@ const roomRouter = require('./routes/room-route');
 const modRouter = require('./routes/flag-route');
 const searchRouter = require('./routes/search-route');
 const moderatorRouter = require('./routes/room-moderator');
-
+const myRoomRouter = require('./routes/my-room-router');
 const User = require('./models/user');
 
 const app = express();
@@ -50,6 +50,7 @@ app.use(passport.session());
 
 async function verifyRole(req, res, next) {
   const userId = req.user.id;
+  console.log(req.user)
   try {
     const verifiedUser = await User.find({ id: userId });
     if (verifiedUser) {
@@ -91,6 +92,7 @@ app.use('/api/admin', tokenVerified, verifyRole, adminRouter);
 app.use('/api/mod', tokenVerified, verifyRole, modRouter);
 app.use('/api/search', tokenVerified, verifyRole, searchRouter);
 app.use('/api/moderator', tokenVerified, verifyRole, moderatorRouter);
+app.use('/api/myroom', tokenVerified,myRoomRouter);
 
 app.get('/', (request, response) =>
   response.send({ message: 'Server working' })
