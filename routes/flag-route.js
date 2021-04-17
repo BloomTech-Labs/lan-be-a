@@ -120,7 +120,7 @@ app.delete('/posts/:id', verifyModeratorOrAdmin, (req, res) => {
   try {
     Flag.archivePost(flaggedPost)
       .then(() => {
-        res.status(200).json({ message: 'Successfuly archived post'});
+        res.status(200).json({ message: 'Successfully archived post'});
       })
       .catch(() => {
         res.status(500).json ({ message: 'Server Error'});
