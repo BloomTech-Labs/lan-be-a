@@ -124,7 +124,6 @@ app.delete("/like/:id", findIfPostLiked, (request, response) => {
   const userID = request.user.id;
   const postID = request.params.id;
   const pair = request.body.pair;
-  console.log(pair);
   if (pair) {
     Post.decrementPostLikes(postID)
       .then(() => {
