@@ -50,7 +50,6 @@ app.use(passport.session());
 
 async function verifyRole(req, res, next) {
   const userId = req.user.id;
-  console.log(req.user)
   try {
     const verifiedUser = await User.find({ id: userId });
     if (verifiedUser) {

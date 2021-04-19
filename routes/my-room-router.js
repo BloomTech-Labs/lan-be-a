@@ -17,7 +17,7 @@ app.get('/:id', (req, res) => {
     });
 });
 
-// TODO: add a room to a users rooms
+//add a room to a users rooms
 app.post('/:userID/:roomID', (req, res) => {
     const { userID, roomID } = req.params;
     MyRoom.add(roomID, userID)
@@ -30,7 +30,7 @@ app.post('/:userID/:roomID', (req, res) => {
     })
 });
 
-// TODO: remove a room from a users rooms
+//remove a room from a users rooms
 app.delete('/:userID/:roomID', (req, res) => {
     const { userID, roomID } = req.params;
 
