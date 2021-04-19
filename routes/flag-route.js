@@ -52,34 +52,40 @@ app.get("/posts/flagged", async (req, res) => {
 // Fetches one instance of all posts by room
 app.get("/posts/:id", async (req, res) => {
   const room_id = req.params.id;
+  const user_id = req.user.id;
+
   const page = req.query.page || 1;
   const limit = req.query.limit || 10;
 
-  Room.fetchRecentByRoomId(room_id, page, limit).then(async (roomPosts) => {
-    const getFlaggedPosts = async (list) => {
-      return Promise.all(
-        list.map(async (post) => {
-          let flaggedPost = { ...post };
-          let flags = await Flag.getFlagsByPostId(post.id);
-          flaggedPost.flags = flags;
-          return flaggedPost;
-        })
-      );
-    };
-    const getFlaggedCommentsByPostId = async (list) => {
-      return Promise.all(
-        list.map(async (post) => {
-          let flaggedPost = { ...post };
-          let flaggedComments = await Flag.getFlaggedCommentsByPostId(post.id);
-          flaggedPost.flaggedComments = flaggedComments;
-          return flaggedPost;
-        })
-      );
-    };
-    let flaggedPosts = await getFlaggedPosts(roomPosts.posts);
-    let flags = await getFlaggedCommentsByPostId(flaggedPosts);
-    res.status(200).json(flags);
-  });
+  Room.fetchRecentByRoomId(room_id, page, limit, user_id).then(
+    async (roomPosts) => {
+      const getFlaggedPosts = async (list) => {
+        return Promise.all(
+          list.map(async (post) => {
+            let flaggedPost = { ...post };
+            let flags = await Flag.getFlagsByPostId(post.id);
+            flaggedPost.flags = flags;
+            return flaggedPost;
+          })
+        );
+      };
+      const getFlaggedCommentsByPostId = async (list) => {
+        return Promise.all(
+          list.map(async (post) => {
+            let flaggedPost = { ...post };
+            let flaggedComments = await Flag.getFlaggedCommentsByPostId(
+              post.id
+            );
+            flaggedPost.flaggedComments = flaggedComments;
+            return flaggedPost;
+          })
+        );
+      };
+      let flaggedPosts = await getFlaggedPosts(roomPosts.posts);
+      let flags = await getFlaggedCommentsByPostId(flaggedPosts);
+      res.status(200).json(flags);
+    }
+  );
 });
 
 // Fetches one instance of all flagged comments
