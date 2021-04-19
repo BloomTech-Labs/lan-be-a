@@ -47,7 +47,9 @@ app.delete('/:id', (req, res) => {
 app.get('/:id/recent', (request, response) => {
   const page = request.query.page || 1;
   const limit = request.query.limit || 10;
-  Room.fetchRecentByRoomId(request.params.id, page, limit)
+  const user_id = request.user.id;
+
+  Room.fetchRecentByRoomId(request.params.id, page, limit, user_id)
     .then((data) => {
       response.status(200).json(data);
     })

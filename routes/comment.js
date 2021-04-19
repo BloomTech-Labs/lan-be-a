@@ -68,8 +68,11 @@ app.get('/:id', (request, response) => {
 // Fetch a posts' comments order by most recent
 app.get('/recent/:id', (request, response) => {
   const postID = request.params.id;
-  Comment.fetchRecent(postID)
-    .then((comments) => response.status(200).json(comments))
+  const user_id = request.user.id;
+  Comment.fetchRecent(postID, user_id)
+    .then((comments) => {
+      response.status(200).json(comments);
+    })
     .catch((error) => {
       console.log(error);
       response
