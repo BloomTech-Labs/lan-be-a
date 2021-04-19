@@ -45,17 +45,23 @@ const fetchRecentByRoomId = async (room_id, page, limit, user_id) => {
     ])
     .where("rtp.room_id", room_id)
     .andWhere("p.visible", 1);
+
+   
   const count = await database("posts as p")
     .join("users as u", "p.user_id", "u.id")
     .join("rooms_to_posts as rtp", "p.id", "rtp.post_id")
     .where("rtp.room_id", room_id)
     .andWhere("p.visible", 1)
     .count("p.id");
+
+     
   const userLikes = (
     await database("liked_posts as lp")
       .select("lp.post_id")
       .where("lp.user_id", user_id)
   ).map((item) => item.post_id);
+
+   
   return {
     posts: posts.map((post) => {
       return { ...post, liked: userLikes.includes(post.id) };
