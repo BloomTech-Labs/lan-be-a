@@ -9,7 +9,7 @@ app.get('/:id', (req, res) => {
     const userId = req.params.id
     MyRoom.fetchFollowedRooms({user_id:userId})
     .then(rooms => {
-        console.log({rooms})
+        
         res.status(200).json({rooms})
     })
     .catch((err) =>{
@@ -21,9 +21,14 @@ app.get('/:id', (req, res) => {
 app.post('/:userID/:roomID', (req, res) => {
     const { userID, roomID } = req.params;
     MyRoom.add(roomID, userID)
-    .then(result => {
-        console.log({result});
-        res.status(201).json({result})
+    .then(() => {
+        MyRoom.fetchFollowedRooms({user_id:userID})
+        .then((rooms) => {
+            res.status(200).json({rooms})
+        })
+        .catch((err) =>{
+            res.status(500).json(`${err}`)
+        });
     })
     .catch((err) =>{
         res.status(500).json(`${err}`)
