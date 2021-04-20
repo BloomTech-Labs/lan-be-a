@@ -40,8 +40,11 @@ app.delete('/:userID/:roomID', (req, res) => {
     const { userID, roomID } = req.params;
 
     MyRoom.remove(roomID, userID)
-    .then(res => {
-        res.status(200).json({ message: `Room ${roomID} has been removed from user ${userID}'s rooms.` });
+    .then(() => {
+        MyRoom.fetchFollowedRooms({user_id:userID})
+        .then((rooms) => {
+            res.status(200).json({rooms})
+        })
     })
     .catch(error => {
         res.status(500).json({ error });
