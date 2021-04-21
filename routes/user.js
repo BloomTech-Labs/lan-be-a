@@ -20,6 +20,7 @@ app.get('/', async (request, response) => {
         created_at: request.user.created_at,
         updated_at: request.user.updated_at,
         role_id: verifiedUser.role_id,
+        github_username: verifiedUser.github_username
       },
     });
   } catch (err) {
@@ -92,6 +93,19 @@ app.put('/displayname', verifyUser, (request, response) => {
     .catch((err) => {
       console.log(err);
       response.status(500).json({ message: 'Error updating user\'s display name' });
+    });
+});
+
+//Update user's GitHub username
+app.put('/githubusername', verifyUser, (request, response) => {
+  const { userID, githubusername } = request.body;
+  User.update(userID, { github_username: githubusername })
+    .then(() => {
+      response.status(200).json({ message: 'Updated user\'s github username successfully' });
+    })
+    .catch((err) => {
+      console.log(err);
+      response.status(500).json({ message: 'Error updating user\'s github username' });
     });
 });
 
