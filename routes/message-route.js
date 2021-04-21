@@ -17,7 +17,7 @@ app.get("/send/:id1/receive/:id2", (req, res) => {
         });
 });
 
-//add a room to a users rooms
+//add a new message
 app.post("/send/:id1/receive/:id2", (req, res) => {
     const user1 = req.params.id1;
     const user2 = req.params.id2;
@@ -32,7 +32,7 @@ app.post("/send/:id1/receive/:id2", (req, res) => {
         });
 });
 
-//remove a room from a users rooms
+//delete a message
 app.delete("/:messageId", (req, res) => {
     const messageId = req.params.messageId;
 
