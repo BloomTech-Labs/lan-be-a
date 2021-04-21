@@ -34,26 +34,27 @@ exports.up = (knex, Promise) => {
             table.integer("weight").notNullable();
         })
 
-        // Users
-        .createTable("users", (table) => {
-            table.string("id").unique();
-            table.string("email").notNullable().unique();
-            table.string("display_name").unique().index();
-            table.string("profile_picture");
-            table.string("track");
-            table.boolean("onboarded").defaultTo("false");
-            table.timestamps(true, true);
-            table
-                .integer("role_id")
-                .notNullable()
-                .unsigned()
-                .defaultTo(1)
-                .references("id")
-                .inTable("roles")
-                .onUpdate("CASCADE")
-                .onDelete("CASCADE");
-            table.boolean("visible").defaultTo(1);
-        })
+    // Users
+    .createTable('users', (table) => {
+      table.string('id').unique();
+      table.string('email').notNullable().unique();
+      table.string('display_name').unique().index();
+      table.string('profile_picture');
+      table.string('track');
+      table.string('github_username').unique();
+      table.boolean('onboarded').defaultTo('false');
+      table.timestamps(true, true);
+      table
+        .integer('role_id')
+        .notNullable()
+        .unsigned()
+        .defaultTo(1)
+        .references('id')
+        .inTable('roles')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
+      table.boolean('visible').defaultTo(1);
+    })
 
         // User Roles (appointment between User and Role)
         .createTable("user_roles", (table) => {

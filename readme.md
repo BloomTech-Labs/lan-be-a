@@ -115,6 +115,7 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | GET    | /api/user/comment/like             | Get all comment likes the user has made       |  
 | PUT    | /api/user/displayname              | Update users display name                     | userID, displayName must be in request body
 | PUT    | /api/user/track                    | Update users track                            | track, token must be in request body
+| PUT    | /api/user/githubusername            | Update users github username                           | userID, username must be in request body
 | PUT    | /api/user/onboard                  | Sets a users onboarded field to true          |  
 | DELETE | /api/user/settings/remove-user/:id | Deletes a user                                |
 
