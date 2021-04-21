@@ -39,6 +39,7 @@ exports.up = (knex, Promise) => {
       table.string('display_name').unique().index();
       table.string('profile_picture');
       table.string('track');
+      table.string('github_username').unique();
       table.boolean('onboarded').defaultTo('false');
       table.timestamps(true, true);
       table
