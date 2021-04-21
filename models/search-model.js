@@ -4,14 +4,14 @@ const database = require('../database/dbConfig');
 const getFullSearchResults = async (search) => {
   const posts = await database('posts')
     .join('users', 'users.id', 'posts.user_id')
-    .select('users.display_name', 'posts.title', 'posts.description', 'posts.created_at')
+    .select('users.display_name', 'posts.title', 'posts.description', 'posts.created_at', 'posts.id')
     .whereRaw('LOWER(posts.title) LIKE ?', [`%${search}%`])
     .orWhereRaw('LOWER(posts.description) LIKE ?', [`%${search}%`])
     .where('posts.visible', 1);
 
   const comments = await database('comments')
     .join('users', 'users.id', 'comments.user_id')
-    .select('users.display_name', 'comments.comment', 'comments.created_at')
+    .select('users.display_name', 'comments.comment', 'comments.created_at', 'comments.post_id', 'comments.id')
     .whereRaw('LOWER(comments.comment) LIKE ?', [`%${search}%`])
     .where('comments.visible', 1)
   const users = await database('users')
@@ -23,10 +23,10 @@ const getFullSearchResults = async (search) => {
     .orWhereRaw('LOWER(rooms.description) LIKE ?', [`%${search}%`]);
 
   return {
-    users: users,
-    rooms: rooms,
-    comments: comments,
-    posts: posts
+    users,
+    rooms,
+    comments,
+    posts
   };
 };
 
