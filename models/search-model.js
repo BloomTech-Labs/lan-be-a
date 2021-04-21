@@ -2,8 +2,6 @@ const database = require('../database/dbConfig');
 
 // Fetch posts, comments, users, rooms based on search input
 const getFullSearchResults = async (search) => {
-    // TODO: posts and comments should ideally come back with the authors display_name, in this context. 
-  // just need the right sql calls... 
   const posts = await database('posts')
     .join('users', 'users.id', 'posts.user_id')
     .select('users.display_name', 'posts.title', 'posts.description', 'posts.created_at')
@@ -16,7 +14,6 @@ const getFullSearchResults = async (search) => {
     .select('users.display_name', 'comments.comment', 'comments.created_at')
     .whereRaw('LOWER(comments.comment) LIKE ?', [`%${search}%`])
     .where('comments.visible', 1)
-    // ? .join('users', 'users.id', 'comments.user_id');
   const users = await database('users')
     .whereRaw('LOWER(users.email) LIKE ?', [`%${search}%`])
     .orWhereRaw('LOWER(users.display_name) LIKE ?', [`%${search}%`])
