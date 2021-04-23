@@ -1,8 +1,17 @@
 const database = require("../database/dbConfig");
 
 //Get following users
-const fetchFollowing = (user_id) => {
-  return database("following").select("following_id").where(user_id);
+const fetchFollowing = async (user_id) => {
+  return database("following")
+    .join("users", "following.following_id", "users.id")
+    .where("following.user_id", user_id.id)
+    .select([
+      "following.following_id",
+      "users.display_name",
+      "users.profile_picture",
+      "users.track",
+      "users.following",
+    ]);
 };
 
 // adds a new following

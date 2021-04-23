@@ -7,7 +7,7 @@ app.get("/:id", (req, res) => {
   const user_id = req.params.id;
 
   following
-    .fetchFollowing({ user_id })
+    .fetchFollowing({ id: user_id })
     .then((following) => {
       res.status(200).json({ following });
     })
