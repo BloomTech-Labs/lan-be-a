@@ -1,7 +1,7 @@
-const passport = require('passport');
-const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-const User = require('../models/user');
-const BACKEND_URL = process.env.BACKEND_DEPLOYED_URL || 'http://localhost:5000';
+const passport = require("passport");
+const LinkedInStrategy = require("passport-linkedin-oauth2").Strategy;
+const User = require("../models/user");
+const BACKEND_URL = process.env.BACKEND_DEPLOYED_URL || "http://localhost:5000";
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -19,7 +19,7 @@ passport.use(
       clientID: process.env.LINKEDIN_CLIENT_ID,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
       callbackURL: `${BACKEND_URL}/api/auth/linkedin/redirect`,
-      scope: ['r_emailaddress', 'r_liteprofile'],
+      scope: ["r_emailaddress", "r_liteprofile"],
     },
     (accessToken, refreshToken, profile, done) => {
       const user = {
@@ -30,7 +30,7 @@ passport.use(
       };
 
       process.nextTick(() => {
-        User.find({ id: user.id }).then((existingUser) => {
+        User.findUserAtAuth({ id: user.id }).then((existingUser) => {
           if (existingUser) {
             return done(null, existingUser);
           } else {

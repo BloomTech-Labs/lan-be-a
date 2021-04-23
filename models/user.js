@@ -1,13 +1,16 @@
 const database = require("../database/dbConfig");
-const following = require("./following");
+const Follow = require("./following");
+
+// Get a user durrin Auth
+const findUserAtAuth = (filter) => {
+  return database("users").where(filter).first();
+};
 
 // Get a user
 const find = async (filter) => {
   const userDetails = await database("users").where(filter).first();
   const followingDetails =
-    userDetails.following !== 0
-      ? await following.fetchFollowing(filter)
-      : [];
+    userDetails.following !== 0 ? await Follow.fetchFollowing(filter) : [];
 
   return { ...userDetails, following_list: followingDetails };
 };
@@ -56,6 +59,7 @@ const onboard = (userID) => {
 };
 
 module.exports = {
+  findUserAtAuth,
   find,
   add,
   update,
