@@ -19,6 +19,7 @@ const moderatorRouter = require("./routes/room-moderator");
 const myRoomRouter = require("./routes/my-room-router");
 const messageRouter = require("./routes/message-route");
 const followingRouter = require("./routes/following-route");
+const bugRouter = require("./routes/bug-route");
 const User = require("./models/user");
 
 const app = express();
@@ -94,6 +95,7 @@ app.use("/api/moderator", tokenVerified, verifyRole, moderatorRouter);
 app.use("/api/myroom", tokenVerified, myRoomRouter);
 app.use("/api/message", tokenVerified, messageRouter);
 app.use("/api/following", tokenVerified, followingRouter);
+app.use("/api/bug", tokenVerified, bugRouter);
 
 app.get("/", (request, response) =>
   response.send({ message: "Server working" })
