@@ -5,7 +5,8 @@ const fetchBugs = () => {
   return database("bugs")
     .join("users", "bugs.user_id", "users.id")
     .select([
-      "users.id",
+      "bugs.id",
+      "bugs.user_id",
       "users.display_name",
       "users.profile_picture",
       "bugs.title",
@@ -24,7 +25,8 @@ const fetchBug = (id) => {
     .where("bugs.id", id)
     .join("users", "bugs.user_id", "users.id")
     .select([
-      "users.id",
+      "bugs.id",
+      "bugs.user_id",
       "users.display_name",
       "users.profile_picture",
       "bugs.title",
