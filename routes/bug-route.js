@@ -1,6 +1,7 @@
 const express = require("express");
 const Bug = require("../models/bugs");
 const app = express.Router();
+const { cloudinary } = require("../config/cloudinary");
 
 app.get("/", async (request, response) => {
   try {
@@ -94,6 +95,18 @@ app.delete("/:id", async (request, response) => {
     }
   } catch (err) {
     return response.status(500).json({ error: err.message, stack: err.stack });
+  }
+});
+
+app.post("/image", async (request, response) => {
+  try {
+    const fileStr = request.body.data;
+    const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
+    });
+    response.status(200).json({ url: uploadResponse.secure_url });
+  } catch (err) {
+    response.status(500).json({ err: "Failed to upload image" });
   }
 });
 
