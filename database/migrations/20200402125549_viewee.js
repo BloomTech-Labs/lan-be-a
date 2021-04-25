@@ -390,12 +390,31 @@ exports.up = (knex, Promise) => {
           .onDelete("CASCADE");
         table.primary(["user_id", "following_id"]);
       })
+
+      // Create bug table
+      .createTable("bugs", (table) => {
+        table.increments();
+        table
+          .string("user_id")
+          .notNullable()
+          .unsigned()
+          .references("id")
+          .inTable("users")
+          .onUpdate("CASCADE")
+          .onDelete("CASCADE");
+        table.string("title").notNullable();
+        table.text("description").notNullable();
+        table.string("photo_url");
+        table.boolean("resolved").defaultTo(false);
+        table.timestamps(true, true);
+      })
   );
 };
 
 // eslint-disable-next-line no-unused-vars
 exports.down = (knex, Promise) => {
   return knex.schema
+    .dropTableIfExists("bugs")
     .dropTableIfExists("following")
     .dropTableIfExists("messages")
     .dropTableIfExists("my_room")

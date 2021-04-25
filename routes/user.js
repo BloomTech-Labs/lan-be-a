@@ -31,6 +31,19 @@ app.get("/", async (request, response) => {
   }
 });
 
+//Fetch all users
+app.get("/all", async (request, response) => {
+  try {
+    const users = await User.fetchAll();
+    response.status(200).json({
+      message: "Successfully fetched users",
+      users,
+    });
+  } catch (err) {
+    return response.status(500).json({ error: err.message, stack: err.stack });
+  }
+});
+
 // Fetch all posts and comments a single user has made
 app.get("/:id", verifyUser, (request, response) => {
   const userID = request.params.id;

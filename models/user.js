@@ -1,7 +1,7 @@
 const database = require("../database/dbConfig");
 const Follow = require("./following");
 
-// Get a user durrin Auth
+// Get a user during Auth
 const findUserAtAuth = (filter) => {
   return database("users").where(filter).first();
 };
@@ -13,6 +13,20 @@ const find = async (filter) => {
     userDetails.following !== 0 ? await Follow.fetchFollowing(filter) : [];
 
   return { ...userDetails, following_list: followingDetails };
+};
+
+//Get all users
+const fetchAll = () => {
+  return database("users")
+    .select([
+      "id",
+      "display_name",
+      "profile_picture",
+      "track",
+      "github_username",
+      "following",
+    ])
+    .orderBy("display_name");
 };
 
 // Add a user
@@ -59,6 +73,7 @@ const onboard = (userID) => {
 };
 
 module.exports = {
+  fetchAll,
   findUserAtAuth,
   find,
   add,
