@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-unused-vars
-const { count, del } = require("../database/dbConfig");
 const database = require("../database/dbConfig");
 
 // Create a room

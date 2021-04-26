@@ -2,8 +2,6 @@ const express = require("express");
 const app = express.Router();
 const Room = require("../models/room-model");
 
-const { verifyAdmin } = require("../middleware");
-
 // Get all rooms
 app.get("/", (req, res) => {
   Room.getAllRooms()
@@ -149,11 +147,9 @@ app.delete("/private/:roomId", async (req, res) => {
     .then(() => {
       Room.remove(roomId)
         .then(() => {
-          res
-            .status(200)
-            .json({
-              message: `Private room ${roomId} has been removed from DB`,
-            });
+          res.status(200).json({
+            message: `Private room ${roomId} has been removed from DB`,
+          });
         })
         .catch((err) => {
           res.status(500).json({ message: err.message });
