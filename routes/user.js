@@ -24,6 +24,7 @@ app.get("/", async (request, response) => {
         gitHubUsername: verifiedUser.github_username,
         following: verifiedUser.following,
         following_list: verifiedUser.following_list,
+        userBio: verifiedUser.user_bio,
       },
     });
   } catch (err) {
@@ -195,6 +196,23 @@ app.delete("/settings/remove-user/:id", verifyUser, (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ err });
+    });
+});
+
+// Update User's Bio
+app.put("/userbio", verifyUser, (request, response) => {
+  const { userID, userBio } = request.body;
+  User.update(userID, { user_bio: userBio })
+    .then(() => {
+      response
+        .status(200)
+        .json({ message: "Updated user's Bio successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating user's Bio" });
     });
 });
 
