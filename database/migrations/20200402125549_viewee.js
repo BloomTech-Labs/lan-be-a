@@ -254,6 +254,7 @@ exports.up = (knex, Promise) => {
         table.increments();
         table.string("room_name").notNullable().unique();
         table.string("description").notNullable().unique();
+        table.boolean("private").defaultTo(false);
       })
 
       // Room To Moderator (appointment between User(moderator) and Room)
@@ -302,6 +303,27 @@ exports.up = (knex, Promise) => {
           .inTable("rooms")
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
+      })
+
+      // Link private rooms to users table
+      .createTable("rooms_to_users", (table) => {
+        table
+          .integer("room_id")
+          .notNullable()
+          .unsigned()
+          .references("id")
+          .inTable("rooms")
+          .onUpdate("CASCADE")
+          .onDelete("CASCADE");
+        table
+          .string("user_id")
+          .notNullable()
+          .unsigned()
+          .references("id")
+          .inTable("users")
+          .onUpdate("CASCADE")
+          .onDelete("CASCADE");
+        table.primary(["room_id", "user_id"]);
       })
 
       // Posts To Tags (appointment between Post and Tag)
@@ -419,6 +441,7 @@ exports.down = (knex, Promise) => {
     .dropTableIfExists("messages")
     .dropTableIfExists("my_room")
     .dropTableIfExists("posts_to_tags")
+    .dropTableIfExists("rooms_to_users")
     .dropTableIfExists("rooms_to_posts")
     .dropTableIfExists("tags")
     .dropTableIfExists("room_to_moderator")

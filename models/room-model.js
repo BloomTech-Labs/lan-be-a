@@ -17,6 +17,50 @@ const getAllRooms = () => {
   return database("rooms").orderBy("room_name");
 };
 
+const getAllPrivateRooms = async () => {
+  const privateRooms = await database("rooms").where("rooms.private", true);
+
+  const privRoomsUsers = privateRooms.map(async (room) => {
+    const users = await database("rooms")
+      .join("rooms_to_users", "rooms.id", "rooms_to_users.room_id")
+      .join("users", "rooms_to_users.user_id", "users.id")
+      .select([
+        "users.id",
+        "users.display_name",
+        "users.profile_picture",
+        "users.track",
+        "users.email",
+        "users.role_id",
+      ])
+      .where("rooms.id", room.id)
+      .orderBy("room_name");
+
+    return { ...room, users };
+  });
+
+  const result = await Promise.all(privRoomsUsers);
+
+  return result;
+};
+
+const getPrivateRoom = async (roomId) => {
+  const privateRoom = await database("rooms").where("rooms.id", roomId).first();
+
+  const users = await database("rooms_to_users")
+    .join("users", "rooms_to_users.user_id", "users.id")
+    .select([
+      "users.id",
+      "users.display_name",
+      "users.profile_picture",
+      "users.track",
+      "users.email",
+      "users.role_id",
+    ])
+    .where("rooms_to_users.room_id", roomId);
+
+  return { ...privateRoom, users };
+};
+
 // Fetch a room by filter
 const getRoomBy = (filter) => {
   return database("rooms").where(filter).first();
@@ -46,7 +90,6 @@ const fetchRecentByRoomId = async (room_id, page, limit, user_id) => {
     .where("rtp.room_id", room_id)
     .andWhere("p.visible", 1);
 
-   
   const count = await database("posts as p")
     .join("users as u", "p.user_id", "u.id")
     .join("rooms_to_posts as rtp", "p.id", "rtp.post_id")
@@ -54,14 +97,12 @@ const fetchRecentByRoomId = async (room_id, page, limit, user_id) => {
     .andWhere("p.visible", 1)
     .count("p.id");
 
-     
   const userLikes = (
     await database("liked_posts as lp")
       .select("lp.post_id")
       .where("lp.user_id", user_id)
   ).map((item) => item.post_id);
 
-   
   return {
     posts: posts.map((post) => {
       return { ...post, liked: userLikes.includes(post.id) };
@@ -131,6 +172,8 @@ module.exports = {
   add,
   remove,
   getAllRooms,
+  getAllPrivateRooms,
+  getPrivateRoom,
   getRoomBy,
   fetchRecentByRoomId,
   fetchPopularByRoomId,
