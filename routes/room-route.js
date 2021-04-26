@@ -2,8 +2,6 @@ const express = require("express");
 const app = express.Router();
 const Room = require("../models/room-model");
 
-const { verifyAdmin } = require("../middleware");
-
 // Get all rooms
 app.get("/", (req, res) => {
   Room.getAllRooms()
@@ -54,6 +52,112 @@ app.post("/", (req, res) => {
         res.status(500).json({ message: err.message });
       });
   }
+});
+
+// Create a private room
+app.post("/private", (req, res) => {
+  const { room_name, description } = req.body;
+  if (!room_name || !description) {
+    res.status(400).json({ message: "Must designate room name to continue." });
+  } else {
+    Room.addPrivateRoom(req.body)
+      .then((data) => {
+        res.status(201).json(data);
+      })
+      .catch((err) => {
+        res.status(500).json({ message: err.message });
+      });
+  }
+});
+
+// Add users to a private room
+app.post("/private/:roomId/users", (req, res) => {
+  const { roomId } = req.params;
+  const { users } = req.body;
+  const promises = [];
+
+  if (users) {
+    users.forEach((userId) => {
+      Room.addUserPrivateRoom(roomId, userId)
+        .then((data) => {
+          promises.push(data);
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
+    });
+  }
+
+  Promise.all(promises)
+    .then(() => {
+      res.status(200).json({ message: "Users added successfully" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+// Remove users from a private room
+app.delete("/private/:roomId/users", (req, res) => {
+  const { roomId } = req.params;
+  const { users } = req.body;
+  const promises = [];
+
+  if (users) {
+    users.forEach((userId) => {
+      Room.removeUserPrivateRoom(roomId, userId)
+        .then((data) => {
+          promises.push(data);
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
+    });
+  }
+
+  Promise.all(promises)
+    .then(() => {
+      res.status(200).json({ message: "Users removed successfully" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+// Delete a private room
+app.delete("/private/:roomId", async (req, res) => {
+  const { roomId } = req.params;
+
+  const { users } = await Room.getPrivateRoom(roomId);
+
+  const promises = [];
+  if (users) {
+    users.forEach((userId) => {
+      Room.removeUserPrivateRoom(roomId, userId)
+        .then((data) => {
+          promises.push(data);
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
+    });
+  }
+
+  Promise.all(promises)
+    .then(() => {
+      Room.remove(roomId)
+        .then(() => {
+          res.status(200).json({
+            message: `Private room ${roomId} has been removed from DB`,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
 });
 
 // Delete a room
