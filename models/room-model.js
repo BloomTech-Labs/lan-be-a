@@ -42,7 +42,7 @@ const remove = (roomId) => {
 
 // Fetch all rooms
 const getAllRooms = () => {
-  return database("rooms").orderBy("room_name");
+  return database("rooms").where("private", false).orderBy("room_name");
 };
 
 const getAllPrivateRooms = async () => {
