@@ -202,34 +202,36 @@ app.delete("/settings/remove-user/:id", verifyUser, (req, res) => {
 
 //Set user becoming a mentor to true
 app.put("/mentor", verifyUser, (request, response) => {
-  const userID = request.user.id;
-  User.mentor(userID)
-    .then(() =>
+  const { userID, mentor } = request.body;
+  User.update(userID, { mentor: mentor })
+    .then(() => {
       response
         .status(200)
-        .json({ message: "Updated user mentor field" })
-    )
+        .json({ message: "Updated mentor status successfully" });
+    })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error updating user mentor field" });
+        .json({ message: "Error updating mentor status" });
     });
 });
+
 //Set user bhecoming a mentee to true
 app.put("/mentee", verifyUser, (request, response) => {
-  const userID = request.user.id;
-  User.mentee(userID)
-    .then(() =>
+  const { userID, mentee } = request.body;
+  User.update(userID, { mentee: mentee })
+    .then(() => {
       response
         .status(200)
-        .json({ message: "Updated user mentee field" })
-    )
+        .json({ message: "Updated mentee status successfully" });
+    })
     .catch((err) => {
       console.log(err);
       response
         .status(500)
-        .json({ message: "Error updating user mentee field" });
+        .json({ message: "Error updating mentee status" });
     });
 });
+
 module.exports = app;
