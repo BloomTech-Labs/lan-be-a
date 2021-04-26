@@ -1,25 +1,50 @@
-const express = require('express');
+const express = require("express");
 const app = express.Router();
-const Room = require('../models/room-model');
+const Room = require("../models/room-model");
 
-const { verifyAdmin } = require('../middleware');
+const { verifyAdmin } = require("../middleware");
 
 // Get all rooms
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   Room.getAllRooms()
     .then((rooms) => {
       res.status(200).json(rooms);
     })
     .catch(() => {
-      res.status(500).json({ message: 'Could not retrieve rooms' });
+      res.status(500).json({ message: "Could not retrieve rooms" });
+    });
+});
+
+// Get all private rooms
+app.get("/private", (req, res) => {
+  Room.getAllPrivateRooms()
+    .then((rooms) => {
+      res.status(200).json(rooms);
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Could not retrieve private rooms" });
+    });
+});
+
+// Get all private rooms
+app.get("/private/:roomId", (req, res) => {
+  const { roomId } = req.params;
+
+  Room.getPrivateRoom(roomId)
+    .then((room) => {
+      if (room.private) res.status(200).json(room);
+      else res.status(403).json({ message: "room is not private" });
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Could not retrieve private rooms" });
     });
 });
 
 // Create a room
-app.post('/', (req, res) => {
+app.post("/", (req, res) => {
   const { room_name, description } = req.body;
   if (!room_name || !description) {
-    res.status(400).json({ message: 'Must designate room name to continue.' });
+    res.status(400).json({ message: "Must designate room name to continue." });
   } else {
     Room.add(req.body)
       .then((data) => {
@@ -32,11 +57,13 @@ app.post('/', (req, res) => {
 });
 
 // Delete a room
-app.delete('/:id', (req, res) => {
+app.delete("/:id", (req, res) => {
   const roomId = req.params.id;
   Room.remove(roomId)
     .then(() => {
-      res.status(200).json({ message: `room ${roomId} has been removed from DB` });
+      res
+        .status(200)
+        .json({ message: `room ${roomId} has been removed from DB` });
     })
     .catch((err) => {
       res.status(500).json({ message: err.message });
@@ -44,7 +71,7 @@ app.delete('/:id', (req, res) => {
 });
 
 // Fetch posts in a room ordered by most recent
-app.get('/:id/recent', (request, response) => {
+app.get("/:id/recent", (request, response) => {
   const page = request.query.page || 1;
   const limit = request.query.limit || 10;
   const user_id = request.user.id;
@@ -62,7 +89,7 @@ app.get('/:id/recent', (request, response) => {
 });
 
 // Fetch posts in a room ordered by most likes
-app.get('/:id/popular', (request, response) => {
+app.get("/:id/popular", (request, response) => {
   const page = request.query.page || 1;
   const limit = request.query.limit || 10;
   Room.fetchPopularByRoomId(request.params.id, page, limit)
@@ -75,7 +102,7 @@ app.get('/:id/popular', (request, response) => {
 });
 
 // Fetch posts from room based on user search input
-app.get('/:id/search', (request, response) => {
+app.get("/:id/search", (request, response) => {
   Room.searchWithRoomId(request.params.id)
     .then((data) => response.status(200).json(data))
     .catch(() =>
