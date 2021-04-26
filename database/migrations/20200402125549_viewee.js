@@ -44,6 +44,8 @@ exports.up = (knex, Promise) => {
         table.string("github_username").unique();
         table.integer("following").defaultTo(0);
         table.boolean("onboarded").defaultTo("false");
+        table.boolean("mentor").defaultTo("false");
+        table.boolean("mentee").defaultTo("false");
         table.timestamps(true, true);
         table
           .integer("role_id")
@@ -55,8 +57,6 @@ exports.up = (knex, Promise) => {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.boolean("visible").defaultTo(1);
-        table.boolean("mentor").defaultTo("false");
-        table.boolean("mentee").defaultTo("false");
       })
 
       // User Roles (appointment between User and Role)

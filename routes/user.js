@@ -24,6 +24,8 @@ app.get("/", async (request, response) => {
         gitHubUsername: verifiedUser.github_username,
         following: verifiedUser.following,
         following_list: verifiedUser.following_list,
+        mentor: verifiedUser.mentor,
+        mentee: verifiedUser.mentee,
       },
     });
   } catch (err) {
