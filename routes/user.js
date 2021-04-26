@@ -198,4 +198,36 @@ app.delete("/settings/remove-user/:id", verifyUser, (req, res) => {
     });
 });
 
+//Set user becoming a mentor to true
+app.put("/mentor", verifyUser, (request, response) => {
+  const userID = request.user.id;
+  User.mentor(userID)
+    .then(() =>
+      response
+        .status(200)
+        .json({ message: "Updated user mentor field" })
+    )
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating user mentor field" });
+    });
+});
+//Set user bhecoming a mentee to true
+app.put("/mentee", verifyUser, (request, response) => {
+  const userID = request.user.id;
+  User.mentee(userID)
+    .then(() =>
+      response
+        .status(200)
+        .json({ message: "Updated user mentee field" })
+    )
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating user mentee field" });
+    });
+});
 module.exports = app;

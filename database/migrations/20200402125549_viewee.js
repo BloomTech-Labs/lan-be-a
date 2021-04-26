@@ -55,6 +55,8 @@ exports.up = (knex, Promise) => {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.boolean("visible").defaultTo(1);
+        table.boolean("mentor").defaultTo("false");
+        table.boolean("mentee").defaultTo("false");
       })
 
       // User Roles (appointment between User and Role)
