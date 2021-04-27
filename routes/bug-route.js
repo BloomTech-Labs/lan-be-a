@@ -27,7 +27,7 @@ app.post("/", async (request, response) => {
 
   try {
     const newBug = await Bug.addBug(value);
-    response.status(200).json(newBug);
+    response.status(201).json(newBug);
   } catch (err) {
     return response.status(500).json({ error: err.message, stack: err.stack });
   }
@@ -104,7 +104,7 @@ app.post("/image", async (request, response) => {
     const uploadResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
     });
-    response.status(200).json({ url: uploadResponse.secure_url });
+    response.status(201).json({ url: uploadResponse.secure_url });
   } catch (err) {
     response.status(500).json({ err: "Failed to upload image" });
   }
