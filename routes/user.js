@@ -25,6 +25,9 @@ app.get("/", async (request, response) => {
         following: verifiedUser.following,
         following_list: verifiedUser.following_list,
         userBio: verifiedUser.user_bio,
+        mentor: verifiedUser.mentor,
+        mentee: verifiedUser.mentee,
+
       },
     });
   } catch (err) {
@@ -199,6 +202,7 @@ app.delete("/settings/remove-user/:id", verifyUser, (req, res) => {
     });
 });
 
+
 // Update User's Bio
 app.put("/userbio", verifyUser, (request, response) => {
   const { userID, userBio } = request.body;
@@ -213,6 +217,40 @@ app.put("/userbio", verifyUser, (request, response) => {
       response
         .status(500)
         .json({ message: "Error updating user's Bio" });
+    });
+});
+
+//Set user becoming a mentor to true
+app.put("/mentor", verifyUser, (request, response) => {
+  const { userID, mentor } = request.body;
+  User.update(userID, { mentor: mentor })
+    .then(() => {
+      response
+        .status(200)
+        .json({ message: "Updated mentor status successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating mentor status" });
+    });
+});
+
+//Set user becoming a mentee to true
+app.put("/mentee", verifyUser, (request, response) => {
+  const { userID, mentee } = request.body;
+  User.update(userID, { mentee: mentee })
+    .then(() => {
+      response
+        .status(200)
+        .json({ message: "Updated mentee status successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating mentee status" });
     });
 });
 

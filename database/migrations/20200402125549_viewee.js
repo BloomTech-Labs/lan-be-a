@@ -45,6 +45,8 @@ exports.up = (knex, Promise) => {
         table.string("user_bio");
         table.integer("following").defaultTo(0);
         table.boolean("onboarded").defaultTo("false");
+        table.boolean("mentor").defaultTo(false);
+        table.boolean("mentee").defaultTo(false);
         table.timestamps(true, true);
         table
           .integer("role_id")

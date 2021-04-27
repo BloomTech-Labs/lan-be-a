@@ -1,10 +1,38 @@
 // eslint-disable-next-line no-unused-vars
-const { count } = require("../database/dbConfig");
 const database = require("../database/dbConfig");
 
 // Create a room
 const add = (room) => {
   return database("rooms").insert(room).returning("*");
+};
+
+//Create Private Room
+const addPrivateRoom = async (room) => {
+  return database("rooms")
+    .insert({
+      room_name: room.room_name,
+      description: room.description,
+      private: true,
+    })
+    .returning("*");
+};
+
+//Add User to a private room
+const addUserPrivateRoom = async (roomId, userId) => {
+  return database("rooms_to_users")
+    .insert({
+      room_id: roomId,
+      user_id: userId,
+    })
+    .returning("*");
+};
+
+//Remove Users from a private room
+const removeUserPrivateRoom = async (roomId, userId) => {
+  return database("rooms_to_users")
+    .where("room_id", roomId)
+    .andWhere("user_id", userId)
+    .del();
 };
 
 // Delete a room
@@ -14,7 +42,7 @@ const remove = (roomId) => {
 
 // Fetch all rooms
 const getAllRooms = () => {
-  return database("rooms").orderBy("room_name");
+  return database("rooms").where("private", false).orderBy("room_name");
 };
 
 const getAllPrivateRooms = async () => {
@@ -170,6 +198,9 @@ const searchWithRoomId = (room_id, search) => {
 
 module.exports = {
   add,
+  addPrivateRoom,
+  addUserPrivateRoom,
+  removeUserPrivateRoom,
   remove,
   getAllRooms,
   getAllPrivateRooms,
