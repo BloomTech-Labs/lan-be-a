@@ -40,21 +40,10 @@ app.delete("/delete/:postID", (request, response) => {
     });
 });
 
-// Fetch a single post
-app.get("/:id", (request, response) => {
-  const postID = request.params.id;
-  Post.fetch(postID)
-    .then((post) => response.status(200).json(post))
-    .catch((error) => {
-      console.log(error);
-      response.status(500).json({
-        message: "Error fetching individual post",
-      });
-    });
-});
+
 
 // Fetch posts ordered by most recent
-app.post("/recent", (request, response) => {
+app.get("/recent", (request, response) => {
   Post.fetchRecent()
     .then((res) => response.status(200).json(res))
     .catch((err) => {
@@ -62,9 +51,18 @@ app.post("/recent", (request, response) => {
       response.status(500).json({ message: "Error fetching recent posts" });
     });
 });
+//Fetch post by recent liked post
+app.get("/recentliked/", (request, response) => {
+  Post.fetchRecentLiked()
+    .then((res) => response.status(200).json(res))
+    .catch((err) => {
+      console.log(err);
+      response.status(500).json({ message: "Error fetching recent liked posts" });
+    });
+});
 
 // Fetch posts ordered by most popular
-app.post("/popular", (request, response) => {
+app.get("/popular", (request, response) => {
   Post.fetchPopular()
     .then((res) => response.status(200).json(res))
     .catch((err) => {
@@ -168,6 +166,18 @@ app.put("/update/:userID/:postID", (request, response) => {
         response.status(500).json(err);
       });
   }
+});
+// Fetch a single post
+app.get("/:id", (request, response) => {
+  const postID = request.params.id;
+  Post.fetch(postID)
+    .then((post) => response.status(200).json(post))
+    .catch((error) => {
+      console.log(error);
+      response.status(500).json({
+        message: "Error fetching individual post",
+      });
+    });
 });
 
 module.exports = app;

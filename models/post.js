@@ -94,7 +94,25 @@ const fetchRecent = () => {
       'posts.updated_at'
     ]);
 };
-
+// fetch 10 most recent post with most likes
+const fetchRecentLiked = () => {
+  return database('posts')
+    .join('users', 'posts.user_id', 'users.id')
+    .orderBy([{ column: 'posts.created_at', order: 'desc' }, { column: 'posts.likes', order: 'desc' }])
+    .select([
+      'posts.id',
+      'users.id as user_id',
+      'users.profile_picture',
+      'users.display_name',
+      'posts.title',
+      'posts.description',
+      'posts.likes',
+      'posts.comments',
+      'posts.created_at',
+      'posts.updated_at'
+    ])
+    .limit(10);
+};
 // Fetch all posts ordered by most likes
 const fetchPopular = () => {
   return database('posts')
@@ -157,5 +175,6 @@ module.exports = {
   fetchPopular,
   fetchSearch,
   postUpdate,
+  fetchRecentLiked
 };
 
