@@ -24,6 +24,8 @@ app.get("/", async (request, response) => {
         gitHubUsername: verifiedUser.github_username,
         following: verifiedUser.following,
         following_list: verifiedUser.following_list,
+        mentor: verifiedUser.mentor,
+        mentee: verifiedUser.mentee,
       },
     });
   } catch (err) {
@@ -195,6 +197,40 @@ app.delete("/settings/remove-user/:id", verifyUser, (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ err });
+    });
+});
+
+//Set user becoming a mentor to true
+app.put("/mentor", verifyUser, (request, response) => {
+  const { userID, mentor } = request.body;
+  User.update(userID, { mentor: mentor })
+    .then(() => {
+      response
+        .status(200)
+        .json({ message: "Updated mentor status successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating mentor status" });
+    });
+});
+
+//Set user bhecoming a mentee to true
+app.put("/mentee", verifyUser, (request, response) => {
+  const { userID, mentee } = request.body;
+  User.update(userID, { mentee: mentee })
+    .then(() => {
+      response
+        .status(200)
+        .json({ message: "Updated mentee status successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      response
+        .status(500)
+        .json({ message: "Error updating mentee status" });
     });
 });
 
