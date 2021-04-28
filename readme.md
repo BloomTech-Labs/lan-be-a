@@ -143,6 +143,9 @@ API hosted at: https://lan-team-a-be.herokuapp.com/
 | PUT    | /api/user/track                    | Update users track                            | track, token must be in request body                              |
 | PUT    | /api/user/githubusername           | Update users github username                  | userID, username must be in request body                          |
 | PUT    | /api/user/onboard                  | Sets a users onboarded field to true          |
+| PUT    | /api/user/userbio                  | Update users bio information                  |
+| PUT    | /api/user/mentor                   | Set user becoming mentor to true              |
+| PUT    | /api/user/mentee                   | Set user becoming mentee to true              |
 | DELETE | /api/user/settings/remove-user/:id | Deletes a user                                |
 
 ## Post Operations
