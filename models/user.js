@@ -25,6 +25,7 @@ const fetchAll = () => {
       "track",
       "github_username",
       "following",
+      "user_bio",
     ])
     .orderBy("display_name");
 };

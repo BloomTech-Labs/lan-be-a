@@ -42,6 +42,7 @@ exports.up = (knex, Promise) => {
         table.string("profile_picture");
         table.string("track");
         table.string("github_username").unique();
+        table.string("user_bio");
         table.integer("following").defaultTo(0);
         table.boolean("onboarded").defaultTo("false");
         table.boolean("mentor").defaultTo(false);
